@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlSharp", "HtmlSharp\HtmlSharp.csproj", "{3912F32F-4798-4394-9721-25583271551A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlSharp.Tests", "HtmlSharp.Tests\HtmlSharp.Tests.csproj", "{21A738C5-4E56-4F4E-94F0-68A20FF3739C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3912F32F-4798-4394-9721-25583271551A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3912F32F-4798-4394-9721-25583271551A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3912F32F-4798-4394-9721-25583271551A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3912F32F-4798-4394-9721-25583271551A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
