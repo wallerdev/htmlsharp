@@ -7,10 +7,14 @@ namespace HtmlSharp.Elements
 {
     class Root : Tag
     {
-        public Root()
-            : base("[document]")
+        public override string Name
         {
+            get { return "[document]"; }
+        }
 
+        public Root()
+        {
+            Hidden = true;
         }
     }
 }

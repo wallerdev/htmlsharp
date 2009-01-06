@@ -13,7 +13,7 @@ namespace HtmlSharp
         public Element NextSibling { get; set; }
         public Element PreviousSibling { get; set; }
 
-        public List<Element> Children { get; set; }
+        public List<Element> Children { get; protected set; }
 
         public Element()
         {

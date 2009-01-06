@@ -7,10 +7,9 @@ namespace HtmlSharp.Elements
 {
     class P : Tag
     {
-        public P()
-            : base("p")
+        public override string Name
         {
-            
+            get { return "p"; }
         }
     }
 }

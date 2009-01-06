@@ -164,7 +164,6 @@ namespace HtmlSharp
                 (dict, current) => { dict.Add(current.Key, current.Value); return dict; });
 
             root = Tag.Create("[document]");
-            root.Hidden = true;
             PushTag(root);
         }
 

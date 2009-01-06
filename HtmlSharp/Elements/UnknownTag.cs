@@ -7,10 +7,16 @@ namespace HtmlSharp.Elements
 {
     class UnknownTag : Tag
     {
-        public UnknownTag(string name)
-            : base(name)
-        {
+        string name;
 
+        public override string Name
+        {
+            get { return name; }
+        }
+        
+        public UnknownTag(string name)
+        {
+            this.name = name;
         }
     }
 }
