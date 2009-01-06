@@ -170,7 +170,7 @@ namespace HtmlSharp
             nestableTags = result.Aggregate(new Dictionary<string, string[]>(),
                 (dict, current) => { dict.Add(current.Key, current.Value); return dict; });
 
-            root = new Tag("[document]");
+            root = Tag.Create("[document]");
             root.Hidden = true;
             PushTag(root);
         }
@@ -938,7 +938,7 @@ namespace HtmlSharp
             }
             string starttagText = html.Substring(i, endPos - i);
 
-            List<KeyValuePair<string, string>> attributes = new List<KeyValuePair<string, string>>();
+            List<TagAttribute> attributes = new List<TagAttribute>();
 
             Match match = tagFind.MatchAtIndex(html, i + 1);
             int k = i + 1 + match.Length;
@@ -965,7 +965,7 @@ namespace HtmlSharp
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
                     attributeValue = HttpUtility.HtmlDecode(attributeValue);
                 }
-                attributes.Add(new KeyValuePair<string, string>(attributeName.ToLower(), attributeValue));
+                attributes.Add(new TagAttribute(attributeName.ToLower(), attributeValue));
                 k = k + match.Length;
             }
 
@@ -1003,7 +1003,7 @@ namespace HtmlSharp
             return endPos;
         }
 
-        void HandleStartEndTag(string tag, List<KeyValuePair<string, string>> attributes)
+        void HandleStartEndTag(string tag, List<TagAttribute> attributes)
         {
             HandleStartTag(tag, attributes);
             HandleEndTag(tag);
@@ -1102,17 +1102,17 @@ namespace HtmlSharp
             ToStringSubClass(text, new Comment());
         }
 
-        void HandleStartTag(string tag, List<KeyValuePair<string, string>> attributes)
+        void HandleStartTag(string tag, List<TagAttribute> attributes)
         {
             UnknownStartTag(tag, attributes);
         }
 
-        void UnknownStartTag(string tag, List<KeyValuePair<string, string>> attributes)
+        void UnknownStartTag(string tag, List<TagAttribute> attributes)
         {
             UnknownStartTag(tag, attributes, false);
         }
 
-        Tag UnknownStartTag(string name, List<KeyValuePair<string, string>> attributes, bool selfClosing)
+        Tag UnknownStartTag(string name, List<TagAttribute> attributes, bool selfClosing)
         {
             if (quoteStack.Count > 0)
             {
@@ -1120,7 +1120,7 @@ namespace HtmlSharp
                 string attrs = string.Empty;
                 foreach (var attrib in attributes)
                 {
-                    attrs += string.Format(" {0}=\"{1}\"", attrib.Key, attrib.Value);
+                    attrs += string.Format(" {0}=\"{1}\"", attrib.Name, attrib.Value);
                 }
                 HandleData(string.Format("<{0}{1}>", name, attrs));
                 return null;
@@ -1131,7 +1131,10 @@ namespace HtmlSharp
                 SmartPop(name);
             }
 
-            Tag tag = new Tag(name, attributes, currentTag, root.Previous);
+            Tag tag = Tag.Create(name);
+            tag.Attributes.AddRange(attributes);
+            tag.Parent = currentTag;
+            tag.Previous = root.Previous;
             if (root.Previous != null)
             {
                 root.Previous.Next = tag;

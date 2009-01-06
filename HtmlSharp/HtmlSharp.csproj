@@ -50,6 +50,9 @@
     <Compile Include="Elements\Comment.cs" />
     <Compile Include="Elements\Declaration.cs" />
     <Compile Include="Element.cs" />
+    <Compile Include="Elements\P.cs" />
+    <Compile Include="Elements\Root.cs" />
+    <Compile Include="Elements\UnknownTag.cs" />
     <Compile Include="HtmlParser.cs" />
     <Compile Include="Document.cs">
       <SubType>Code</SubType>
@@ -58,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elements\Tag.cs" />
     <Compile Include="Elements\Text.cs" />
+    <Compile Include="TagAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

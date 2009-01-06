@@ -15,8 +15,6 @@ namespace HtmlSharp
 
         public List<Element> Children { get; set; }
 
-        public virtual string Name { get; set; }
-
         public Element()
         {
             Children = new List<Element>();
