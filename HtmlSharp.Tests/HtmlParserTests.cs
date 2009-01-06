@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using HtmlSharp;
 using MbUnit.Framework;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Tests
 {

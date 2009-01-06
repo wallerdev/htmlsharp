@@ -7,12 +7,12 @@ using System.Web;
 
 namespace HtmlSharp
 {
-    public class Page
+    public class Document
     {
         public string Html { get; private set; }
         public Element Root { get; private set; }
 
-        public Page(string html, Element root)
+        public Document(string html, Element root)
         {
             Html = html;
             Root = root;

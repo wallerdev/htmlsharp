@@ -46,18 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CharacterData.cs" />
-    <Compile Include="Comment.cs" />
-    <Compile Include="Declaration.cs" />
+    <Compile Include="Elements\CharacterData.cs" />
+    <Compile Include="Elements\Comment.cs" />
+    <Compile Include="Elements\Declaration.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="HtmlParser.cs" />
-    <Compile Include="Page.cs">
+    <Compile Include="Document.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ProcessingInstruction.cs" />
+    <Compile Include="Elements\ProcessingInstruction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tag.cs" />
-    <Compile Include="Text.cs" />
+    <Compile Include="Elements\Tag.cs" />
+    <Compile Include="Elements\Text.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

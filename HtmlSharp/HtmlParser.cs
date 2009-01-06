@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp
 {
@@ -174,10 +175,10 @@ namespace HtmlSharp
             PushTag(root);
         }
 
-        public Page Parse(string html)
+        public Document Parse(string html)
         {
             Feed(html);
-            return new Page(html, root);
+            return new Document(html, root);
         }
 
         //Feeds data into the parser
