@@ -1,1 +1,3 @@
 h1. HtmlSharp
+
+HtmlSharp is a C# library for parsing HTML.
