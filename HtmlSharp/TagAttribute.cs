@@ -2,18 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Extensions;
 
 namespace HtmlSharp
 {
     public class TagAttribute
     {
-        public string Name { get; private set; }
-        public string Value { get; private set; }
+        string _value;
 
-        public TagAttribute(string name, string vaue)
+        public string Name { get; private set; }       
+        public string Value
+        {
+            get
+            {
+                return _value.HtmlDecode();
+            }
+            private set
+            {
+                _value = value;
+            }
+        }
+
+        public TagAttribute(string name, string value)
         {
             Name = name;
-            Value = Value;
+            Value = value;
         }
 
         public override bool Equals(object obj)

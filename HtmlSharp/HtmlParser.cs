@@ -5,17 +5,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlSharp.Elements;
+using HtmlSharp.Extensions;
 
 namespace HtmlSharp
 {
-    public static class Extensions
-    {
-        public static Match MatchAtIndex(this Regex r, string input, int index)
-        {
-            Regex newRegex = new Regex("^" + r.ToString());
-            return newRegex.Match(input.Substring(index));
-        }
-    }
     public class HtmlParser
     {
         bool cDataMode;

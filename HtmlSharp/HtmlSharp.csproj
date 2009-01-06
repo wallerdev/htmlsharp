@@ -53,6 +53,8 @@
     <Compile Include="Elements\P.cs" />
     <Compile Include="Elements\Root.cs" />
     <Compile Include="Elements\UnknownTag.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="HtmlEncoder.cs" />
     <Compile Include="HtmlParser.cs" />
     <Compile Include="Document.cs">
       <SubType>Code</SubType>
