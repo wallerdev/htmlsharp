@@ -5,10 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public interface INestableTag
-    {
-        Type[] NestingBreakers { get; }
-    }
+
 
     public abstract class Tag : Element
     {
@@ -64,22 +61,16 @@ namespace HtmlSharp.Elements
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            string atts = string.Join(" ",
-                Attributes.Select(a => string.Format("{0}=\"{1}\"", a.Name, a.Value))
-                          .ToArray());
-
-            if (atts.Length > 0)
+            StringBuilder builder = new StringBuilder("<");
+            builder.Append(Name);
+            foreach (TagAttribute attribute in Attributes)
             {
-                builder.AppendFormat("<{0} {1}>", Name, atts);
+                builder.Append(" ").Append(attribute);
             }
-            else
+            builder.Append(">");
+            foreach (Element element in Children)
             {
-                builder.AppendFormat("<{0}>", Name);
-            }
-            foreach (Element ele in Children)
-            {
-                builder.Append(ele.ToString());
+                builder.Append(element);
             }
             builder.AppendFormat("</{0}>", Name);
             return builder.ToString();

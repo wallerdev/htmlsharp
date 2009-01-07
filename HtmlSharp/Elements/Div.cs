@@ -14,7 +14,7 @@ namespace HtmlSharp.Elements
 
         public Div()
         {
-            Name = "Div";
+            Name = "div";
         }
     }
 }

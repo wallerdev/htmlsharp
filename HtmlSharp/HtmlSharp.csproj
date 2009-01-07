@@ -46,13 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\Base.cs" />
+    <Compile Include="Elements\Br.cs" />
     <Compile Include="Elements\CharacterData.cs" />
     <Compile Include="Elements\Comment.cs" />
     <Compile Include="Elements\Declaration.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Elements\Div.cs" />
+    <Compile Include="Elements\Frame.cs" />
+    <Compile Include="Elements\Hr.cs" />
+    <Compile Include="Elements\Img.cs" />
+    <Compile Include="Elements\INestableTag.cs" />
+    <Compile Include="Elements\Input.cs" />
+    <Compile Include="Elements\Link.cs" />
+    <Compile Include="Elements\Meta.cs" />
     <Compile Include="Elements\P.cs" />
     <Compile Include="Elements\Root.cs" />
+    <Compile Include="Elements\Spacer.cs" />
     <Compile Include="Elements\UnknownTag.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="HtmlEncoder.cs" />
