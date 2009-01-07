@@ -77,7 +77,6 @@ namespace HtmlSharp
             { "textarea", null }
         };
 
-
         bool literal;
 
         Stack<string> quoteStack = new Stack<string>();
@@ -875,7 +874,6 @@ namespace HtmlSharp
                         attributeValue[0] == '"' && attributeValue[attributeValue.Length - 1] == '"')
                 {
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
-                    attributeValue = HttpUtility.HtmlDecode(attributeValue);
                 }
                 tag.Attributes.Add(new TagAttribute(attributeName.ToLower(), attributeValue));
                 k = k + match.Length;
