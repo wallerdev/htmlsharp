@@ -5,10 +5,11 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    class P : Tag
+    public class P : Tag
     {
-        public override string Name { get { return "p"; } }
-        public override bool IsSelfClosing { get { return false; } }
-        public override bool IsNestable { get { return false; } }
+        public P()
+        {
+            Name = "p";
+        }
     }
 }

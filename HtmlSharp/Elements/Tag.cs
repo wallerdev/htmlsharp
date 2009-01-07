@@ -5,13 +5,18 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
+    public interface INestableTag
+    {
+        Type[] NestingBreakers { get; }
+    }
+
     public abstract class Tag : Element
     {
         public bool Hidden { get; protected set; }
         public List<TagAttribute> Attributes { get; private set; }
-        public abstract string Name { get; }
-        public abstract bool IsSelfClosing { get; }
-        public abstract bool IsNestable { get; }
+        public string Name { get; protected set; }
+        public bool IsSelfClosing { get; protected set; }
+        public bool ResetsNesting { get; protected set; }
 
         static Dictionary<string, Func<Tag>> tagMap = new Dictionary<string, Func<Tag>>()
         {

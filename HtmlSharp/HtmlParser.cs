@@ -140,9 +140,6 @@ namespace HtmlSharp
             { "pre" , new string[0]}
         };
 
-        Dictionary<string, string[]> resetNestingTags;
-        Dictionary<string, string[]> nestableTags;
-
         bool literal;
 
         Stack<string> quoteStack = new Stack<string>();
@@ -150,19 +147,6 @@ namespace HtmlSharp
         public HtmlParser()
         {
             interesting = interestingNormal;
-
-
-            var result = nestableBlockTags.Union(nonNestableBlockTags).Union(
-                nestableListTags).Union(nestableTableTags);
-            resetNestingTags = result.Aggregate(new Dictionary<string, string[]>(),
-                (dict, current) => { dict.Add(current.Key, current.Value); return dict; });
-            resetNestingTags["noscript"] = new string[0];
-
-            result = nestableInlineTags.Union(nestableBlockTags).Union(
-                nestableListTags).Union(nestableTableTags);
-            nestableTags = result.Aggregate(new Dictionary<string, string[]>(),
-                (dict, current) => { dict.Add(current.Key, current.Value); return dict; });
-
             root = Tag.Create("[document]");
             PushTag(root);
         }
@@ -1175,25 +1159,18 @@ namespace HtmlSharp
             // <td><tr><td> *<td>* should pop to 'tr', not the first 'td'
             //"""
 
-            string[] nestingResetTriggers;
-            bool isNestable = nestableTags.TryGetValue(tag.Name, out nestingResetTriggers);
-
-            bool isResetNesting = resetNestingTags.ContainsKey(tag.Name);
-            if (!isResetNesting)
-            {
-                nestingResetTriggers = new string[] { };
-            }
+            INestableTag nestableTag = tag as INestableTag;
             Tag popTo = null;
             bool inclusive = true;
             foreach (Tag t in tagStack)
             {
-                if (t.Name == tag.Name && !isNestable)
+                if (t.Name == tag.Name && nestableTag == null)
                 {
                     popTo = tag;
                     break;
                 }
-                if (nestingResetTriggers.Length > 0 && nestingResetTriggers.Contains(t.Name) ||
-                    (nestingResetTriggers.Length == 0 && isResetNesting && resetNestingTags.ContainsKey(t.Name)))
+                else if (nestableTag != null && nestableTag.NestingBreakers.Contains(t.GetType()) ||
+                    (nestableTag == null && tag.ResetsNesting && t.ResetsNesting))
                 {
                     popTo = t;
                     inclusive = false;
