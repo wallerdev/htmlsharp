@@ -930,12 +930,10 @@ namespace HtmlSharp
             }
             string starttagText = html.Substring(i, endPos - i);
 
-            List<TagAttribute> attributes = new List<TagAttribute>();
-
             Match match = tagFind.MatchAtIndex(html, i + 1);
             int k = i + 1 + match.Length;
             lastTag = html.Substring(i + 1, k - (i + 1)).ToLower();
-            string tag = lastTag;
+            Tag tag = Tag.Create(lastTag);
 
             while (k < endPos)
             {
@@ -957,7 +955,7 @@ namespace HtmlSharp
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
                     attributeValue = HttpUtility.HtmlDecode(attributeValue);
                 }
-                attributes.Add(new TagAttribute(attributeName.ToLower(), attributeValue));
+                tag.Attributes.Add(new TagAttribute(attributeName.ToLower(), attributeValue));
                 k = k + match.Length;
             }
 
@@ -981,12 +979,12 @@ namespace HtmlSharp
 
             if (end.EndsWith("/>"))
             {
-                HandleStartEndTag(tag, attributes);
+                HandleStartEndTag(tag);
             }
             else
             {
-                HandleStartTag(tag, attributes);
-                if (CDataContentElements.Contains(tag))
+                HandleStartTag(tag);
+                if (CDataContentElements.Contains(tag.Name))
                 {
                     CDataMode = true;
                 }
@@ -995,10 +993,10 @@ namespace HtmlSharp
             return endPos;
         }
 
-        void HandleStartEndTag(string tag, List<TagAttribute> attributes)
+        void HandleStartEndTag(Tag tag)
         {
-            HandleStartTag(tag, attributes);
-            HandleEndTag(tag);
+            HandleStartTag(tag);
+            HandleEndTag(tag.Name);
         }
 
         KeyValuePair<int, int> GetPosition()
@@ -1094,37 +1092,31 @@ namespace HtmlSharp
             ToStringSubClass(text, new Comment());
         }
 
-        void HandleStartTag(string tag, List<TagAttribute> attributes)
+        void HandleStartTag(Tag tag)
         {
-            UnknownStartTag(tag, attributes);
+            UnknownStartTag(tag);
         }
 
-        void UnknownStartTag(string tag, List<TagAttribute> attributes)
-        {
-            UnknownStartTag(tag, attributes, false);
-        }
-
-        Tag UnknownStartTag(string name, List<TagAttribute> attributes, bool selfClosing)
+        Tag UnknownStartTag(Tag tag)
         {
             if (quoteStack.Count > 0)
             {
                 //not a real tag
                 string attrs = string.Empty;
-                foreach (var attrib in attributes)
+                foreach (var attrib in tag.Attributes)
                 {
                     attrs += string.Format(" {0}=\"{1}\"", attrib.Name, attrib.Value);
                 }
-                HandleData(string.Format("<{0}{1}>", name, attrs));
+                HandleData(string.Format("<{0}{1}>", tag.Name, attrs));
                 return null;
             }
             EndData();
-            if (!IsSelfClosingTag(name) && !selfClosing)
+            if (!tag.IsSelfClosing)
             {
-                SmartPop(name);
+                SmartPop(tag);
             }
 
-            Tag tag = Tag.Create(name);
-            tag.Attributes.AddRange(attributes);
+            //Tag tag = Tag.Create(name);
             tag.Parent = currentTag;
             tag.Previous = root.Previous;
             if (root.Previous != null)
@@ -1133,13 +1125,13 @@ namespace HtmlSharp
             }
             root.Previous = tag;
             PushTag(tag);
-            if (selfClosing || IsSelfClosingTag(name))
+            if (tag.IsSelfClosing)
             {
                 PopTag();
             }
-            if (quoteTags.ContainsKey(name))
+            if (quoteTags.ContainsKey(tag.Name))
             {
-                quoteStack.Push(name);
+                quoteStack.Push(tag.Name);
                 literal = true;
             }
             return tag;
@@ -1165,7 +1157,7 @@ namespace HtmlSharp
             currentTag = tagStack.Peek();
         }
 
-        void SmartPop(string tag)
+        void SmartPop(Tag tag)
         {
             //"""We need to pop up to the previous tag of this type, unless
             //one of this tag's nesting reset triggers comes between this
@@ -1184,18 +1176,18 @@ namespace HtmlSharp
             //"""
 
             string[] nestingResetTriggers;
-            bool isNestable = nestableTags.TryGetValue(tag, out nestingResetTriggers);
+            bool isNestable = nestableTags.TryGetValue(tag.Name, out nestingResetTriggers);
 
-            bool isResetNesting = resetNestingTags.ContainsKey(tag);
+            bool isResetNesting = resetNestingTags.ContainsKey(tag.Name);
             if (!isResetNesting)
             {
                 nestingResetTriggers = new string[] { };
             }
-            string popTo = null;
+            Tag popTo = null;
             bool inclusive = true;
             foreach (Tag t in tagStack)
             {
-                if ((t == null || t.Name == tag) && !isNestable)
+                if (t.Name == tag.Name && !isNestable)
                 {
                     popTo = tag;
                     break;
@@ -1203,14 +1195,14 @@ namespace HtmlSharp
                 if (nestingResetTriggers.Length > 0 && nestingResetTriggers.Contains(t.Name) ||
                     (nestingResetTriggers.Length == 0 && isResetNesting && resetNestingTags.ContainsKey(t.Name)))
                 {
-                    popTo = t.Name;
+                    popTo = t;
                     inclusive = false;
                     break;
                 }
             }
-            if (!string.IsNullOrEmpty(popTo))
+            if (popTo != null)
             {
-                PopToTag(popTo, inclusive);
+                PopToTag(popTo.Name, inclusive);
             }
         }
 

@@ -8,7 +8,8 @@ namespace HtmlSharp.Elements
     class Root : Tag
     {
         public override string Name { get { return "[document]"; } }
-        public override bool SelfClosing { get { return false; } }
+        public override bool IsSelfClosing { get { return false; } }
+        public override bool IsNestable { get { return false; } }
 
         public Root()
         {

@@ -10,7 +10,8 @@ namespace HtmlSharp.Elements
         string name;
 
         public override string Name { get { return name; } }
-        public override bool SelfClosing { get { return false; } }
+        public override bool IsSelfClosing { get { return false; } }
+        public override bool IsNestable { get { return false; } }
 
         public UnknownTag(string name)
         {

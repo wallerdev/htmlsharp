@@ -10,7 +10,8 @@ namespace HtmlSharp.Elements
         public bool Hidden { get; protected set; }
         public List<TagAttribute> Attributes { get; private set; }
         public abstract string Name { get; }
-        public abstract bool SelfClosing { get; }
+        public abstract bool IsSelfClosing { get; }
+        public abstract bool IsNestable { get; }
 
         static Dictionary<string, Func<Tag>> tagMap = new Dictionary<string, Func<Tag>>()
         {
