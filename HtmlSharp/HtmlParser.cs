@@ -77,68 +77,6 @@ namespace HtmlSharp
             { "textarea", null }
         };
 
-        Dictionary<string, string> selfClosingTags = new Dictionary<string, string>()
-        {
-            { "br",     null },
-            { "hr",     null },
-            { "input",  null },
-            { "img",    null },
-            { "meta",   null },
-            { "spacer", null },
-            { "link",   null },
-            { "frame",  null },
-            { "base",   null }
-        };
-
-        Dictionary<string, string[]> nestableInlineTags = new Dictionary<string, string[]>()
-        {
-            { "span", new string[0] },
-            { "font", new string[0] },
-            { "q", new string[0] },
-            { "object", new string[0] },
-            { "bob", new string[0] },
-            { "sub", new string[0] },
-            { "sup", new string[0] },
-            { "center", new string[0] }
-        };
-
-        Dictionary<string, string[]> nestableBlockTags = new Dictionary<string, string[]>()
-        {
-            {"blockquote", new string[0] },
-            {"div", new string[0] },
-            {"fieldset", new string[0] },
-            {"ins", new string[0] },
-            { "del", new string[0] }
-        };
-
-        Dictionary<string, string[]> nestableListTags = new Dictionary<string, string[]>()
-        {
-            {"ol", new string[0]},
-            { "ul", new string[0]},
-            { "li", new[] { "ul", "ol" }},
-            { "dl", new string[0] },
-            { "dd", new[] { "dl" }},
-            { "dt", new[] { "dl" }}
-        };
-
-        Dictionary<string, string[]> nestableTableTags = new Dictionary<string, string[]>()
-        {
-            { "table", new string[0]},
-            { "tr", new[] {"table", "tbody", "tfoot", "thead" }},
-            { "td", new[] { "tr" }},
-            { "th", new[] { "tr" }},
-            { "thead", new[] { "table" }},
-            { "tbody", new[] { "table" }},
-            { "tfoot", new[] { "table" }}
-        };
-
-        Dictionary<string, string[]> nonNestableBlockTags = new Dictionary<string, string[]>()
-        { 
-            { "address", new string[0] },
-            { "form", new string[0] },
-            { "p",  new string[0] },
-            { "pre" , new string[0]}
-        };
 
         bool literal;
 
@@ -1186,11 +1124,6 @@ namespace HtmlSharp
         void PopToTag(string popTo)
         {
             PopToTag(popTo, true);
-        }
-
-        bool IsSelfClosingTag(string tag)
-        {
-            return selfClosingTags.ContainsKey(tag);
         }
 
         void EndData(Text containerClass)
