@@ -6,7 +6,8 @@ h2. Usage
 
 Say you have the following html stored in a string.
 
-pre. <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<pre>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
   <title>Sample HTML</title>
@@ -17,6 +18,7 @@ pre. <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/htm
   <p> id="copyright">Copyright data.</p>
 </body>
 </html>
+</pre>
 
 The first step is to parse your document
 
