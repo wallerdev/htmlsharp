@@ -50,6 +50,7 @@
     <Compile Include="Elements\Comment.cs" />
     <Compile Include="Elements\Declaration.cs" />
     <Compile Include="Element.cs" />
+    <Compile Include="Elements\Div.cs" />
     <Compile Include="Elements\P.cs" />
     <Compile Include="Elements\Root.cs" />
     <Compile Include="Elements\UnknownTag.cs" />

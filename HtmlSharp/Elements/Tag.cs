@@ -21,7 +21,8 @@ namespace HtmlSharp.Elements
         static Dictionary<string, Func<Tag>> tagMap = new Dictionary<string, Func<Tag>>()
         {
             {"p", () => new P()},
-            {"[document]", () => new Root()}
+            {"[document]", () => new Root()},
+            {"div", () => new Div()}
         };
 
         public static Tag Create(string name)

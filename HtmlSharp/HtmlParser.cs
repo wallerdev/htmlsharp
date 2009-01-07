@@ -875,7 +875,7 @@ namespace HtmlSharp
                 {
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
                 }
-                tag.Attributes.Add(new TagAttribute(attributeName.ToLower(), attributeValue));
+                tag.Attributes.Add(new TagAttribute(attributeName, attributeValue));
                 k = k + match.Length;
             }
 
@@ -1014,11 +1014,6 @@ namespace HtmlSharp
 
         void HandleStartTag(Tag tag)
         {
-            UnknownStartTag(tag);
-        }
-
-        Tag UnknownStartTag(Tag tag)
-        {
             if (quoteStack.Count > 0)
             {
                 //not a real tag
@@ -1028,7 +1023,6 @@ namespace HtmlSharp
                     attrs += string.Format(" {0}=\"{1}\"", attrib.Name, attrib.Value);
                 }
                 HandleData(string.Format("<{0}{1}>", tag.Name, attrs));
-                return null;
             }
             EndData();
             if (!tag.IsSelfClosing)
@@ -1054,7 +1048,6 @@ namespace HtmlSharp
                 quoteStack.Push(tag.Name);
                 literal = true;
             }
-            return tag;
         }
 
         Tag PopTag()

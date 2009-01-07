@@ -25,7 +25,7 @@ namespace HtmlSharp
 
         public TagAttribute(string name, string value)
         {
-            Name = name;
+            Name = name.ToLower();
             Value = value;
         }
 
