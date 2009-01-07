@@ -4,23 +4,27 @@ HtmlSharp is a C# library for parsing HTML.
 
 h2. Usage
 
-Say you have the following html stored in a string.
+Let's say you have the following html stored in a string named html.
 
-<pre>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-  <title>Sample HTML</title>
-</head>
-<body>
-  <p class="important">Make sure you read this part.</p>
-  <p>Some info about stuff.</p>
-  <p> id="copyright">Copyright data.</p>
-</body>
-</html>
-</pre>
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <html>
+  <head>
+    <title>Sample HTML</title>
+  </head>
+  <body>
+    <p class="important">Make sure you read this part.</p>
+    <p>Some info about stuff.</p>
+    <p> id="copyright">Copyright data.</p>
+  </body>
+  </html>
 
 The first step is to parse your document
 
-HtmlParser parser = new HtmlParser();
-HtmlDocument doc = parser.Parse(html);
+  HtmlParser parser = new HtmlParser();
+  HtmlDocument doc = parser.Parse(html);
+
+From there, we can use "css selectors":http://www.w3.org/TR/css3-selectors/#selectors to find the information we want from the document.
+
+To find the tag with the id of copyright, we can simply do:
+
+  Tag t = doc.Find("#copyright");
