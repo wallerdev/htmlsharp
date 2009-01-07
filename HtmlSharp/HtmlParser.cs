@@ -1147,7 +1147,7 @@ namespace HtmlSharp
 
         Tag PopTag()
         {
-            Tag tag = tagStack.Pop();
+            tagStack.Pop();
             if (tagStack.Count > 0)
             {
                 currentTag = tagStack.Peek();
@@ -1186,7 +1186,6 @@ namespace HtmlSharp
             string[] nestingResetTriggers;
             bool isNestable = nestableTags.TryGetValue(tag, out nestingResetTriggers);
 
-            nestingResetTriggers = nestingResetTriggers ?? new string[] { };
             bool isResetNesting = resetNestingTags.ContainsKey(tag);
             if (!isResetNesting)
             {

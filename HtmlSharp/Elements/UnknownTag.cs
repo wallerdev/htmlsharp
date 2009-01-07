@@ -9,11 +9,9 @@ namespace HtmlSharp.Elements
     {
         string name;
 
-        public override string Name
-        {
-            get { return name; }
-        }
-        
+        public override string Name { get { return name; } }
+        public override bool SelfClosing { get { return false; } }
+
         public UnknownTag(string name)
         {
             this.name = name;

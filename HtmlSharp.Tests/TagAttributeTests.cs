@@ -24,7 +24,7 @@ namespace HtmlSharp.Tests
         }
 
         [Test]
-        public void TestHtmlEncodingValue()
+        public void TestHtmlDecodingValue()
         {
             var attr = new TagAttribute("value", "3 &lt; 5");
             Assert.AreEqual("3 < 5", attr.Value);

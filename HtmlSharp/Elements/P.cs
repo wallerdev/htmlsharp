@@ -7,9 +7,7 @@ namespace HtmlSharp.Elements
 {
     class P : Tag
     {
-        public override string Name
-        {
-            get { return "p"; }
-        }
+        public override string Name { get { return "p"; } }
+        public override bool SelfClosing { get { return false; } }
     }
 }
