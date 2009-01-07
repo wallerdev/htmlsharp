@@ -1,3 +1,24 @@
 h1. HtmlSharp
 
 HtmlSharp is a C# library for parsing HTML.
+
+h2. Usage
+
+Say you have the following html stored in a string.
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Sample HTML</title>
+</head>
+<body>
+  <p class="important">Make sure you read this part.</p>
+  <p>Some info about stuff.</p>
+  <p> id="copyright">Copyright data.</p>
+</body>
+</html>
+
+The first step is to parse your document
+
+HtmlParser parser = new HtmlParser();
+HtmlDocument doc = parser.Parse(html);
