@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public interface INestableTag
+    public interface IAllowsNesting
     {
         Type[] NestingBreakers { get; }
     }

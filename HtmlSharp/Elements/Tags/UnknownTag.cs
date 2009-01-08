@@ -5,12 +5,11 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    class Root : Tag
+    class UnknownTag : Tag
     {
-        public Root()
+        public UnknownTag(string name)
         {
-            Hidden = true;
-            TagName = "[document]";
+            TagName = name;
         }
     }
 }

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlSharp", "HtmlSharp\Html
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlSharp.Tests", "HtmlSharp.Tests\HtmlSharp.Tests.csproj", "{21A738C5-4E56-4F4E-94F0-68A20FF3739C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagGenerator", "TagGenerator\TagGenerator.csproj", "{2FCC6027-F11B-4A9D-BC04-81BDBA2F6219}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21A738C5-4E56-4F4E-94F0-68A20FF3739C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FCC6027-F11B-4A9D-BC04-81BDBA2F6219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FCC6027-F11B-4A9D-BC04-81BDBA2F6219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FCC6027-F11B-4A9D-BC04-81BDBA2F6219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FCC6027-F11B-4A9D-BC04-81BDBA2F6219}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

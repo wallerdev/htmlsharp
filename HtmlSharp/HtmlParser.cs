@@ -904,7 +904,7 @@ namespace HtmlSharp
             else
             {
                 HandleStartTag(tag);
-                if (CDataContentElements.Contains(tag.Name))
+                if (CDataContentElements.Contains(tag.TagName))
                 {
                     CDataMode = true;
                 }
@@ -916,7 +916,7 @@ namespace HtmlSharp
         void HandleStartEndTag(Tag tag)
         {
             HandleStartTag(tag);
-            HandleEndTag(tag.Name);
+            HandleEndTag(tag.TagName);
         }
 
         KeyValuePair<int, int> GetPosition()
@@ -1022,7 +1022,7 @@ namespace HtmlSharp
                 {
                     attrs += string.Format(" {0}=\"{1}\"", attrib.Name, attrib.Value);
                 }
-                HandleData(string.Format("<{0}{1}>", tag.Name, attrs));
+                HandleData(string.Format("<{0}{1}>", tag.TagName, attrs));
             }
             EndData();
             if (!tag.IsSelfClosing)
@@ -1043,9 +1043,9 @@ namespace HtmlSharp
             {
                 PopTag();
             }
-            if (quoteTags.ContainsKey(tag.Name))
+            if (quoteTags.ContainsKey(tag.TagName))
             {
-                quoteStack.Push(tag.Name);
+                quoteStack.Push(tag.TagName);
                 literal = true;
             }
         }
@@ -1088,12 +1088,12 @@ namespace HtmlSharp
             // <td><tr><td> *<td>* should pop to 'tr', not the first 'td'
             //"""
 
-            INestableTag nestableTag = tag as INestableTag;
+            IAllowsNesting nestableTag = tag as IAllowsNesting;
             Tag popTo = null;
             bool inclusive = true;
             foreach (Tag t in tagStack)
             {
-                if (t.Name == tag.Name && nestableTag == null)
+                if (t.TagName == tag.TagName && nestableTag == null)
                 {
                     popTo = tag;
                     break;
@@ -1108,7 +1108,7 @@ namespace HtmlSharp
             }
             if (popTo != null)
             {
-                PopToTag(popTo.Name, inclusive);
+                PopToTag(popTo.TagName, inclusive);
             }
         }
 
@@ -1129,7 +1129,7 @@ namespace HtmlSharp
                 char[] spaceChars = { (char)9, (char)10, (char)12, (char)13, (char)32 };
                 if (new string(data.Where(c => !spaceChars.Contains(c)).ToArray()) == "")
                 {
-                    if (preserveWhitespaceTags.Intersect(tagStack.Select(tag => tag.Name)).Count() == 0)
+                    if (preserveWhitespaceTags.Intersect(tagStack.Select(tag => tag.TagName)).Count() == 0)
                     {
                         if (data.Contains("\n"))
                         {
@@ -1188,7 +1188,7 @@ namespace HtmlSharp
 
         Tag PopToTag(string tag, bool inclusive)
         {
-            if (tag == root.Name)
+            if (tag == root.TagName)
             {
                 return null;
             }
@@ -1199,7 +1199,7 @@ namespace HtmlSharp
             foreach (Tag t in tagStack)
             {
                 i++;
-                if (tag == t.Name)
+                if (tag == t.TagName)
                 {
                     numPops = i;
                     break;

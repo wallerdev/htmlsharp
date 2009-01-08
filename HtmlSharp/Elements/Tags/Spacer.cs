@@ -5,12 +5,12 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    class Root : Tag
+    public class Spacer : Tag
     {
-        public Root()
+        public Spacer()
         {
-            Hidden = true;
-            TagName = "[document]";
+            TagName = "spacer";
+            IsSelfClosing = true;
         }
     }
 }
