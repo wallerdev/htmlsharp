@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Dfn(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Dfn(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Dfn(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "dfn";
         }

@@ -47,7 +47,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Div(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Div(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Div(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "div";

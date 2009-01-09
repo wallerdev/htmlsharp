@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Address(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Address(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Address(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "address";

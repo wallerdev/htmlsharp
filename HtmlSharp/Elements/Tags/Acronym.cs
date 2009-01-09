@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Acronym(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Acronym(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Acronym(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "acronym";
         }

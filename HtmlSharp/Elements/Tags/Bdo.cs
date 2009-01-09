@@ -25,7 +25,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Bdo(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Bdo(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Bdo(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "bdo";
         }

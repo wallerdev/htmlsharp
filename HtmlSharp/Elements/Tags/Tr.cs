@@ -55,7 +55,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public TR(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public TR(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public TR(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "tr";

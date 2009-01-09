@@ -13,7 +13,18 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public UnknownTag(string name, params Element[] children)
-            : base(children)
+            : this(name, new TagAttribute[0], children)
+        {
+        }
+
+        public UnknownTag(string name, params TagAttribute[] attributes)
+            : this(name, attributes, new Element[0])
+        {
+
+        }
+
+        public UnknownTag(string name, IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = name;
         }

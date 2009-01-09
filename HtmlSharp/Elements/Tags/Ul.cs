@@ -49,7 +49,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public UL(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public UL(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public UL(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "ul";

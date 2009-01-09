@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Kbd(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public Kbd(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Kbd(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "kbd";
         }

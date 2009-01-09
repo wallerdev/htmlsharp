@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp
 {
     public class Document
     {
         public string Html { get; private set; }
-        public Element Root { get; private set; }
+        public Tag Root { get; private set; }
 
-        public Document(string html, Element root)
+        public Document(string html, Tag root)
         {
             Html = html;
             Root = root;
@@ -26,6 +27,14 @@ namespace HtmlSharp
                 builder.Append(ele.ToString());
             }
             return builder.ToString();
+        }
+
+        public IEnumerable<Tag> FindAll()
+        {
+            foreach (Tag t in Root.FindAll())
+            {
+                yield return t;
+            }
         }
     }
 }

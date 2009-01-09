@@ -15,7 +15,16 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public Root(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+        public Root(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public Root(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             Hidden = true;
             TagName = "[document]";

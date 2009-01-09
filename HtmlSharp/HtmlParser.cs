@@ -784,7 +784,8 @@ namespace HtmlSharp
             Match match = tagFind.MatchAtIndex(html, i + 1);
             int k = i + 1 + match.Length;
             lastTag = html.Substring(i + 1, k - (i + 1)).ToLowerInvariant();
-            Tag tag = Tag.Create(lastTag);
+
+            List<TagAttribute> attributes = new List<TagAttribute>();
 
             while (k < endPos)
             {
@@ -805,9 +806,11 @@ namespace HtmlSharp
                 {
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
                 }
-                tag.AddAttribute(new TagAttribute(attributeName, attributeValue));
+                attributes.Add(new TagAttribute(attributeName, attributeValue));
                 k = k + match.Length;
             }
+
+            Tag tag = Tag.Create(lastTag, attributes);
 
             string end = html.Substring(k, endPos - k).Trim();
             if (end != ">" && end != "/>")

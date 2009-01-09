@@ -41,7 +41,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public IFrame(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public IFrame(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public IFrame(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "iframe";
         }

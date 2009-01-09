@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public DT(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public DT(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public DT(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "dt";

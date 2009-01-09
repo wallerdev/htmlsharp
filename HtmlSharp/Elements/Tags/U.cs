@@ -45,7 +45,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public U(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public U(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public U(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             TagName = "u";
         }

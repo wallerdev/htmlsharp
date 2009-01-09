@@ -53,7 +53,17 @@ namespace HtmlSharp.Elements.Tags
         }
 
         public TFoot(params Element[] children)
-            : base(children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        public TFoot(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+        }
+
+        public TFoot(IEnumerable<TagAttribute> attributes, params Element[] children)
+            : base(attributes, children)
         {
             ResetsNesting = true;
             TagName = "tfoot";

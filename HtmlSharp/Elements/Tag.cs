@@ -114,11 +114,16 @@ namespace HtmlSharp.Elements
 
         public static Tag Create(string name)
         {
+            return Create(name, new TagAttribute[0]);
+        }
+
+        public static Tag Create(string name, IEnumerable<TagAttribute> attributes)
+        {
             if (tagMap.ContainsKey(name))
             {
                 return tagMap[name]();
             }
-            return new UnknownTag(name);
+            return new UnknownTag(name, attributes);
         }
 
         protected Tag()
@@ -127,13 +132,29 @@ namespace HtmlSharp.Elements
         }
 
         protected Tag(params Element[] children)
+            : this(new TagAttribute[0], children)
+        {
+        }
+
+        protected Tag(params TagAttribute[] attributes)
+            : this(attributes, new Element[0])
+        {
+
+        }
+
+        protected Tag(IEnumerable<TagAttribute> attributes, params Element[] children)
             : this()
         {
             foreach (var child in children)
             {
                 AddChild(child);
             }
+            foreach (var attribute in attributes)
+            {
+                this.attributes.Add(attribute.Name, attribute);
+            }
         }
+
 
         public string this[string attribute]
         {
@@ -143,9 +164,16 @@ namespace HtmlSharp.Elements
             }
         }
 
-        public void AddAttribute(TagAttribute attribute)
+        public IEnumerable<Tag> FindAll()
         {
-            attributes.Add(attribute.Name, attribute);
+            foreach (Tag t in Children.Where(e => e is Tag))
+            {
+                yield return t;
+                foreach (Tag tag in t.FindAll())
+                {
+                    yield return tag;
+                }
+            }
         }
 
         public override bool Equals(object obj)
