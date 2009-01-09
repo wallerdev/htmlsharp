@@ -2,21 +2,27 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    class Param : Tag
+    public class Param : Tag
     {
-        public string Id {  get { return this["id"]; } }
+        public string Id { get { return this["id"]; } }
 
-        public string Name {  get { return this["name"]; } }
+        public string Name { get { return this["name"]; } }
 
-        public string Type {  get { return this["type"]; } }
+        public string Type { get { return this["type"]; } }
 
-        public string Value {  get { return this["value"]; } }
+        public string Value { get { return this["value"]; } }
 
-        public string Valuetype {  get { return this["valuetype"]; } }
+        public string Valuetype { get { return this["valuetype"]; } }
 
         public Param()
+            : this(new Element[0])
         {
-            
+        }
+
+        public Param(params Element[] children)
+            : base(children)
+        {
+            TagName = "param";
         }
     }
 }

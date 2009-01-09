@@ -2,61 +2,67 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    class Button : Tag, IAllowsNesting
+    public class Button : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[] {  }; } }
+        public Type[] NestingBreakers { get { return new Type[0]; } }
 
-        public string Accesskey {  get { return this["accesskey"]; } }
+        public string Accesskey { get { return this["accesskey"]; } }
 
-        public string Class {  get { return this["class"]; } }
+        public string Class { get { return this["class"]; } }
 
-        public string Dir {  get { return this["dir"]; } }
+        public string Dir { get { return this["dir"]; } }
 
-        public string Disabled {  get { return this["disabled"]; } }
+        public string Disabled { get { return this["disabled"]; } }
 
-        public string Id {  get { return this["id"]; } }
+        public string Id { get { return this["id"]; } }
 
-        public string Lang {  get { return this["lang"]; } }
+        public string Lang { get { return this["lang"]; } }
 
-        public string Name {  get { return this["name"]; } }
+        public string Name { get { return this["name"]; } }
 
-        public string Onblur {  get { return this["onblur"]; } }
+        public string Onblur { get { return this["onblur"]; } }
 
-        public string Onclick {  get { return this["onclick"]; } }
+        public string Onclick { get { return this["onclick"]; } }
 
-        public string Ondblclick {  get { return this["ondblclick"]; } }
+        public string Ondblclick { get { return this["ondblclick"]; } }
 
-        public string Onfocus {  get { return this["onfocus"]; } }
+        public string Onfocus { get { return this["onfocus"]; } }
 
-        public string Onkeydown {  get { return this["onkeydown"]; } }
+        public string Onkeydown { get { return this["onkeydown"]; } }
 
-        public string Onkeypress {  get { return this["onkeypress"]; } }
+        public string Onkeypress { get { return this["onkeypress"]; } }
 
-        public string Onkeyup {  get { return this["onkeyup"]; } }
+        public string Onkeyup { get { return this["onkeyup"]; } }
 
-        public string Onmousedown {  get { return this["onmousedown"]; } }
+        public string Onmousedown { get { return this["onmousedown"]; } }
 
-        public string Onmousemove {  get { return this["onmousemove"]; } }
+        public string Onmousemove { get { return this["onmousemove"]; } }
 
-        public string Onmouseout {  get { return this["onmouseout"]; } }
+        public string Onmouseout { get { return this["onmouseout"]; } }
 
-        public string Onmouseover {  get { return this["onmouseover"]; } }
+        public string Onmouseover { get { return this["onmouseover"]; } }
 
-        public string Onmouseup {  get { return this["onmouseup"]; } }
+        public string Onmouseup { get { return this["onmouseup"]; } }
 
-        public string Style {  get { return this["style"]; } }
+        public string Style { get { return this["style"]; } }
 
-        public string Tabindex {  get { return this["tabindex"]; } }
+        public string Tabindex { get { return this["tabindex"]; } }
 
-        public string Title {  get { return this["title"]; } }
+        public string Title { get { return this["title"]; } }
 
-        public string Type {  get { return this["type"]; } }
+        public string Type { get { return this["type"]; } }
 
-        public string Value {  get { return this["value"]; } }
+        public string Value { get { return this["value"]; } }
 
         public Button()
+            : this(new Element[0])
         {
-            
+        }
+
+        public Button(params Element[] children)
+            : base(children)
+        {
+            TagName = "button";
         }
     }
 }

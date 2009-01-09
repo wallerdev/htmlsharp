@@ -2,63 +2,69 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    class Area : Tag
+    public class Area : Tag
     {
-        public string Accesskey {  get { return this["accesskey"]; } }
+        public string Accesskey { get { return this["accesskey"]; } }
 
-        public string Alt {  get { return this["alt"]; } }
+        public string Alt { get { return this["alt"]; } }
 
-        public string Class {  get { return this["class"]; } }
+        public string Class { get { return this["class"]; } }
 
-        public string Coords {  get { return this["coords"]; } }
+        public string Coords { get { return this["coords"]; } }
 
-        public string Dir {  get { return this["dir"]; } }
+        public string Dir { get { return this["dir"]; } }
 
-        public string Href {  get { return this["href"]; } }
+        public string Href { get { return this["href"]; } }
 
-        public string Id {  get { return this["id"]; } }
+        public string Id { get { return this["id"]; } }
 
-        public string Lang {  get { return this["lang"]; } }
+        public string Lang { get { return this["lang"]; } }
 
-        public string Nohref {  get { return this["nohref"]; } }
+        public string Nohref { get { return this["nohref"]; } }
 
-        public string Onblur {  get { return this["onblur"]; } }
+        public string Onblur { get { return this["onblur"]; } }
 
-        public string Onclick {  get { return this["onclick"]; } }
+        public string Onclick { get { return this["onclick"]; } }
 
-        public string Ondblclick {  get { return this["ondblclick"]; } }
+        public string Ondblclick { get { return this["ondblclick"]; } }
 
-        public string Onfocus {  get { return this["onfocus"]; } }
+        public string Onfocus { get { return this["onfocus"]; } }
 
-        public string Onkeydown {  get { return this["onkeydown"]; } }
+        public string Onkeydown { get { return this["onkeydown"]; } }
 
-        public string Onkeypress {  get { return this["onkeypress"]; } }
+        public string Onkeypress { get { return this["onkeypress"]; } }
 
-        public string Onkeyup {  get { return this["onkeyup"]; } }
+        public string Onkeyup { get { return this["onkeyup"]; } }
 
-        public string Onmousedown {  get { return this["onmousedown"]; } }
+        public string Onmousedown { get { return this["onmousedown"]; } }
 
-        public string Onmousemove {  get { return this["onmousemove"]; } }
+        public string Onmousemove { get { return this["onmousemove"]; } }
 
-        public string Onmouseout {  get { return this["onmouseout"]; } }
+        public string Onmouseout { get { return this["onmouseout"]; } }
 
-        public string Onmouseover {  get { return this["onmouseover"]; } }
+        public string Onmouseover { get { return this["onmouseover"]; } }
 
-        public string Onmouseup {  get { return this["onmouseup"]; } }
+        public string Onmouseup { get { return this["onmouseup"]; } }
 
-        public string Shape {  get { return this["shape"]; } }
+        public string Shape { get { return this["shape"]; } }
 
-        public string Style {  get { return this["style"]; } }
+        public string Style { get { return this["style"]; } }
 
-        public string Tabindex {  get { return this["tabindex"]; } }
+        public string Tabindex { get { return this["tabindex"]; } }
 
-        public string Target {  get { return this["target"]; } }
+        public string Target { get { return this["target"]; } }
 
-        public string Title {  get { return this["title"]; } }
+        public string Title { get { return this["title"]; } }
 
         public Area()
+            : this(new Element[0])
         {
-            
+        }
+
+        public Area(params Element[] children)
+            : base(children)
+        {
+            TagName = "area";
         }
     }
 }

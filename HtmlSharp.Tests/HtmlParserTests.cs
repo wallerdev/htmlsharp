@@ -5,6 +5,7 @@ using System.Text;
 using HtmlSharp;
 using MbUnit.Framework;
 using HtmlSharp.Elements;
+using HtmlSharp.Elements.Tags;
 
 namespace HtmlSharp.Tests
 {
@@ -21,107 +22,100 @@ namespace HtmlSharp.Tests
         [Test]
         public void TestSingleEmptyTag()
         {
+            parser = new HtmlParser();
             var page = parser.Parse("<tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag")));
         }
 
         [Test]
         public void TestSingleTagWithoutContentAndWithClosingTag()
         {
             var page = parser.Parse("<tag></tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag")));
         }
 
         [Test]
         public void TestSingleTagWithoutContentAndWithSelfClosingTag()
         {
             var page = parser.Parse("<tag/>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag")));
         }
 
         [Test]
         public void TestSingleTagWithContent()
         {
             var page = parser.Parse("<tag>content");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[0].Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new Text() { Value = "content" })));
         }
 
         [Test]
         public void TestSingleTagWithContentAndWithClosingTag()
         {
             var page = parser.Parse("<tag>content</tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[0].Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new Text() { Value = "content" })));
         }
 
         [Test]
         public void TestRepeatedTagsWithoutContent()
         {
             var page = parser.Parse("<tag><tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[1]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag"), new UnknownTag("tag")));
         }
 
         [Test]
         public void TestRepeatedTagsWithoutContentAndWithClosingTag()
         {
             var page = parser.Parse("<tag></tag><tag></tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[1]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag"), new UnknownTag("tag")));
         }
 
         [Test]
         public void TestRepeatedTagsWithContent()
         {
             var page = parser.Parse("<tag>content<tag>content");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[0].Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[1]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[1].Children[0]);
+            Assert.AreEqual(page.Root, new Root(
+                new UnknownTag("tag", new Text() { Value = "content" }),
+                new UnknownTag("tag", new Text() { Value = "content" })));
         }
 
         [Test]
         public void TestRepeatedTagsWithContentAndWithClosingTags()
         {
             var page = parser.Parse("<tag>content</tag><tag>content</tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[0].Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[1]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[1].Children[0]);
+            Assert.AreEqual(page.Root, new Root(
+                new UnknownTag("tag", new Text() { Value = "content" }),
+                new UnknownTag("tag", new Text() { Value = "content" })));
         }
 
         [Test]
         public void TestNestedTags()
         {
             var page = parser.Parse("<tag><innertag></tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0].Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new UnknownTag("innertag"))));
         }
 
         [Test]
         public void TestNestedTagsWithContent()
         {
             var page = parser.Parse("<tag><innertag>content</tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0].Children[0]);
-            Assert.IsInstanceOfType(typeof(Text), page.Root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual(page.Root, new Root(
+                new UnknownTag("tag",
+                    new UnknownTag("innertag",
+                        new Text() { Value = "content" }))));
         }
 
         [Test]
         public void TestDuplicateRepeatedTags()
         {
             var page = parser.Parse("<tag><tag></tag>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[1]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag"), new UnknownTag("tag")));
         }
 
         [Test]
         public void TestUnecessaryClosingTags()
         {
             var page = parser.Parse("<tag></tag></tag></innertag>");
-            Assert.AreEqual(1, page.Root.Children.Count);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag")));
         }
 
         //Nestable Tags
@@ -129,9 +123,9 @@ namespace HtmlSharp.Tests
         [Test]
         public void TestDuplicateNestedNestableTags()
         {
+            parser = new HtmlParser();
             var page = parser.Parse("<div><div></div>");
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0]);
-            Assert.IsInstanceOfType(typeof(Tag), page.Root.Children[0].Children[0]);
+            Assert.IsTrue(page.Root.Equals(new Root(new Div(new Div()))));
         }
     }
 }

@@ -118,7 +118,7 @@
     <Compile Include="Elements\Tags\Param.cs" />
     <Compile Include="Elements\Tags\Pre.cs" />
     <Compile Include="Elements\Tags\Q.cs" />
-    <Compile Include="Elements\Root.cs" />
+    <Compile Include="Elements\Tags\Root.cs" />
     <Compile Include="Elements\Tags\S.cs" />
     <Compile Include="Elements\Tags\Samp.cs" />
     <Compile Include="Elements\Tags\Script.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="Elements\ProcessingInstruction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elements\Tag.cs" />
-    <Compile Include="Elements\Tags\Text.cs" />
+    <Compile Include="Elements\Text.cs" />
     <Compile Include="TagAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

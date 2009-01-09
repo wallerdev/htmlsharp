@@ -2,23 +2,29 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    class Script : Tag, IAllowsNesting
+    public class Script : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[] {  }; } }
+        public Type[] NestingBreakers { get { return new Type[0]; } }
 
-        public string Charset {  get { return this["charset"]; } }
+        public string Charset { get { return this["charset"]; } }
 
-        public string Defer {  get { return this["defer"]; } }
+        public string Defer { get { return this["defer"]; } }
 
-        public string Language {  get { return this["language"]; } }
+        public string Language { get { return this["language"]; } }
 
-        public string Src {  get { return this["src"]; } }
+        public string Src { get { return this["src"]; } }
 
-        public string Type {  get { return this["type"]; } }
+        public string Type { get { return this["type"]; } }
 
         public Script()
+            : this(new Element[0])
         {
-            
+        }
+
+        public Script(params Element[] children)
+            : base(children)
+        {
+            TagName = "script";
         }
     }
 }

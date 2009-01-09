@@ -106,7 +106,8 @@ namespace HtmlSharp.Elements
             {"tt", () => new Tt()},
             {"u", () => new U()},
             {"ul", () => new Ul()},
-            {"var", () => new Var()}
+            {"var", () => new Var()},
+            {"[document]", () => new Root()}
         };
 
         public static Tag Create(string name)
@@ -122,6 +123,12 @@ namespace HtmlSharp.Elements
         {
             Children = new List<Element>();
             Attributes = new List<TagAttribute>();
+        }
+
+        public Tag(params Element[] children)
+            : this()
+        {
+            Children.AddRange(children);
         }
 
         public string this[string attribute]
@@ -145,7 +152,7 @@ namespace HtmlSharp.Elements
                 {
                     return false;
                 }
-                return Attributes.SequenceEqual(t.Attributes);
+                return Attributes.SequenceEqual(t.Attributes) && Children.SequenceEqual(t.Children);
             }
         }
 
