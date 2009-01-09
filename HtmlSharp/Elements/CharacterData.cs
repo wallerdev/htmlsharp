@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public class CharacterData : Text
+    public class CharacterData : HtmlText
     {
 
     }

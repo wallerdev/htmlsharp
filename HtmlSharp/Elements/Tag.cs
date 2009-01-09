@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HtmlSharp.Elements.Tags;
+using System.Collections.ObjectModel;
 
 namespace HtmlSharp.Elements
 {
     public abstract class Tag : Element
     {
+        Dictionary<string, TagAttribute> attributes = new Dictionary<string, TagAttribute>();
         public bool Hidden { get; protected set; }
-        public List<TagAttribute> Attributes { get; private set; }
+        public IEnumerable<TagAttribute> Attributes { get { return attributes.Values; } }
         public string TagName { get; protected set; }
         public bool IsSelfClosing { get; protected set; }
         public bool ResetsNesting { get; protected set; }
@@ -49,7 +51,7 @@ namespace HtmlSharp.Elements
             {"font", () => new Font()},
             {"form", () => new Form()},
             {"frame", () => new Frame()},
-            {"frameset", () => new FrameSet()},
+            {"frameset", () => new Frameset()},
             {"h1", () => new H1()},
             {"h2", () => new H2()},
             {"h3", () => new H3()},
@@ -121,22 +123,29 @@ namespace HtmlSharp.Elements
 
         protected Tag()
         {
-            Children = new List<Element>();
-            Attributes = new List<TagAttribute>();
+            attributes = new Dictionary<string, TagAttribute>();
         }
 
-        public Tag(params Element[] children)
+        protected Tag(params Element[] children)
             : this()
         {
-            Children.AddRange(children);
+            foreach (var child in children)
+            {
+                AddChild(child);
+            }
         }
 
         public string this[string attribute]
         {
             get
             {
-                return Attributes.Single(x => x.Name == attribute).Value;
+                return attributes[attribute].Value;
             }
+        }
+
+        public void AddAttribute(TagAttribute attribute)
+        {
+            attributes.Add(attribute.Name, attribute);
         }
 
         public override bool Equals(object obj)

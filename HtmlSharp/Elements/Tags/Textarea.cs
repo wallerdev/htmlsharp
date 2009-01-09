@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
     public class TextArea : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[0]; } }
+        public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
 
         public string Accesskey { get { return this["accesskey"]; } }
 
@@ -50,7 +51,7 @@ namespace HtmlSharp.Elements.Tags
 
         public string Onselect { get { return this["onselect"]; } }
 
-        public string Readonly { get { return this["readonly"]; } }
+        public string ReadOnly { get { return this["readonly"]; } }
 
         public string Rows { get { return this["rows"]; } }
 

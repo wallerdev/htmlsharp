@@ -61,7 +61,7 @@
     <Compile Include="HtmlParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagAttributeTests.cs" />
-    <Compile Include="TextTests.cs" />
+    <Compile Include="HtmlTextTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

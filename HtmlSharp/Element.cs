@@ -7,28 +7,34 @@ namespace HtmlSharp
 {
     public abstract class Element
     {
+        private List<Element> children = new List<Element>();
+
         public Element Parent { get; set; }
         public Element Previous { get; set; }
         public Element Next { get; set; }
         public Element NextSibling { get; set; }
         public Element PreviousSibling { get; set; }
 
-        public List<Element> Children { get; protected set; }
-
+        public IEnumerable<Element> Children { get { return children; } }
+        
         protected Element()
         {
-            Children = new List<Element>();
         }
 
         public void Setup(Element parent, Element previous)
         {
             Parent = parent;
             Previous = previous;
-            if (Parent != null && Parent.Children.Count > 0)
+            if (Parent != null && Parent.children.Count > 0)
             {
-                PreviousSibling = Parent.Children[Parent.Children.Count - 1];
+                PreviousSibling = Parent.children[Parent.children.Count - 1];
                 PreviousSibling.NextSibling = this;
             }
+        }
+
+        internal void AddChild(Element element)
+        {
+            children.Add(element);
         }
     }
 }

@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class FrameSet : Tag, IAllowsNesting
+    public class Frameset : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[0]; } }
+        public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
 
         public string Class { get { return this["class"]; } }
 
@@ -22,12 +23,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public FrameSet()
+        public Frameset()
             : this(new Element[0])
         {
         }
 
-        public FrameSet(params Element[] children)
+        public Frameset(params Element[] children)
             : base(children)
         {
             TagName = "frameset";

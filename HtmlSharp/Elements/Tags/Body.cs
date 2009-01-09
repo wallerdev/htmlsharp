@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
     public class Body : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[0]; } }
+        public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
 
         public string Alink { get { return this["alink"]; } }
 

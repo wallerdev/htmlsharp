@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
@@ -58,7 +59,7 @@ namespace HtmlSharp.Elements.Tags
 
         public string Onselect { get { return this["onselect"]; } }
 
-        public string Readonly { get { return this["readonly"]; } }
+        public string ReadOnly { get { return this["readonly"]; } }
 
         public string Size { get { return this["size"]; } }
 

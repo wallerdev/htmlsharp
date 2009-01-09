@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public class ProcessingInstruction : Text
+    public class ProcessingInstruction : HtmlText
     {
         public override string ToString()
         {

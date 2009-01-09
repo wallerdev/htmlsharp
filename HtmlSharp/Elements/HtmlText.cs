@@ -6,7 +6,7 @@ using HtmlSharp.Extensions;
 
 namespace HtmlSharp.Elements
 {
-    public class Text : Element
+    public class HtmlText : Element
     {
         string _value;
         public string Value
@@ -28,7 +28,7 @@ namespace HtmlSharp.Elements
             }
             else
             {
-                Text t = (Text)obj;
+                HtmlText t = (HtmlText)obj;
                 return t.Value.Equals(Value);
             }
         }

@@ -45,14 +45,14 @@ namespace HtmlSharp.Tests
         public void TestSingleTagWithContent()
         {
             var page = parser.Parse("<tag>content");
-            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new Text() { Value = "content" })));
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new HtmlText() { Value = "content" })));
         }
 
         [Test]
         public void TestSingleTagWithContentAndWithClosingTag()
         {
             var page = parser.Parse("<tag>content</tag>");
-            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new Text() { Value = "content" })));
+            Assert.AreEqual(page.Root, new Root(new UnknownTag("tag", new HtmlText() { Value = "content" })));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace HtmlSharp.Tests
         {
             var page = parser.Parse("<tag>content<tag>content");
             Assert.AreEqual(page.Root, new Root(
-                new UnknownTag("tag", new Text() { Value = "content" }),
-                new UnknownTag("tag", new Text() { Value = "content" })));
+                new UnknownTag("tag", new HtmlText() { Value = "content" }),
+                new UnknownTag("tag", new HtmlText() { Value = "content" })));
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace HtmlSharp.Tests
         {
             var page = parser.Parse("<tag>content</tag><tag>content</tag>");
             Assert.AreEqual(page.Root, new Root(
-                new UnknownTag("tag", new Text() { Value = "content" }),
-                new UnknownTag("tag", new Text() { Value = "content" })));
+                new UnknownTag("tag", new HtmlText() { Value = "content" }),
+                new UnknownTag("tag", new HtmlText() { Value = "content" })));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(page.Root, new Root(
                 new UnknownTag("tag",
                     new UnknownTag("innertag",
-                        new Text() { Value = "content" }))));
+                        new HtmlText() { Value = "content" }))));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace HtmlSharp.Tests
         {
             parser = new HtmlParser();
             var page = parser.Parse("<div><div></div>");
-            Assert.IsTrue(page.Root.Equals(new Root(new Div(new Div()))));
+            Assert.AreEqual(page.Root, new Root(new Div(new Div())));
         }
     }
 }

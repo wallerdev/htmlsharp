@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public class Comment : Text
+    public class Comment : HtmlText
     {
         public override string ToString()
         {

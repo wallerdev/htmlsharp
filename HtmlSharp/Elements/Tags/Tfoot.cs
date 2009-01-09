@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
     public class TFoot : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[] { typeof(Table) }; } }
+        public IEnumerable<Type> NestingBreakers { get { return new Type[] { typeof(Table) }; } }
 
         public string Align { get { return this["align"]; } }
 

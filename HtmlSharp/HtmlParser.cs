@@ -11,26 +11,6 @@ namespace HtmlSharp
 {
     public class HtmlParser
     {
-        bool cDataMode;
-        bool CDataMode
-        {
-            get
-            {
-                return cDataMode;
-            }
-            set
-            {
-                if (value)
-                {
-                    interesting = interestingCData;
-                }
-                else
-                {
-                    interesting = interestingNormal;
-                }
-                cDataMode = value;
-            }
-        }
         //parser 
         Regex declnameMatch = new Regex(@"[a-zA-Z][-_.a-zA-Z0-9]*\s*");
         Regex declareStringLit = new Regex(@"('[^']*\'|""[^""]*"")\s*");
@@ -74,8 +54,6 @@ namespace HtmlSharp
             { "textarea", null }
         };
 
-        bool literal;
-
         Stack<string> quoteStack = new Stack<string>();
 
         public HtmlParser()
@@ -99,7 +77,7 @@ namespace HtmlSharp
                 //markup massage
             }
             html += data;
-            GoAhead(false);
+            GoAhead();
             EndData();
             while (currentTag != root)
             {
@@ -107,12 +85,19 @@ namespace HtmlSharp
             }
         }
 
-        void Close()
+        void SetCDataMode(bool value)
         {
-            GoAhead(true);
+            if (value)
+            {
+                interesting = interestingCData;
+            }
+            else
+            {
+                interesting = interestingNormal;
+            }
         }
 
-        void GoAhead(bool end)
+        void GoAhead()
         {
             int i = 0;
             int j;
@@ -175,10 +160,6 @@ namespace HtmlSharp
                     }
                     if (k < 0)
                     {
-                        if (end)
-                        {
-                            throw new Exception("EOF in middle of construct");
-                        }
                         break;
                     }
                     i = UpdatePosition(i, k);
@@ -188,23 +169,7 @@ namespace HtmlSharp
                     throw new Exception("interesting.search() lied");
                 }
             }
-
-            if (end && i < html.Length)
-            {
-                HandleData(html.Substring(i, html.Length - i));
-                i = UpdatePosition(i, html.Length);
-            }
             html = html.Substring(i);
-        }
-
-        void HandleEntityReference(string name)
-        {
-            HandleData(HttpUtility.HtmlDecode(name));
-        }
-
-        void HandleCharacterReference(string name)
-        {
-            HandleData(HttpUtility.HtmlDecode(name));
         }
 
         int RealParseDeclaration(int i)
@@ -220,7 +185,7 @@ namespace HtmlSharp
             //# ATTLIST, NOTATION, SHORTREF, USEMAP,
             //# LINKTYPE, LINK, IDLINK, USELINK, SYSTEM
             int j = i + 2;
-            string decltype, name;
+            string decltype;
 
             if (j >= html.Length || html[j] == '-')
             {
@@ -271,10 +236,6 @@ namespace HtmlSharp
                     {
                         HandleDeclaration(data);
                     }
-                    else
-                    {
-                        UnknownDeclaration(data);
-                    }
                     return j + 1;
                 }
                 if (c == '"' || c == '\'')
@@ -289,7 +250,6 @@ namespace HtmlSharp
                 else if (Char.IsLetter(c))
                 {
                     KeyValuePair<string, int> both = ScanName(j, i);
-                    name = both.Key;
                     j = both.Value;
                 }
                 else if (otherChars.Contains(c))
@@ -482,7 +442,6 @@ namespace HtmlSharp
         int ParseDoctypeAttlist(int i, int declstartpos)
         {
             var both = ScanName(i, declstartpos);
-            string name = both.Key;
             int j = both.Value;
             if (j >= html.Length)
             {
@@ -498,7 +457,6 @@ namespace HtmlSharp
                 // scan a series of attribute descriptions; simplified:
                 // name type [value] [#constraint]
                 both = ScanName(j, declstartpos);
-                name = both.Key;
                 j = both.Value;
                 if (j < 0)
                 {
@@ -531,7 +489,6 @@ namespace HtmlSharp
                 else
                 {
                     both = ScanName(j, declstartpos);
-                    name = both.Key;
                     j = both.Value;
                 }
 
@@ -565,7 +522,6 @@ namespace HtmlSharp
                         return -1;
                     }
                     both = ScanName(j + 1, declstartpos);
-                    name = both.Key;
                     j = both.Value;
                     if (j < 0)
                     {
@@ -586,7 +542,6 @@ namespace HtmlSharp
         int ParseDoctypeNotation(int i, int declstartpos)
         {
             var both = ScanName(i, declstartpos);
-            string name = both.Key;
             int j = both.Value;
             char c;
             if (j < 0)
@@ -616,7 +571,6 @@ namespace HtmlSharp
                 else
                 {
                     both = ScanName(j, declstartpos);
-                    name = both.Key;
                     j = both.Value;
                     if (j < 0)
                     {
@@ -712,11 +666,6 @@ namespace HtmlSharp
             return -1;
         }
 
-        void UnknownDeclaration(string data)
-        {
-
-        }
-
         void HandleDeclaration(string text)
         {
             ToStringSubClass(text, new Declaration());
@@ -793,7 +742,6 @@ namespace HtmlSharp
                 return -1;
             }
             j = match.Index;
-            UnknownDeclaration(html.Substring(i + 3, j - (i + 3)));
             return match.Index + match.Length;
         }
 
@@ -823,7 +771,7 @@ namespace HtmlSharp
             ToStringSubClass(text, new ProcessingInstruction());
         }
 
-        void ToStringSubClass(string text, Text p)
+        void ToStringSubClass(string text, HtmlText p)
         {
             EndData();
             HandleData(text);
@@ -836,8 +784,7 @@ namespace HtmlSharp
         }
 
         int ParseStartTag(int i)
-        {
-            int startPos = i;
+        {            
             int endPos = CheckForWholeStartTag(i);
             if (endPos < 0)
             {
@@ -869,7 +816,7 @@ namespace HtmlSharp
                 {
                     attributeValue = attributeValue.Substring(1, attributeValue.Length - 2);
                 }
-                tag.Attributes.Add(new TagAttribute(attributeName, attributeValue));
+                tag.AddAttribute(new TagAttribute(attributeName, attributeValue));
                 k = k + match.Length;
             }
 
@@ -900,7 +847,7 @@ namespace HtmlSharp
                 HandleStartTag(tag);
                 if (CDataContentElements.Contains(tag.TagName))
                 {
-                    CDataMode = true;
+                    SetCDataMode(true);
                 }
             }
 
@@ -973,7 +920,7 @@ namespace HtmlSharp
 
             string tag = match.Groups[1].Value;
             HandleEndTag(tag.ToLower());
-            CDataMode = false;
+            SetCDataMode(false);
             return j;
         }
 
@@ -1040,7 +987,6 @@ namespace HtmlSharp
             if (quoteTags.ContainsKey(tag.TagName))
             {
                 quoteStack.Push(tag.TagName);
-                literal = true;
             }
         }
 
@@ -1058,7 +1004,7 @@ namespace HtmlSharp
         {
             if (currentTag != null)
             {
-                currentTag.Children.Add(tag);
+                currentTag.AddChild(tag);
             }
             tagStack.Push(tag);
             currentTag = tagStack.Peek();
@@ -1111,17 +1057,15 @@ namespace HtmlSharp
             PopToTag(popTo, true);
         }
 
-        void EndData(Text containerClass)
+        void EndData(HtmlText containerClass)
         {
             if (currentData.Count > 0)
             {
-                StringBuilder builder = new StringBuilder();
                 string data = currentData.Aggregate(new StringBuilder(), (x, y) => x.Append(y)).ToString();
 
-
-
+                //TODO: clean this up
                 char[] spaceChars = { (char)9, (char)10, (char)12, (char)13, (char)32 };
-                if (new string(data.Where(c => !spaceChars.Contains(c)).ToArray()) == "")
+                if (string.IsNullOrEmpty(new string(data.Where(c => !spaceChars.Contains(c)).ToArray())))
                 {
                     if (preserveWhitespaceTags.Intersect(tagStack.Select(tag => tag.TagName)).Count() == 0)
                     {
@@ -1136,7 +1080,7 @@ namespace HtmlSharp
                     }
                 }
                 currentData = new List<string>();
-                Text o = containerClass;
+                HtmlText o = containerClass;
                 o.Value = data;
                 o.Setup(currentTag, root.Previous);
                 if (root.Previous != null)
@@ -1144,18 +1088,13 @@ namespace HtmlSharp
                     root.Previous.Next = o;
                 }
                 root.Previous = o;
-                currentTag.Children.Add(o);
+                currentTag.AddChild(o);
             }
         }
 
         void EndData()
         {
-            EndData(new Text());
-        }
-
-        void ExtractCharsetFromMeta(List<KeyValuePair<string, string>> attributes)
-        {
-            //throw new NotImplementedException();
+            EndData(new HtmlText());
         }
 
         void HandleEndTag(string tag)
@@ -1176,7 +1115,6 @@ namespace HtmlSharp
             if (quoteStack.Count > 0 && quoteStack.Peek() == tag)
             {
                 quoteStack.Pop();
-                literal = quoteStack.Count > 0;
             }
         }
 

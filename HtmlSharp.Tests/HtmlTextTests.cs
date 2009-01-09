@@ -7,12 +7,12 @@ using HtmlSharp.Elements;
 
 namespace HtmlSharp.Tests
 {
-    public class TextTests
+    public class HtmlTextTests
     {
         [Test]
         public void TestHtmlDecodingValue()
         {
-            var tag = new Text();
+            var tag = new HtmlText();
             tag.Value = "10 &lt; 20";
             Assert.AreEqual("10 < 20", tag.Value);
             Assert.AreEqual("10 < 20", tag.ToString());

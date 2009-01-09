@@ -7,6 +7,6 @@ namespace HtmlSharp.Elements
 {
     public interface IAllowsNesting
     {
-        Type[] NestingBreakers { get; }
+        IEnumerable<Type> NestingBreakers { get; }
     }
 }
