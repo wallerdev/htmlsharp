@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using HtmlSharp.Elements;
 using HtmlSharp.Extensions;
+using System.Globalization;
 
 namespace HtmlSharp
 {
@@ -164,10 +165,6 @@ namespace HtmlSharp
                     }
                     i = UpdatePosition(i, k);
                 }
-                else
-                {
-                    throw new Exception("interesting.search() lied");
-                }
             }
             html = html.Substring(i);
         }
@@ -268,16 +265,16 @@ namespace HtmlSharp
                         //# also in data attribute specifications of attlist declaration
                         //# also link type declaration subsets in linktype declarations
                         //# also link attribute specification lists in link declarations
-                        throw new Exception("Unsupported [ char in declaration: " + decltype);
+                        throw new HtmlParseException("Unsupported [ char in declaration: " + decltype);
                     }
                     else
                     {
-                        throw new Exception("Unexpected [ char in declaration");
+                        throw new HtmlParseException("Unexpected [ char in declaration");
                     }
                 }
                 else
                 {
-                    throw new Exception("Unexpected  char in declaration: " + html[j]);
+                    throw new HtmlParseException("Unexpected  char in declaration: " + html[j]);
                 }
                 if (j < 0)
                 {
@@ -292,7 +289,7 @@ namespace HtmlSharp
             int j;
             if (html.Substring(i, i + 9) == "<![CDATA[")
             {
-                int k = html.IndexOf("]]>", i);
+                int k = html.IndexOf("]]>", i, StringComparison.Ordinal);
                 if (k == -1)
                 {
                     k = html.Length;
@@ -334,7 +331,7 @@ namespace HtmlSharp
                     if (s != "<!")
                     {
                         UpdatePosition(declstartpos, j + 1);
-                        throw new Exception("unexpected char in internal subset: " + s);
+                        throw new HtmlParseException("Unexpected char in internal subset: " + s);
                     }
                     if (j + 2 == html.Length)
                     {
@@ -377,7 +374,7 @@ namespace HtmlSharp
                     else
                     {
                         UpdatePosition(declstartpos, j + 2);
-                        throw new Exception("Unknown declaration in internal subset: " + name);
+                        throw new HtmlParseException("Unknown declaration in internal subset: " + name);
                     }
                     if (j < 0)
                     {
@@ -418,7 +415,7 @@ namespace HtmlSharp
                             return j;
                         }
                         UpdatePosition(declstartpos, j);
-                        throw new Exception("Unexpected char after internal subset");
+                        throw new HtmlParseException("Unexpected char after internal subset");
                     }
                     else
                     {
@@ -432,7 +429,7 @@ namespace HtmlSharp
                 else
                 {
                     UpdatePosition(declstartpos, j);
-                    throw new Exception("unexpected char in internal subset: " + c);
+                    throw new HtmlParseException("Unexpected char in internal subset: " + c);
                 }
             }
 
@@ -471,7 +468,7 @@ namespace HtmlSharp
                 {
                     if (html.Substring(j).Contains(")"))
                     {
-                        j = html.IndexOf(")", j) + 1;
+                        j = html.IndexOf(")", j, StringComparison.Ordinal) + 1;
                     }
                     else
                     {
@@ -661,7 +658,7 @@ namespace HtmlSharp
             // style content model: just skip until '>'
             if (html.Substring(j).Contains('>'))
             {
-                return html.IndexOf(">", j) + 1;
+                return html.IndexOf(">", j, StringComparison.Ordinal) + 1;
             }
             return -1;
         }
@@ -686,12 +683,12 @@ namespace HtmlSharp
                 {
                     return new KeyValuePair<string, int>(null, -1);
                 }
-                return new KeyValuePair<string, int>(name.ToLower(), i + m.Length);
+                return new KeyValuePair<string, int>(name.ToLowerInvariant(), i + m.Length);
             }
             else
             {
                 UpdatePosition(declstartpos, i);
-                throw new Exception("expected name token");
+                throw new HtmlParseException("Expected name token.");
             }
         }
 
@@ -735,7 +732,7 @@ namespace HtmlSharp
             }
             else
             {
-                throw new Exception("Unknown status keyword in marked section: " + html.Substring(i + 3, j - (i + 3)));
+                throw new HtmlParseException("Unknown status keyword in marked section: " + html.Substring(i + 3, j - (i + 3)));
             }
             if (!match.Success)
             {
@@ -747,10 +744,6 @@ namespace HtmlSharp
 
         int ParseProcessingInstruction(int i)
         {
-            if (html.Substring(i, 2) != "<?")
-            {
-                throw new Exception("Unexpected call to parseProcessingInstring");
-            }
             Match match = processingInstructionClose.Match(html, i + 2);
             if (!match.Success)
             {
@@ -764,10 +757,6 @@ namespace HtmlSharp
 
         void HandleProcessingInstruction(string text)
         {
-            if (text.Substring(0, 3) == "xml")
-            {
-                text = "xml version='1.0' encoding='%SOUP-ENCODING%'";
-            }
             ToStringSubClass(text, new ProcessingInstruction());
         }
 
@@ -794,7 +783,7 @@ namespace HtmlSharp
 
             Match match = tagFind.MatchAtIndex(html, i + 1);
             int k = i + 1 + match.Length;
-            lastTag = html.Substring(i + 1, k - (i + 1)).ToLower();
+            lastTag = html.Substring(i + 1, k - (i + 1)).ToLowerInvariant();
             Tag tag = Tag.Create(lastTag);
 
             while (k < endPos)
@@ -835,10 +824,10 @@ namespace HtmlSharp
                 {
                     off = off + starttagText.Length;
                 }
-                throw new Exception("Junk characters in start tag: " + starttagText);
+                throw new HtmlParseException("Junk characters in start tag: " + starttagText);
             }
 
-            if (end.EndsWith("/>"))
+            if (end.EndsWith("/>", StringComparison.Ordinal))
             {
                 HandleStartEndTag(tag);
             }
@@ -898,14 +887,13 @@ namespace HtmlSharp
                     return -1;
                 }
                 UpdatePosition(i, j);
-                throw new Exception("Malformed start tag");
+                throw new HtmlParseException("Malformed start tag");
             }
-            throw new Exception("This shouldnt happen");
+            throw new HtmlParseException("Invalid call");
         }
 
         int ParseEndTag(int i)
         {
-
             Match match = endEndTag.Match(html, i + 1);
             if (!match.Success)
             {
@@ -915,11 +903,11 @@ namespace HtmlSharp
             match = endTagFind.MatchAtIndex(html, i);
             if (!match.Success)
             {
-                throw new Exception("bad end tag");
+                throw new HtmlParseException("Bad end tag.");
             }
 
             string tag = match.Groups[1].Value;
-            HandleEndTag(tag.ToLower());
+            HandleEndTag(tag.ToLowerInvariant());
             SetCDataMode(false);
             return j;
         }
@@ -931,10 +919,6 @@ namespace HtmlSharp
 
         int ParseComment(int i, bool report)
         {
-            if (html.Substring(i, 4) != "<!--")
-            {
-                throw new Exception("unexpected call to parse_comment()");
-            }
             Match match = commentClose.Match(html, i + 4);
             if (!match.Success)
             {
@@ -961,9 +945,9 @@ namespace HtmlSharp
                 string attrs = string.Empty;
                 foreach (var attrib in tag.Attributes)
                 {
-                    attrs += string.Format(" {0}=\"{1}\"", attrib.Name, attrib.Value);
+                    attrs += string.Format(CultureInfo.InvariantCulture, " {0}=\"{1}\"", attrib.Name, attrib.Value);
                 }
-                HandleData(string.Format("<{0}{1}>", tag.TagName, attrs));
+                HandleData(string.Format(CultureInfo.InvariantCulture, "<{0}{1}>", tag.TagName, attrs));
             }
             EndData();
             if (!tag.IsSelfClosing)
@@ -1107,7 +1091,7 @@ namespace HtmlSharp
             if (quoteStack.Count > 0 && quoteStack.Peek() != tag)
             {
                 //not a real tag
-                HandleData(string.Format("</{0}>", tag));
+                HandleData("</" + tag + ">");
                 return;
             }
             EndData();

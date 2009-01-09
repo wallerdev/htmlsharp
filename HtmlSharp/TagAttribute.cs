@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HtmlSharp.Extensions;
+using System.Globalization;
 
 namespace HtmlSharp
 {
@@ -25,7 +26,7 @@ namespace HtmlSharp
 
         public TagAttribute(string name, string value)
         {
-            Name = name.ToLower();
+            Name = name.ToLowerInvariant();
             Value = value;
         }
 
@@ -49,7 +50,7 @@ namespace HtmlSharp
 
         public override string ToString()
         {
-            return string.Format("{0}=\"{1}\"", Name, Value);
+            return string.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\"", Name, Value);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace HtmlSharp.Elements
     {
         public override string ToString()
         {
-            return string.Format("<?{0}?>", base.ToString());
+            return "<?" + base.ToString() + "?>";
         }
     }
 }

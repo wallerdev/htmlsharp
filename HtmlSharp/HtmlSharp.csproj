@@ -146,6 +146,7 @@
     <Compile Include="Elements\Tags\Var.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="HtmlEncoder.cs" />
+    <Compile Include="HtmlParseException.cs" />
     <Compile Include="HtmlParser.cs" />
     <Compile Include="Document.cs">
       <SubType>Code</SubType>

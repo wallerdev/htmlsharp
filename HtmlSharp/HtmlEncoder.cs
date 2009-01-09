@@ -292,11 +292,11 @@ namespace HtmlSharp
                                     {
                                         if ((entity[1] == 'x') || (entity[1] == 'X'))
                                         {
-                                            value = (char)((ushort)int.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier));
+                                            value = (char)((ushort)int.Parse(entity.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture));
                                         }
                                         else
                                         {
-                                            value = (char)((ushort)int.Parse(entity.Substring(1)));
+                                            value = (char)((ushort)int.Parse(entity.Substring(1), CultureInfo.InvariantCulture));
                                         }
                                         i = index;
                                     }
