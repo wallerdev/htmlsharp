@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Isindex : Tag
+    public class IsIndex : Tag
     {
         public string Class { get { return this["class"]; } }
 
@@ -18,12 +18,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Isindex()
+        public IsIndex()
             : this(new Element[0])
         {
         }
 
-        public Isindex(params Element[] children)
+        public IsIndex(params Element[] children)
             : base(children)
         {
             TagName = "isindex";

@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Fieldset : Tag, IAllowsNesting
+    public class FieldSet : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -38,12 +38,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Fieldset()
+        public FieldSet()
             : this(new Element[0])
         {
         }
 
-        public Fieldset(params Element[] children)
+        public FieldSet(params Element[] children)
             : base(children)
         {
             ResetsNesting = true;

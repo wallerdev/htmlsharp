@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Hr : Tag
+    public class HR : Tag
     {
         public string Align { get { return this["align"]; } }
 
@@ -44,12 +44,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Width { get { return this["width"]; } }
 
-        public Hr()
+        public HR()
             : this(new Element[0])
         {
         }
 
-        public Hr(params Element[] children)
+        public HR(params Element[] children)
             : base(children)
         {
             TagName = "hr";

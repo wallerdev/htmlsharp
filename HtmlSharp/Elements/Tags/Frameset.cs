@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Frameset : Tag, IAllowsNesting
+    public class FrameSet : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -22,12 +22,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Frameset()
+        public FrameSet()
             : this(new Element[0])
         {
         }
 
-        public Frameset(params Element[] children)
+        public FrameSet(params Element[] children)
             : base(children)
         {
             TagName = "frameset";

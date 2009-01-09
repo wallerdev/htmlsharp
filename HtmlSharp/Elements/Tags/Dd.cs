@@ -2,9 +2,9 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Dd : Tag, IAllowsNesting
+    public class DD : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[] { typeof(Dl) }; } }
+        public Type[] NestingBreakers { get { return new Type[] { typeof(DL) }; } }
 
         public string Class { get { return this["class"]; } }
 
@@ -38,12 +38,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Dd()
+        public DD()
             : this(new Element[0])
         {
         }
 
-        public Dd(params Element[] children)
+        public DD(params Element[] children)
             : base(children)
         {
             ResetsNesting = true;

@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace HtmlSharp.Extensions
 {
-    public static class Extensions
+    public static class HelperExtensions
     {
         static HtmlEncoder encoder = new HtmlEncoder();
 

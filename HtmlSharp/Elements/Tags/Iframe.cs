@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Iframe : Tag, IAllowsNesting
+    public class IFrame : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -34,12 +34,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Width { get { return this["width"]; } }
 
-        public Iframe()
+        public IFrame()
             : this(new Element[0])
         {
         }
 
-        public Iframe(params Element[] children)
+        public IFrame(params Element[] children)
             : base(children)
         {
             TagName = "iframe";

@@ -15,7 +15,7 @@ namespace HtmlSharp
 
         public List<Element> Children { get; protected set; }
 
-        public Element()
+        protected Element()
         {
             Children = new List<Element>();
         }

@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Textarea : Tag, IAllowsNesting
+    public class TextArea : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -60,12 +60,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Textarea()
+        public TextArea()
             : this(new Element[0])
         {
         }
 
-        public Textarea(params Element[] children)
+        public TextArea(params Element[] children)
             : base(children)
         {
             TagName = "textarea";

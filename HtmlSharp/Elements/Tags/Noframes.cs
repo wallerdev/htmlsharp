@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Noframes : Tag, IAllowsNesting
+    public class NoFrames : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -38,12 +38,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Noframes()
+        public NoFrames()
             : this(new Element[0])
         {
         }
 
-        public Noframes(params Element[] children)
+        public NoFrames(params Element[] children)
             : base(children)
         {
             TagName = "noframes";

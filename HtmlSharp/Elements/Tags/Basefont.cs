@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Basefont : Tag
+    public class BaseFont : Tag
     {
         public string Color { get { return this["color"]; } }
 
@@ -12,12 +12,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Size { get { return this["size"]; } }
 
-        public Basefont()
+        public BaseFont()
             : this(new Element[0])
         {
         }
 
-        public Basefont(params Element[] children)
+        public BaseFont(params Element[] children)
             : base(children)
         {
             TagName = "basefont";

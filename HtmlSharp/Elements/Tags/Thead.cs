@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Thead : Tag, IAllowsNesting
+    public class THead : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[] { typeof(Table) }; } }
 
@@ -46,12 +46,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Valign { get { return this["valign"]; } }
 
-        public Thead()
+        public THead()
             : this(new Element[0])
         {
         }
 
-        public Thead(params Element[] children)
+        public THead(params Element[] children)
             : base(children)
         {
             ResetsNesting = true;

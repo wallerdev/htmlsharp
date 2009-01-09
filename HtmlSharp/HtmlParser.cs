@@ -41,9 +41,6 @@ namespace HtmlSharp
         Regex interestingNormal = new Regex("[<]");
         Regex interestingCData = new Regex(@"<(/|\Z)");
 
-        Regex entityReference = new Regex(@"&([a-zA-Z][-.a-zA-Z0-9]*)[^a-zA-Z0-9]");
-        Regex characterReference = new Regex("&#(?:[0-9]+|[xX][0-9a-fA-F]+)[^0-9a-fA-F]");
-
         Regex startTagOpen = new Regex("<[a-zA-Z]");
         Regex processingInstructionClose = new Regex(">");
         Regex commentClose = new Regex(@"--\s*>");
@@ -63,7 +60,7 @@ namespace HtmlSharp
         string lastTag;
 
         int lineNumber = 1;
-        int offset = 0;
+        int offset;
         Tag currentTag;
         Tag root;
         List<string> currentData = new List<string>();
@@ -658,7 +655,6 @@ namespace HtmlSharp
             }
 
             var both = ScanName(j, declstartpos);
-            string name = both.Key;
             j = both.Value;
             if (j < 0)
             {
@@ -690,7 +686,6 @@ namespace HtmlSharp
                 else
                 {
                     both = ScanName(j, declstartpos);
-                    name = both.Key;
                     j = both.Value;
                     if (j < 0)
                     {
@@ -704,7 +699,6 @@ namespace HtmlSharp
         int ParseDoctypeElement(int i, int declstartpos)
         {
             var both = ScanName(i, declstartpos);
-            string name = both.Key;
             int j = both.Value;
             if (j < 0)
             {

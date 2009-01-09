@@ -2,9 +2,9 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Tr : Tag, IAllowsNesting
+    public class TR : Tag, IAllowsNesting
     {
-        public Type[] NestingBreakers { get { return new Type[] { typeof(Table), typeof(Tbody), typeof(Tfoot), typeof(Thead) }; } }
+        public Type[] NestingBreakers { get { return new Type[] { typeof(Table), typeof(TBody), typeof(TFoot), typeof(THead) }; } }
 
         public string Align { get { return this["align"]; } }
 
@@ -48,12 +48,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Valign { get { return this["valign"]; } }
 
-        public Tr()
+        public TR()
             : this(new Element[0])
         {
         }
 
-        public Tr(params Element[] children)
+        public TR(params Element[] children)
             : base(children)
         {
             ResetsNesting = true;

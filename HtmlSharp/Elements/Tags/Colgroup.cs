@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Colgroup : Tag, IAllowsNesting
+    public class ColGroup : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -50,12 +50,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Width { get { return this["width"]; } }
 
-        public Colgroup()
+        public ColGroup()
             : this(new Element[0])
         {
         }
 
-        public Colgroup(params Element[] children)
+        public ColGroup(params Element[] children)
             : base(children)
         {
             TagName = "colgroup";

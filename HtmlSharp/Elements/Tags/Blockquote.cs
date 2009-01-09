@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Blockquote : Tag, IAllowsNesting
+    public class BlockQuote : Tag, IAllowsNesting
     {
         public Type[] NestingBreakers { get { return new Type[0]; } }
 
@@ -40,12 +40,12 @@ namespace HtmlSharp.Elements.Tags
 
         public string Title { get { return this["title"]; } }
 
-        public Blockquote()
+        public BlockQuote()
             : this(new Element[0])
         {
         }
 
-        public Blockquote(params Element[] children)
+        public BlockQuote(params Element[] children)
             : base(children)
         {
             ResetsNesting = true;
