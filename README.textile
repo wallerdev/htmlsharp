@@ -2,7 +2,6 @@ h1. HtmlSharp
 
 HtmlSharp is a C# library for parsing HTML.
 
-=======
 h2. Usage
 
 Let's say you have the following html stored in a string named html.
