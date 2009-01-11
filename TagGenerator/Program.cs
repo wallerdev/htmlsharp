@@ -222,11 +222,11 @@ namespace HtmlSharp.Elements.Tags
                 //File.Delete(@"C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\HtmlSharp\HtmlSharp\Elements\" +
                 //    new CultureInfo("en-US", false).TextInfo.ToTitleCase(t.Name) + ".cs");
 
-                File.WriteAllText(@"C:\Documents and Settings\Administrator\My Documents\Visual Studio 2008\Projects\HtmlSharp\HtmlSharp\Elements\Tags\" +
+                File.WriteAllText(@"..\..\..\HtmlSharp\Elements\Tags\" +
                     TagClass.GetClassName(t.Name) + ".cs",
                     t.GetClassDefinition());
 
-                Console.WriteLine("{{\"{0}\", () => new {1}()}},", t.Name, TagClass.GetClassName(t.Name));
+                Console.WriteLine("{{\"{0}\", attributes => new {1}(attributes)}},", t.Name, TagClass.GetClassName(t.Name));
             }
 
             Console.WriteLine(tags.Count);
