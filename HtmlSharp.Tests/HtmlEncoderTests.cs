@@ -1,28 +1,32 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MbUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HtmlSharp.Tests
 {
+    /// <summary>
+    /// Summary description for UnitTest1
+    /// </summary>
+    [TestClass]
     public class HtmlEncoderTests
     {
-        [Test]
+        [TestMethod]
         public void TestEntityWithSemicolon()
         {
             var encoder = new HtmlEncoder();
             Assert.AreEqual(">", encoder.Decode("&gt;"));
         }
 
-        [Test]
+        [TestMethod]
         public void TestEntityWithoutSemicolon()
         {
             var encoder = new HtmlEncoder();
             Assert.AreEqual("&gt", encoder.Decode("&gt"));
         }
 
-        [Test]
+        [TestMethod]
         public void TestInvalidEntity()
         {
             var encoder = new HtmlEncoder();

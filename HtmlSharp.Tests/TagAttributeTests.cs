@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MbUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HtmlSharp.Tests
 {
+    /// <summary>
+    /// Summary description for TagAttributeTests
+    /// </summary>
+    [TestClass]
     public class TagAttributeTests
     {
-        [Test]
+        [TestMethod]
         public void TestEquivalence()
         {
             var attr = new TagAttribute("align", "left");
@@ -16,14 +20,14 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(attr, attr2);
         }
 
-        [Test]
+        [TestMethod]
         public void TestToString()
         {
             var attr = new TagAttribute("align", "left");
             Assert.AreEqual("align=\"left\"", attr.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void TestHtmlDecodingValue()
         {
             var attr = new TagAttribute("value", "3 &lt; 5");

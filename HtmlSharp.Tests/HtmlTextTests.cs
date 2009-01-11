@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MbUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HtmlSharp.Elements;
 
 namespace HtmlSharp.Tests
 {
+    /// <summary>
+    /// Summary description for HtmlTextTests
+    /// </summary>
+    [TestClass]
     public class HtmlTextTests
     {
-        [Test]
+        [TestMethod]
         public void TestHtmlDecodingValue()
         {
             var tag = new HtmlText();

@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MbUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HtmlSharp.Elements.Tags;
 using HtmlSharp.Elements;
 
 namespace HtmlSharp.Tests
 {
-    class TagTests
+    /// <summary>
+    /// Summary description for TagTests
+    /// </summary>
+    [TestClass]
+    public class TagTests
     {
-        [Test]
+        [TestMethod]
         public void TestTagEquivalence()
         {
             Assert.AreEqual(new Div(), new Div());
@@ -19,7 +23,7 @@ namespace HtmlSharp.Tests
             Assert.AreNotEqual(new Div(new TagAttribute("id", "abc")), new Div());
         }
 
-        [Test]
+        [TestMethod]
         public void TestTagToString()
         {
             Assert.AreEqual("<div></div>", new Div().ToString());
