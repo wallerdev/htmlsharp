@@ -128,6 +128,13 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new Root(new Div(new TagAttribute("id", "value"))), page.Root);
         }
 
+        [Test]
+        public void TestUnquotedAttributes()
+        {
+            var page = parser.Parse("<div id=value>");
+            Assert.AreEqual(new Root(new Div(new TagAttribute("id", "value"))), page.Root);
+        }
+
         //Nestable Tags
         
         [Test]
