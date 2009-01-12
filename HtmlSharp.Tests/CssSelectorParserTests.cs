@@ -37,7 +37,10 @@ namespace HtmlSharp.Tests
                             new CssTypeSelector(
                                 new A())
                         },
-                        new CssChildCombinator()), selector.ToString());
+                        new CssCombinator[]
+                        {
+                            new CssChildCombinator()
+                        }), selector.ToString());
             }
         }
     }

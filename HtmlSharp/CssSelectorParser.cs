@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp
 {
@@ -11,14 +12,15 @@ namespace HtmlSharp
         List<CssSimpleSelector> selectors = new List<CssSimpleSelector>();
         List<CssCombinator> combinators = new List<CssCombinator>();
 
-        public void Add(CssSimpleSelector selector)
+        public CssSelector(CssSimpleSelector selector)
         {
             selectors.Add(selector);
         }
 
-        public void Add(CssCombinator combinator)
+        public CssSelector(IEnumerable<CssSimpleSelector> selectors, IEnumerable<CssCombinator> combinators)
         {
-            combinators.Add(combinator);
+            this.selectors.AddRange(selectors);
+            this.combinators.AddRange(combinators);
         }
 
         public override string ToString()
@@ -32,12 +34,16 @@ namespace HtmlSharp
                     selectorBuilder.Append(combinators[i]);
                 }
             }
-
             return selectorBuilder.ToString();
         }
     }
 
     public class CssCombinator
+    {
+
+    }
+
+    public class CssChildCombinator : CssCombinator
     {
 
     }
@@ -55,29 +61,66 @@ namespace HtmlSharp
         }
     }
 
+    public class CssTypeSelector : CssSimpleSelector
+    {
+        string name;
+
+        public CssTypeSelector(string name)
+        {
+            this.name = name;
+        }
+
+        public CssTypeSelector(Tag tag)
+        {
+            name = tag.TagName;
+        }
+    }
+
     public class CssSelectorParser
     {
         public CssSelector Parse(string selector)
         {
-            CssSelector result = new CssSelector();
+            List<CssSimpleSelector> simpleSelectors = new List<CssSimpleSelector>();
+            List<CssCombinator> combinators = new List<CssCombinator>();
 
-            selector = RemoveUncessaryWhiteSpace(selector);
-
-            CssSimpleSelector currentSelector = null;
+            selector = RemoveUncessaryWhiteSpace(selector).ToLowerInvariant();
 
             int i = 0;
             while (i < selector.Length)
             {
                 if (selector[i] == '*')
                 {
-                    currentSelector = new CssUniversalSelector();
+                    simpleSelectors.Add(new CssUniversalSelector());
+                }
+                else if (char.IsLetter(selector, i))
+                {
+                    //reaad the tag name and update the position
+                    string tag = TakeWhile(i, selector, IsTagCharacter);
+                    //currentSelector = new CssTypeSelector(
                 }
                 i++;
             }
 
-            result.Add(currentSelector);
+            return new CssSelector(simpleSelectors, combinators.ToArray());
+        }
 
-            return result;
+        static bool IsTagCharacter(char c)
+        {
+            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
+        }
+
+        string TakeWhile(int index, string selector, Func<char, bool> method)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (char c in selector)
+            {
+                if (method(c))
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString();
         }
 
         string RemoveUncessaryWhiteSpace(string selector)
