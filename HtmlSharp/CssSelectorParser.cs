@@ -36,6 +36,24 @@ namespace HtmlSharp
             }
             return selectorBuilder.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssSelector t = (CssSelector)obj;
+                return combinators.SequenceEqual(t.combinators) && selectors.SequenceEqual(t.selectors);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return combinators.Aggregate(0, (a, b) => a ^= b.GetHashCode()) & selectors.Aggregate(0, (a, b) => a ^= b.GetHashCode());
+        }
     }
 
     public class CssCombinator
@@ -45,7 +63,10 @@ namespace HtmlSharp
 
     public class CssChildCombinator : CssCombinator
     {
-
+        public override string ToString()
+        {
+            return ">";
+        }
     }
 
     public class CssSimpleSelector
@@ -58,6 +79,16 @@ namespace HtmlSharp
         public override string ToString()
         {
             return "*";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetType() == GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 

@@ -40,7 +40,7 @@ namespace HtmlSharp.Tests
                         new CssCombinator[]
                         {
                             new CssChildCombinator()
-                        }), selector.ToString());
+                        }), selector);
             }
         }
     }
