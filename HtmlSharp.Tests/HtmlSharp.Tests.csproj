@@ -38,6 +38,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CssSelectorParserTests.cs" />
     <Compile Include="HtmlParserTests.cs" />
     <Compile Include="HtmlTextTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

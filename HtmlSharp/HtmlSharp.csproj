@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CssSelectorParser.cs" />
     <Compile Include="Elements\CharacterData.cs" />
     <Compile Include="Elements\Comment.cs" />
     <Compile Include="Element.cs" />
