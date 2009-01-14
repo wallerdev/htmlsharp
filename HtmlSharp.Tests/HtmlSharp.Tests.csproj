@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CssSelectorParserTests.cs" />
+    <Compile Include="CssSelectorTokenizerTests.cs" />
     <Compile Include="HtmlParserTests.cs" />
     <Compile Include="HtmlTextTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

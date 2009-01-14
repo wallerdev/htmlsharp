@@ -30,14 +30,14 @@ namespace HtmlSharp.Tests
             {
                 Assert.AreEqual(
                     new CssSelector(
-                        new CssSimpleSelector[]
+                        new[]
                         {
                             new CssTypeSelector(
                                 new P()), 
                             new CssTypeSelector(
                                 new A())
                         },
-                        new CssCombinator[]
+                        new[]
                         {
                             new CssChildCombinator()
                         }), selector);

@@ -94,16 +94,135 @@ namespace HtmlSharp
 
     public class CssTypeSelector : CssSimpleSelector
     {
-        string name;
+        public string Name { get; private set; }
 
         public CssTypeSelector(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public CssTypeSelector(Tag tag)
         {
-            name = tag.TagName;
+            Name = tag.TagName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssTypeSelector t = (CssTypeSelector)obj;
+                return Name == t.Name;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+    }
+
+    public enum CssSelectorTokenType
+    {
+        TypeSelector
+    }
+
+    public class CssSelectorToken
+    {
+        CssSelectorTokenType type;
+        string text;
+
+        public CssSelectorToken(CssSelectorTokenType type, string text)
+        {
+            this.type = type;
+            this.text = text;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssSelectorToken t = (CssSelectorToken)obj;
+                return text == t.text && object.Equals(type, t.type);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return text.GetHashCode() ^ type.GetHashCode();
+        }
+    }
+
+    public class CssSelectorTokenizer
+    {
+        int currentPosition = 0;
+        string input;
+
+        public CssSelectorTokenizer()
+        {
+        }
+
+        public IEnumerable<CssSelectorToken> Tokenize(string input)
+        {
+            this.input = input;
+
+            SkipWhiteSpace();
+            while (currentPosition < input.Length)
+            {
+                yield return ReadToken();
+                SkipWhiteSpace();
+            }
+        }
+
+        CssSelectorToken ReadToken()
+        {
+            CssSelectorToken token;
+            if (char.IsLetter(input, currentPosition))
+            {
+                token = new CssSelectorToken(CssSelectorTokenType.TypeSelector, ConsumeTypeToken());
+            }
+            else
+            {
+                throw new FormatException(
+                    string.Format("Unrecognised token '{0}' at position {1}",
+                        input[currentPosition], currentPosition + 1));
+            }
+
+            return token;
+        }
+
+        private string ConsumeTypeToken()
+        {
+            return ConsumeWhile(char.IsLetterOrDigit);
+        }
+
+        private string ConsumeWhile(Predicate<char> condition)
+        {
+            StringBuilder token = new StringBuilder();
+            while (currentPosition < input.Length && condition(input[currentPosition]))
+            {
+                token.Append(input[currentPosition]);
+                currentPosition++;
+            }
+            return token.ToString();
+        }
+
+        private CssSelectorToken ConsumeChar(CssSelectorToken value)
+        {
+            currentPosition++;
+            return value;
+        }
+
+        private void SkipWhiteSpace()
+        {
+            ConsumeWhile(char.IsWhiteSpace);
         }
     }
 
@@ -116,21 +235,24 @@ namespace HtmlSharp
 
             selector = RemoveUncessaryWhiteSpace(selector).ToLowerInvariant();
 
-            int i = 0;
-            while (i < selector.Length)
-            {
-                if (selector[i] == '*')
-                {
-                    simpleSelectors.Add(new CssUniversalSelector());
-                }
-                else if (char.IsLetter(selector, i))
-                {
-                    //reaad the tag name and update the position
-                    string tag = TakeWhile(i, selector, IsTagCharacter);
-                    //currentSelector = new CssTypeSelector(
-                }
-                i++;
-            }
+            //int i = 0;
+            //while (i < selector.Length)
+            //{
+            //    if (selector[i] == '*')
+            //    {
+            //        simpleSelectors.Add(new CssUniversalSelector());
+            //    }
+            //    else if (char.IsLetter(selector, i))
+            //    {
+            //        string tag = TakeWhile(i, selector, IsTagCharacter);
+            //        simpleSelectors.Add(new CssTypeSelector(tag));
+            //        i += tag.Length;
+            //    }
+            //    else
+            //    {
+            //        i++;
+            //    }
+            //}
 
             return new CssSelector(simpleSelectors, combinators.ToArray());
         }
