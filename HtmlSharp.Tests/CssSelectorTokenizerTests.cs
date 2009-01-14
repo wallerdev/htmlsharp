@@ -18,5 +18,12 @@ namespace HtmlSharp.Tests
             CssSelectorTokenizer tokenizer = new CssSelectorTokenizer();
             Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.TypeSelector, "div"), tokenizer.Tokenize("div").Single());
         }
+
+        [TestMethod]
+        public void TestSingleUniversalSelector()
+        {
+            CssSelectorTokenizer tokenizer = new CssSelectorTokenizer();
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.UniversalSelector, "*"), tokenizer.Tokenize("*").Single());
+        }
     }
 }

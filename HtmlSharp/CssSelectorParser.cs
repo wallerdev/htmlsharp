@@ -127,7 +127,8 @@ namespace HtmlSharp
 
     public enum CssSelectorTokenType
     {
-        TypeSelector
+        TypeSelector,
+        UniversalSelector
     }
 
     public class CssSelectorToken
@@ -188,6 +189,10 @@ namespace HtmlSharp
             {
                 token = new CssSelectorToken(CssSelectorTokenType.TypeSelector, ConsumeTypeToken());
             }
+            else if (input[currentPosition] == '*')
+            {
+                token = new CssSelectorToken(CssSelectorTokenType.UniversalSelector, ConsumeChar());
+            }
             else
             {
                 throw new FormatException(
@@ -196,6 +201,12 @@ namespace HtmlSharp
             }
 
             return token;
+        }
+
+        private string ConsumeChar()
+        {
+            currentPosition++;
+            return input[currentPosition - 1].ToString();
         }
 
         private string ConsumeTypeToken()
