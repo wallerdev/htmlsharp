@@ -127,19 +127,31 @@ namespace HtmlSharp
 
     public enum CssSelectorTokenType
     {
+        Invalid,
         TypeSelector,
-        UniversalSelector
+        UniversalSelector,
+        AttributeStart,
+        AttributeEnd,
+        AttributeName,
+        AttributeMatch,
+        AttributePrefixMatch,
+        AttributeSuffixMatch,
+        AttributeSubstringMatch,
+        AttributeIncludesMatch,
+        AttributeDashMatch,
+        AttributeValue,
+        WhiteSpace
     }
 
     public class CssSelectorToken
     {
-        CssSelectorTokenType type;
-        string text;
+        public CssSelectorTokenType TokenType { get; set; }
+        public string Text { get; set; }
 
         public CssSelectorToken(CssSelectorTokenType type, string text)
         {
-            this.type = type;
-            this.text = text;
+            this.TokenType = type;
+            this.Text = text;
         }
 
         public override bool Equals(object obj)
@@ -151,13 +163,13 @@ namespace HtmlSharp
             else
             {
                 CssSelectorToken t = (CssSelectorToken)obj;
-                return text == t.text && object.Equals(type, t.type);
+                return Text == t.Text && object.Equals(TokenType, t.TokenType);
             }
         }
 
         public override int GetHashCode()
         {
-            return text.GetHashCode() ^ type.GetHashCode();
+            return Text.GetHashCode() ^ TokenType.GetHashCode();
         }
     }
 
@@ -165,6 +177,19 @@ namespace HtmlSharp
     {
         int currentPosition = 0;
         string input;
+        List<CssSelectorToken> tokens = new List<CssSelectorToken>();
+
+        CssSelectorTokenType LastTokenType
+        {
+            get
+            {
+                if (tokens.Count > 0)
+                {
+                    return tokens[tokens.Count - 1].TokenType;
+                }
+                return CssSelectorTokenType.Invalid;
+            }
+        }
 
         public CssSelectorTokenizer()
         {
@@ -177,30 +202,164 @@ namespace HtmlSharp
             SkipWhiteSpace();
             while (currentPosition < input.Length)
             {
-                yield return ReadToken();
-                SkipWhiteSpace();
+                if (char.IsLetter(input, currentPosition))
+                {
+                    yield return new CssSelectorToken(CssSelectorTokenType.TypeSelector, ConsumeTypeToken());
+                }
+                else if (input[currentPosition] == '*')
+                {
+                    yield return new CssSelectorToken(CssSelectorTokenType.UniversalSelector, ConsumeChar());
+                }
+                else if (input[currentPosition] == '[')
+                {
+                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeStart, ConsumeChar());
+                    SkipWhiteSpace();
+
+                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeName, ConsumeAttributeName());
+                    SkipWhiteSpace();
+
+                    if (input[currentPosition] == ']')
+                    {
+                        yield return new CssSelectorToken(CssSelectorTokenType.AttributeEnd, ConsumeChar());
+                    }
+                    else
+                    {
+                        if (input.Substring(currentPosition, 2) == "^=")
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributePrefixMatch, ConsumePrefixMatch());
+                        }
+                        else if (input.Substring(currentPosition, 2) == "$=")
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeSuffixMatch, ConsumeSuffixMatch());
+                        }
+                        else if (input.Substring(currentPosition, 2) == "*=")
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeSubstringMatch, ConsumeSuffixMatch());
+                        }
+                        else if (input[currentPosition] == '=')
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeMatch, ConsumeChar());
+                        }
+                        else if (input.Substring(currentPosition, 2) == "~=")
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeIncludesMatch, ConsumeIncludesMatch());
+                        }
+                        else if (input.Substring(currentPosition, 2) == "|=")
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeDashMatch, ConsumeDashMatch());
+                        }
+                        else
+                        {
+                            UnrecognizedToken();
+                        }
+                        SkipWhiteSpace();
+
+                        if (input[currentPosition] == '"' || input[currentPosition] == '\'')
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeValue, ConsumeAttributeStringValue());
+                        }
+                        else if (char.IsLetter(input, currentPosition))
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeValue, ConsumeAttributeValue());
+                        }
+                        else
+                        {
+                            UnrecognizedToken();
+                        }
+
+                        if (input[currentPosition] == ']')
+                        {
+                            yield return new CssSelectorToken(CssSelectorTokenType.AttributeEnd, ConsumeChar());
+                        }
+                        else
+                        {
+                            UnrecognizedToken();
+                        }
+                    }
+                }
+                else
+                {
+                    UnrecognizedToken();
+                }
+                if (currentPosition < input.Length && char.IsWhiteSpace(input, currentPosition))
+                {
+                    yield return new CssSelectorToken(CssSelectorTokenType.WhiteSpace, ConsumeWhiteSpace());
+                }
             }
         }
 
-        CssSelectorToken ReadToken()
+        private string ConsumeWhiteSpace()
         {
-            CssSelectorToken token;
-            if (char.IsLetter(input, currentPosition))
-            {
-                token = new CssSelectorToken(CssSelectorTokenType.TypeSelector, ConsumeTypeToken());
-            }
-            else if (input[currentPosition] == '*')
-            {
-                token = new CssSelectorToken(CssSelectorTokenType.UniversalSelector, ConsumeChar());
-            }
-            else
-            {
-                throw new FormatException(
-                    string.Format("Unrecognised token '{0}' at position {1}",
-                        input[currentPosition], currentPosition + 1));
-            }
+            return ConsumeWhile(char.IsWhiteSpace);
+        }
 
-            return token;
+        private string ConsumeAttributeStringValue()
+        {
+            return ConsumeString();
+        }
+
+        private string ConsumeString()
+        {
+            char end = ConsumeChar()[0];
+            StringBuilder token = new StringBuilder();
+            while (currentPosition < input.Length && (input[currentPosition] != end || input[currentPosition - 1] == '\\'))
+            {
+                if (input[currentPosition - 1] == '\\' && input[currentPosition] == end)
+                {
+                    //remove backslash
+                    token.Length -= 1;
+                }
+                token.Append(input[currentPosition]);
+                currentPosition++;
+            }
+            currentPosition++;
+            return token.ToString();
+        }
+
+        private string ConsumeAttributeValue()
+        {
+            return ConsumeIdent();
+        }
+
+        private string ConsumeDashMatch()
+        {
+            currentPosition += 2;
+            return input.Substring(currentPosition - 2, 2);
+        }
+
+        private string ConsumeIncludesMatch()
+        {
+            currentPosition += 2;
+            return input.Substring(currentPosition - 2, 2);
+        }
+
+        private string ConsumeSuffixMatch()
+        {
+            currentPosition += 2;
+            return input.Substring(currentPosition - 2, 2);
+        }
+
+        private void UnrecognizedToken()
+        {
+            throw new FormatException(
+                string.Format("Unrecognised token '{0}' at position {1}",
+                    input[currentPosition], currentPosition + 1));
+        }
+
+        private string ConsumePrefixMatch()
+        {
+            currentPosition += 2;
+            return input.Substring(currentPosition - 2, 2);
+        }
+
+        private string ConsumeIdent()
+        {
+            return ConsumeWhile(char.IsLetterOrDigit);
+        }
+
+        private string ConsumeAttributeName()
+        {
+            return ConsumeIdent();
         }
 
         private string ConsumeChar()
@@ -211,7 +370,7 @@ namespace HtmlSharp
 
         private string ConsumeTypeToken()
         {
-            return ConsumeWhile(char.IsLetterOrDigit);
+            return ConsumeIdent();
         }
 
         private string ConsumeWhile(Predicate<char> condition)
