@@ -214,21 +214,21 @@ namespace HtmlSharp
         static readonly Regex suffixMatch = new Regex(@"\$=");
         static readonly Regex substringMatch = new Regex(@"\*=");
 
-        static readonly Regex function = new Regex(string.Format(@"{0}\(", ident));
-        static readonly Regex hash = new Regex(string.Format("#{0}", name));
-        static readonly Regex plus = new Regex(string.Format(@"{0}\+", w));
-        static readonly Regex greater = new Regex(string.Format(@"{0}>", w));
-        static readonly Regex comma = new Regex(string.Format(@"{0},", w));
-        static readonly Regex tilde = new Regex(string.Format(@"{0}~", w));
+        static readonly Regex function = new Regex(string.Format(@"({0})\(", ident));
+        static readonly Regex hash = new Regex(string.Format("#({0})", name));
+        static readonly Regex plus = new Regex(string.Format(@"({0})\+", w));
+        static readonly Regex greater = new Regex(string.Format(@"({0})>", w));
+        static readonly Regex comma = new Regex(string.Format(@"({0}),", w));
+        static readonly Regex tilde = new Regex(string.Format(@"({0})~", w));
         static readonly Regex not = new Regex(@":not\(");
-        static readonly Regex atKeyword = new Regex(string.Format("@{0}", ident));
-        static readonly Regex percentage = new Regex(string.Format("{0}%", num));
-        static readonly Regex dimension = new Regex(string.Format("{0}{1}", num, ident));
+        static readonly Regex atKeyword = new Regex(string.Format("@({0})", ident));
+        static readonly Regex percentage = new Regex(string.Format("({0})%", num));
+        static readonly Regex dimension = new Regex(string.Format("({0})({1})", num, ident));
         static readonly Regex cdo = new Regex("<!--");
         static readonly Regex cdc = new Regex("-->");
 
-        static readonly Regex uri = new Regex(string.Format(@"url\({0}{1}{0}\)", w, str));
-        static readonly Regex uri2 = new Regex(string.Format(@"url\({0}([!#$%&*-~]|{1}|{2})*{0}\)", w, nonascii, escape));
+        static readonly Regex uri = new Regex(string.Format(@"url\(({0})({1})({0})\)", w, str));
+        static readonly Regex uri2 = new Regex(string.Format(@"url\(({0})([!#$%&*-~]|({1})|({2}))*({0})\)", w, nonascii, escape));
         static readonly Regex unicodeRange = new Regex(@"U\+[0-9a-f?]{1,6}(-[0-9a-f]{1,6})?");
         static readonly Regex comment = new Regex(@"/\*[^*]*\*+([^/*][^*]*\*+)*/");
 
