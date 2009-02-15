@@ -21,93 +21,63 @@ namespace HtmlSharp.Tests
         }
 
         [TestMethod]
-        public void TestSingleTypeSelector()
+        public void TestIdent()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.TypeSelector, "div"), tokenizer.Tokenize("div").Single());
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.Ident, "div"), tokenizer.Tokenize("div").Single());
         }
 
         [TestMethod]
-        public void TestSingleUniversalSelector()
+        public void TestText()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.UniversalSelector, "*"), tokenizer.Tokenize("*").Single());
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.Text, "*"), tokenizer.Tokenize("*").Single());
         }
 
         [TestMethod]
-        public void TestAttributeStart()
+        public void TestWhiteSpace()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeStart, "["), tokenizer.Tokenize("[a]").First());
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.WhiteSpace, "    \t  "), tokenizer.Tokenize("    \t  ").Single());
         }
 
         [TestMethod]
-        public void TestAttributeEnd()
+        public void TestPrefixMatch()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeEnd, "]"), tokenizer.Tokenize("[a]").Last());
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.PrefixMatch, "^="), tokenizer.Tokenize("^=").Single());
         }
 
         [TestMethod]
-        public void TestSkipInitialSpace()
+        public void TestSuffixMatch()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.TypeSelector, "div"), tokenizer.Tokenize("    \t  div").Single());
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.SuffixMatch, "$="), tokenizer.Tokenize("$=").Single());
         }
 
         [TestMethod]
-        public void TestAttributePrefixMatch()
+        public void TestSubstringMatch()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributePrefixMatch, "^="), tokenizer.Tokenize("[name^=div]").ElementAt(2));
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.SubstringMatch, "*="), tokenizer.Tokenize("*=").Single());
         }
 
         [TestMethod]
-        public void TestAttributSuffixMatch()
+        public void TestIncludes()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeSuffixMatch, "$="), tokenizer.Tokenize("[name$=div]").ElementAt(2));
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.Includes, "~="), tokenizer.Tokenize("~=").Single());
         }
 
         [TestMethod]
-        public void TestAttributeSubstringMatch()
+        public void TestDashMatch()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeSubstringMatch, "*="), tokenizer.Tokenize("[name*=div]").ElementAt(2));
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.DashMatch, "|="), tokenizer.Tokenize("|=").Single());
         }
 
         [TestMethod]
-        public void TestAttributeMatch()
+        public void TestSingleQuoteString()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeMatch, "="), tokenizer.Tokenize("[name=div]").ElementAt(2));
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.String, "'div'"), tokenizer.Tokenize("'div'").Single());
         }
 
         [TestMethod]
-        public void TestAttributeIncludesMatch()
+        public void TestDoubleQuoteString()
         {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeIncludesMatch, "~="), tokenizer.Tokenize("[name~=div]").ElementAt(2));
-        }
-
-        [TestMethod]
-        public void TestAttributeDashMatch()
-        {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeDashMatch, "|="), tokenizer.Tokenize("[name|=div]").ElementAt(2));
-        }
-
-        [TestMethod]
-        public void TestAttributeValue()
-        {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeValue, "div"), tokenizer.Tokenize("[name=div]").ElementAt(3));
-        }
-
-        [TestMethod]
-        public void TestSingleQuotedAttributeValue()
-        {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeValue, "div"), tokenizer.Tokenize("[name='div']").ElementAt(3));
-        }
-
-        [TestMethod]
-        public void TestDoubleQuotedAttributeValue()
-        {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeValue, "div"), tokenizer.Tokenize("[name=\"div\"]").ElementAt(3));
-        }
-
-        [TestMethod]
-        public void TestEscapedQuotedAttributeValue()
-        {
-            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.AttributeValue, "di\"v"), tokenizer.Tokenize("[name=\"di\\\"v\"]").ElementAt(3));
+            Assert.AreEqual(new CssSelectorToken(CssSelectorTokenType.String, "\"div\""), tokenizer.Tokenize("\"div\"").Single());
         }
     }
 }
