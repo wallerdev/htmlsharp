@@ -15,7 +15,7 @@ Let's say you have the following html stored in a string named html.
 <body>
   <p class="important">Make sure you read this part.</p>
   <p>Some info about stuff.</p>
-  <p> id="copyright">Copyright data.</p>
+  <p id="copyright">Copyright data.</p>
 </body>
 </html>
 </pre>
