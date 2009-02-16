@@ -490,10 +490,21 @@ namespace HtmlSharp
 
             while (true)
             {
-                CssHashSelector hashSelector = ParseHashSelector();
-                if (hashSelector != null)
+                CssSelectorFilter filterSelector;
+                filterSelector = ParseHashSelector();
+                if (filterSelector != null)
                 {
-                    filters.Add(hashSelector);
+                    filters.Add(filterSelector);
+                }
+                filterSelector = ParseClassSelector();
+                if (filterSelector != null)
+                {
+                    filters.Add(filterSelector);
+                }
+                filterSelector = ParseAttributeSelector();
+                if (filterSelector != null)
+                {
+                    filters.Add(filterSelector);
                 }
             }
             if (typeSelector == null)
@@ -506,9 +517,34 @@ namespace HtmlSharp
             throw new NotImplementedException();
         }
 
-        private CssHashSelector ParseHashSelector()
+        private CssSelectorFilter ParseAttributeSelector()
         {
-            CssHashSelector selector = null;
+            throw new NotImplementedException();
+        }
+
+        private CssSelectorFilter ParseClassSelector()
+        {
+            CssSelectorFilter selector = null;
+            if (CurrentToken.Text == ".")
+            {
+                currentPosition++;
+                if (CurrentToken == null)
+                {
+                    //parse error
+                }
+                if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                {
+                    selector = new CssClassSelector("." + CurrentToken.Text);
+                }
+                
+                currentPosition++;
+            }
+            return selector;
+        }
+
+        private CssSelectorFilter ParseHashSelector()
+        {
+            CssSelectorFilter selector = null;
             if (CurrentToken.TokenType == CssSelectorTokenType.Hash)
             {
                 selector = new CssHashSelector(CurrentToken.Text);
