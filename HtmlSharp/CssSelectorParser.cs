@@ -11,15 +11,15 @@ namespace HtmlSharp
 {
     public class CssSelector
     {
-        List<CssSimpleSelector> selectors = new List<CssSimpleSelector>();
+        List<CssSimpleSelectorSequence> selectors = new List<CssSimpleSelectorSequence>();
         List<CssCombinator> combinators = new List<CssCombinator>();
 
-        public CssSelector(CssSimpleSelector selector)
+        public CssSelector(CssSimpleSelectorSequence selector)
         {
             selectors.Add(selector);
         }
 
-        public CssSelector(IEnumerable<CssSimpleSelector> selectors, IEnumerable<CssCombinator> combinators)
+        public CssSelector(IEnumerable<CssSimpleSelectorSequence> selectors, IEnumerable<CssCombinator> combinators)
         {
             this.selectors.AddRange(selectors);
             this.combinators.AddRange(combinators);
@@ -71,12 +71,36 @@ namespace HtmlSharp
         }
     }
 
-    public class CssSimpleSelector
+    public class CssDescendantCombinator : CssCombinator
+    {
+        public override string ToString()
+        {
+            return " ";
+        }
+    }
+
+    public class CssAdjacentSiblingCombinator : CssCombinator
+    {
+        public override string ToString()
+        {
+            return "+";
+        }
+    }
+
+    public class CssGeneralSiblingCombinator : CssCombinator
+    {
+        public override string ToString()
+        {
+            return "~";
+        }
+    }
+
+    public class CssSimpleSelectorSequence
     {
 
     }
 
-    public class CssUniversalSelector : CssSimpleSelector
+    public class CssUniversalSelector : CssSimpleSelectorSequence
     {
         public override string ToString()
         {
@@ -94,7 +118,7 @@ namespace HtmlSharp
         }
     }
 
-    public class CssTypeSelector : CssSimpleSelector
+    public class CssTypeSelector : CssSimpleSelectorSequence
     {
         public string Name { get; private set; }
 
@@ -489,62 +513,179 @@ namespace HtmlSharp
         //}
     }
 
+    public class CssSelectorsGroup
+    {
+        IEnumerable<CssSelector> selectors;
+
+        public CssSelectorsGroup(IEnumerable<CssSelector> selectors)
+        {
+            this.selectors = selectors;
+        }
+    }
+
     public class CssSelectorParser
     {
-        public CssSelector Parse(string selector)
+        CssSelectorTokenizer tokenizer = new CssSelectorTokenizer();
+        List<CssSelectorToken> tokens = new List<CssSelectorToken>();
+        int currentPosition = 0;
+
+        CssSelectorToken CurrentToken { get { return tokens.ElementAtOrDefault(currentPosition); } }
+
+        public CssSelectorsGroup Parse(string selector)
         {
-            List<CssSimpleSelector> simpleSelectors = new List<CssSimpleSelector>();
-            List<CssCombinator> combinators = new List<CssCombinator>();
+            tokens = tokenizer.Tokenize(selector).ToList();
 
-            selector = RemoveUncessaryWhiteSpace(selector).ToLowerInvariant();
-
-            //int i = 0;
-            //while (i < selector.Length)
-            //{
-            //    if (selector[i] == '*')
-            //    {
-            //        simpleSelectors.Add(new CssUniversalSelector());
-            //    }
-            //    else if (char.IsLetter(selector, i))
-            //    {
-            //        string tag = TakeWhile(i, selector, IsTagCharacter);
-            //        simpleSelectors.Add(new CssTypeSelector(tag));
-            //        i += tag.Length;
-            //    }
-            //    else
-            //    {
-            //        i++;
-            //    }
-            //}
-
-            return new CssSelector(simpleSelectors, combinators.ToArray());
-        }
-
-        static bool IsTagCharacter(char c)
-        {
-            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
-        }
-
-        string TakeWhile(int index, string selector, Func<char, bool> method)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (char c in selector)
+            List<CssSelector> selectors = new List<CssSelector>();
+            while (currentPosition < tokens.Count)
             {
-                if (method(c))
+                selectors.Add(ParseSelector());
+                if (new CssSelectorToken(CssSelectorTokenType.Text, ",").Equals(CurrentToken))
                 {
-                    builder.Append(c);
+                    currentPosition++;
+                }
+                else if (CurrentToken != null)
+                {
+                    //parse error
                 }
             }
 
-            return builder.ToString();
+            return new CssSelectorsGroup(selectors);
         }
 
-        string RemoveUncessaryWhiteSpace(string selector)
+        private CssSelector ParseSelector()
         {
-            selector = Regex.Replace(selector, "[ \t\n\r\f]+", " ");
-            //selector = Regex.Replace(selector, " ?[
+            List<CssSimpleSelectorSequence> simpleSelectorSequences = new List<CssSimpleSelectorSequence>();
+            List<CssCombinator> combinators = new List<CssCombinator>();
 
-            return selector;
+            CssCombinator combinator = null;
+            while (combinator == null)
+            {
+                simpleSelectorSequences.Add(ParseSimpleSelectorSequence());
+
+                combinator = ParseCombinator();
+                if (combinator != null)
+                {
+                    combinators.Add(combinator);
+                }
+            }
+
+            return new CssSelector(simpleSelectorSequences, combinators);
+        }
+
+        private CssCombinator ParseCombinator()
+        {
+            CssCombinator combinator = null;
+            if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.Plus)
+            {
+                combinator = new CssAdjacentSiblingCombinator();
+                currentPosition++;
+                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
+                {
+                    currentPosition++;
+                }
+            }
+            else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.Greater)
+            {
+                combinator = new CssChildCombinator();
+                currentPosition++;
+                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
+                {
+                    currentPosition++;
+                }
+            }
+            else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.Tilde)
+            {
+                combinator = new CssGeneralSiblingCombinator();
+                currentPosition++;
+                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
+                {
+                    currentPosition++;
+                }
+            }
+            else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
+            {
+                combinator = new CssDescendantCombinator();
+                currentPosition++;
+            }
+
+            return combinator;
+        }
+
+        private CssSimpleSelectorSequence ParseSimpleSelectorSequence()
+        {
+            if (CurrentToken == null)
+            {
+                //parse error
+            }
+
+            CssTypeSelector typeSelector = ParseTypeSelector();
+            throw new NotImplementedException();
+        }
+
+        private CssTypeSelector ParseTypeSelector()
+        {
+            CssNamespacePrefix prefix = ParseCssNamespacePrefix();
+            throw new NotImplementedException();
+        }
+
+        private CssNamespacePrefix ParseCssNamespacePrefix()
+        {
+            CssNamespacePrefix prefix = null;
+
+            if (CurrentToken != null)
+            {
+                if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                {
+                    string ident = CurrentToken.Text;
+                    currentPosition++;
+                    if (CurrentToken == null)
+                    {
+                        currentPosition--;
+                    }
+                    else if (CurrentToken.Text == "|")
+                    {
+                        prefix = new CssNamespacePrefix(ident);
+                        currentPosition++;
+                    }
+                    else
+                    {
+                        currentPosition--;
+                    }
+                }
+                else if (CurrentToken.Text == "*")
+                {
+                    currentPosition++;
+                    if (CurrentToken == null)
+                    {
+                        currentPosition--;
+                    }
+                    else if (CurrentToken.Text == "|")
+                    {
+                        prefix = new CssNamespacePrefix("*");
+                        currentPosition++;
+                    }
+                    else
+                    {
+                        currentPosition--;
+                    }
+                }
+                else if (CurrentToken.Text == "|")
+                {
+                    //TODO: is this supposed to mean universal selector?
+                    prefix = new CssNamespacePrefix("");
+                    currentPosition++;
+                }
+            }
+            return prefix;
+        }
+    }
+
+    public class CssNamespacePrefix
+    {
+        public string Namespace { get; private set; }
+        public CssNamespacePrefix(string ns)
+        {
+            this.Namespace = ns;
         }
     }
 }
