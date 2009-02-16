@@ -97,40 +97,76 @@ namespace HtmlSharp
 
     public class CssSimpleSelectorSequence
     {
+        IEnumerable<CssSimpleSelector> selectors;
 
+        public CssSimpleSelectorSequence(IEnumerable<CssSimpleSelector> selectors)
+        {
+            this.selectors = selectors;
+        }
     }
 
-    public class CssUniversalSelector : CssSimpleSelectorSequence
+    public class CssSimpleSelector
     {
-        public override string ToString()
-        {
-            return "*";
-        }
 
-        public override bool Equals(object obj)
-        {
-            return obj.GetType() == GetType();
-        }
+    }
 
-        public override int GetHashCode()
+    public class CssSelectorFilter
+    {
+
+    }
+
+    public class CssHashSelector : CssSelectorFilter
+    {
+        string hash;
+
+        public CssHashSelector(string hash)
         {
-            return base.GetHashCode();
+            this.hash = hash;
         }
     }
 
-    public class CssTypeSelector : CssSimpleSelectorSequence
+    public class CssClassSelector : CssSelectorFilter
+    {
+        string klass;
+
+        public CssClassSelector(string klass)
+        {
+            this.klass = klass;
+        }
+    }
+
+    public class CssAttributeSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssPseudoSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssNegationSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssTypeSelector
     {
         public string Name { get; private set; }
+        public CssSelectorNamespacePrefix Namespace { get; private set; }
 
         public CssTypeSelector(string name)
         {
             this.Name = name;
         }
 
-        public CssTypeSelector(Tag tag)
+        public CssTypeSelector(string name, CssSelectorNamespacePrefix prefix)
+            : this(name)
         {
-            Name = tag.TagName;
+            this.Namespace = prefix;
         }
+
+
 
         public override bool Equals(object obj)
         {
@@ -148,6 +184,36 @@ namespace HtmlSharp
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+    }
+
+    public class CssUniversalSelector : CssTypeSelector
+    {
+        public CssUniversalSelector()
+            : base("*")
+        {
+
+        }
+
+        public CssUniversalSelector(CssSelectorNamespacePrefix prefix)
+            : base("*", prefix)
+        {
+
+        }
+
+        public override string ToString()
+        {
+            return "*";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetType() == GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
@@ -311,206 +377,6 @@ namespace HtmlSharp
                 }
             }
         }
-
-        //public IEnumerable<CssSelectorToken> Tokenize(string input)
-        //{
-        //    this.input = input;
-
-        //    SkipWhiteSpace();
-        //    while (currentPosition < input.Length)
-        //    {
-        //        if (char.IsLetter(input, currentPosition))
-        //        {
-        //            yield return new CssSelectorToken(CssSelectorTokenType.TypeSelector, ConsumeTypeToken());
-        //        }
-        //        else if (input[currentPosition] == '*')
-        //        {
-        //            yield return new CssSelectorToken(CssSelectorTokenType.UniversalSelector, ConsumeChar());
-        //        }
-        //        else if (input[currentPosition] == '[') //handle attributes
-        //        {
-        //            yield return new CssSelectorToken(CssSelectorTokenType.AttributeStart, ConsumeChar());
-        //            SkipWhiteSpace();
-
-        //            yield return new CssSelectorToken(CssSelectorTokenType.AttributeName, ConsumeAttributeName());
-        //            SkipWhiteSpace();
-
-        //            if (input[currentPosition] == ']')
-        //            {
-        //                yield return new CssSelectorToken(CssSelectorTokenType.AttributeEnd, ConsumeChar());
-        //            }
-        //            else
-        //            {
-        //                if (input.Substring(currentPosition, 2) == "^=")
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributePrefixMatch, ConsumePrefixMatch());
-        //                }
-        //                else if (input.Substring(currentPosition, 2) == "$=")
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeSuffixMatch, ConsumeSuffixMatch());
-        //                }
-        //                else if (input.Substring(currentPosition, 2) == "*=")
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeSubstringMatch, ConsumeSuffixMatch());
-        //                }
-        //                else if (input[currentPosition] == '=')
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeMatch, ConsumeChar());
-        //                }
-        //                else if (input.Substring(currentPosition, 2) == "~=")
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeIncludesMatch, ConsumeIncludesMatch());
-        //                }
-        //                else if (input.Substring(currentPosition, 2) == "|=")
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeDashMatch, ConsumeDashMatch());
-        //                }
-        //                else
-        //                {
-        //                    UnrecognizedToken();
-        //                }
-        //                SkipWhiteSpace();
-
-        //                if (input[currentPosition] == '"' || input[currentPosition] == '\'')
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeValue, ConsumeAttributeStringValue());
-        //                }
-        //                else if (char.IsLetter(input, currentPosition))
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeValue, ConsumeAttributeValue());
-        //                }
-        //                else
-        //                {
-        //                    UnrecognizedToken();
-        //                }
-
-        //                if (input[currentPosition] == ']')
-        //                {
-        //                    yield return new CssSelectorToken(CssSelectorTokenType.AttributeEnd, ConsumeChar());
-        //                }
-        //                else
-        //                {
-        //                    UnrecognizedToken();
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            UnrecognizedToken();
-        //        }
-        //        if (currentPosition < input.Length && char.IsWhiteSpace(input, currentPosition))
-        //        {
-        //            yield return new CssSelectorToken(CssSelectorTokenType.WhiteSpace, ConsumeWhiteSpace());
-        //        }
-        //    }
-        //}
-
-        //private string ConsumeWhiteSpace()
-        //{
-        //    return ConsumeWhile(char.IsWhiteSpace);
-        //}
-
-        //private string ConsumeAttributeStringValue()
-        //{
-        //    return ConsumeString();
-        //}
-
-        //private string ConsumeString()
-        //{
-        //    char end = ConsumeChar()[0];
-        //    StringBuilder token = new StringBuilder();
-        //    while (currentPosition < input.Length && (input[currentPosition] != end || input[currentPosition - 1] == '\\'))
-        //    {
-        //        if (input[currentPosition - 1] == '\\' && input[currentPosition] == end)
-        //        {
-        //            //remove backslash
-        //            token.Length -= 1;
-        //        }
-        //        token.Append(input[currentPosition]);
-        //        currentPosition++;
-        //    }
-        //    currentPosition++;
-        //    return token.ToString();
-        //}
-
-        //private string ConsumeAttributeValue()
-        //{
-        //    return ConsumeIdent();
-        //}
-
-        //private string ConsumeDashMatch()
-        //{
-        //    currentPosition += 2;
-        //    return input.Substring(currentPosition - 2, 2);
-        //}
-
-        //private string ConsumeIncludesMatch()
-        //{
-        //    currentPosition += 2;
-        //    return input.Substring(currentPosition - 2, 2);
-        //}
-
-        //private string ConsumeSuffixMatch()
-        //{
-        //    currentPosition += 2;
-        //    return input.Substring(currentPosition - 2, 2);
-        //}
-
-        //private void UnrecognizedToken()
-        //{
-        //    throw new FormatException(
-        //        string.Format("Unrecognised token '{0}' at position {1}",
-        //            input[currentPosition], currentPosition + 1));
-        //}
-
-        //private string ConsumePrefixMatch()
-        //{
-        //    currentPosition += 2;
-        //    return input.Substring(currentPosition - 2, 2);
-        //}
-
-        //private string ConsumeIdent()
-        //{
-        //    return ConsumeWhile(char.IsLetterOrDigit);
-        //}
-
-        //private string ConsumeAttributeName()
-        //{
-        //    return ConsumeIdent();
-        //}
-
-        //private string ConsumeChar()
-        //{
-        //    currentPosition++;
-        //    return input[currentPosition - 1].ToString();
-        //}
-
-        //private string ConsumeTypeToken()
-        //{
-        //    return ConsumeIdent();
-        //}
-
-        //private string ConsumeWhile(Predicate<char> condition)
-        //{
-        //    StringBuilder token = new StringBuilder();
-        //    while (currentPosition < input.Length && condition(input[currentPosition]))
-        //    {
-        //        token.Append(input[currentPosition]);
-        //        currentPosition++;
-        //    }
-        //    return token.ToString();
-        //}
-
-        //private CssSelectorToken ConsumeChar(CssSelectorToken value)
-        //{
-        //    currentPosition++;
-        //    return value;
-        //}
-
-        //private void SkipWhiteSpace()
-        //{
-        //    ConsumeWhile(char.IsWhiteSpace);
-        //}
     }
 
     public class CssSelectorsGroup
@@ -618,19 +484,78 @@ namespace HtmlSharp
                 //parse error
             }
 
-            CssTypeSelector typeSelector = ParseTypeSelector();
+            CssTypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
+
+            List<CssSelectorFilter> filters = new List<CssSelectorFilter>();
+
+            while (true)
+            {
+                CssHashSelector hashSelector = ParseHashSelector();
+                if (hashSelector != null)
+                {
+                    filters.Add(hashSelector);
+                }
+            }
+            if (typeSelector == null)
+            {
+                //there better be a hash, class, attrib, pseudo, or negation!
+
+            }
+            
+
             throw new NotImplementedException();
+        }
+
+        private CssHashSelector ParseHashSelector()
+        {
+            CssHashSelector selector = null;
+            if (CurrentToken.TokenType == CssSelectorTokenType.Hash)
+            {
+                selector = new CssHashSelector(CurrentToken.Text);
+                currentPosition++;
+            }
+            return selector;
+        }
+
+        private CssTypeSelector ParseUniversalSelector()
+        {
+            CssTypeSelector selector = null;
+
+            int tempPos = currentPosition;
+            CssSelectorNamespacePrefix prefix = ParseCssNamespacePrefix();
+
+            if (CurrentToken != null)
+            {
+                if (CurrentToken.Text == "*")
+                {
+                    selector = new CssUniversalSelector(prefix);
+                }
+            }
+
+            return selector;
         }
 
         private CssTypeSelector ParseTypeSelector()
         {
-            CssNamespacePrefix prefix = ParseCssNamespacePrefix();
-            throw new NotImplementedException();
+            CssTypeSelector selector = null;
+
+            int tempPos = currentPosition;
+            CssSelectorNamespacePrefix prefix = ParseCssNamespacePrefix();
+
+            if (CurrentToken != null)
+            {
+                if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                {
+                    selector = new CssTypeSelector(CurrentToken.Text, prefix);
+                }
+            }
+
+            return selector;
         }
 
-        private CssNamespacePrefix ParseCssNamespacePrefix()
+        private CssSelectorNamespacePrefix ParseCssNamespacePrefix()
         {
-            CssNamespacePrefix prefix = null;
+            CssSelectorNamespacePrefix prefix = null;
 
             if (CurrentToken != null)
             {
@@ -644,7 +569,7 @@ namespace HtmlSharp
                     }
                     else if (CurrentToken.Text == "|")
                     {
-                        prefix = new CssNamespacePrefix(ident);
+                        prefix = new CssSelectorNamespacePrefix(ident);
                         currentPosition++;
                     }
                     else
@@ -661,7 +586,7 @@ namespace HtmlSharp
                     }
                     else if (CurrentToken.Text == "|")
                     {
-                        prefix = new CssNamespacePrefix("*");
+                        prefix = new CssSelectorNamespacePrefix("*");
                         currentPosition++;
                     }
                     else
@@ -672,7 +597,7 @@ namespace HtmlSharp
                 else if (CurrentToken.Text == "|")
                 {
                     //TODO: is this supposed to mean universal selector?
-                    prefix = new CssNamespacePrefix("");
+                    prefix = new CssSelectorNamespacePrefix("");
                     currentPosition++;
                 }
             }
@@ -680,10 +605,10 @@ namespace HtmlSharp
         }
     }
 
-    public class CssNamespacePrefix
+    public class CssSelectorNamespacePrefix
     {
         public string Namespace { get; private set; }
-        public CssNamespacePrefix(string ns)
+        public CssSelectorNamespacePrefix(string ns)
         {
             this.Namespace = ns;
         }
