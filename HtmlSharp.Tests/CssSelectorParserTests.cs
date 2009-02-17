@@ -13,13 +13,13 @@ namespace HtmlSharp.Tests
     [TestClass]
     public class CssSelectorParserTests
     {
-        //[TestMethod]
-        //public void TestUniversalSelector()
-        //{
-        //    CssSelectorParser parser = new CssSelectorParser();
-        //    var selector = parser.Parse("*");
-        //    Assert.AreEqual(new CssSelector(new CssUniversalSelector()), selector);
-        //}
+        [TestMethod]
+        public void TestUniversalSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("a");
+            Assert.AreEqual(new CssSelectorsGroup(new[] { new CssSelector(new CssSimpleSelectorSequence(new CssUniversalSelector(), new CssSelectorFilter[0]) )}), selector);
+        }
 
         //[TestMethod]
         //public void TestWhiteSpace()

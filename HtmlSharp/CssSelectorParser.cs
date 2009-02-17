@@ -97,17 +97,23 @@ namespace HtmlSharp
 
     public class CssSimpleSelectorSequence
     {
-        IEnumerable<CssSimpleSelector> selectors;
+        IEnumerable<CssSelectorFilter> filters;
+        CssTypeSelector selector;
 
-        public CssSimpleSelectorSequence(IEnumerable<CssSimpleSelector> selectors)
+        public CssSimpleSelectorSequence(CssTypeSelector selector, IEnumerable<CssSelectorFilter> filters)
         {
-            this.selectors = selectors;
+            this.selector = selector;
+            this.filters = filters;
         }
     }
 
     public class CssSimpleSelector
     {
-
+        string text;
+        public CssSimpleSelector(string text)
+        {
+            this.text = text;
+        }
     }
 
     public class CssSelectorFilter
@@ -137,17 +143,34 @@ namespace HtmlSharp
 
     public class CssAttributeSelector : CssSelectorFilter
     {
+        string attribute;
+        CssBinaryMatchSelector selector;
 
+        public CssAttributeSelector(string attribute, CssBinaryMatchSelector selector)
+        {
+            this.attribute = attribute;
+            this.selector = selector;
+        }
     }
 
     public class CssPseudoSelector : CssSelectorFilter
     {
+        string pseudo;
 
+        public CssPseudoSelector(string pseudo)
+        {
+            this.pseudo = pseudo;
+        }
     }
 
     public class CssNegationSelector : CssSelectorFilter
     {
+        string negation;
 
+        public CssNegationSelector(string negation)
+        {
+
+        }
     }
 
     public class CssBinaryMatchSelector : CssSelectorFilter
@@ -155,34 +178,64 @@ namespace HtmlSharp
 
     }
 
-    public class CssPrefixMatchSelector : CssSelectorFilter
+    public class CssPrefixMatchSelector : CssBinaryMatchSelector
     {
+        string prefix;
 
+        public CssPrefixMatchSelector(string prefix)
+        {
+            this.prefix = prefix;
+        }
     }
 
-    public class CssSuffixMatchSelector : CssSelectorFilter
+    public class CssSuffixMatchSelector : CssBinaryMatchSelector
     {
+        string suffix;
 
+        public CssSuffixMatchSelector(string suffix)
+        {
+            this.suffix = suffix;
+        }
     }
 
-    public class CssSubstringMatchSelector : CssSelectorFilter
+    public class CssSubstringMatchSelector : CssBinaryMatchSelector
     {
+        string substring;
 
+        public CssSubstringMatchSelector(string substring)
+        {
+            this.substring = substring;
+        }
     }
 
-    public class CssExactMatchSelector : CssSelectorFilter
+    public class CssExactMatchSelector : CssBinaryMatchSelector
     {
+        string text;
 
+        public CssExactMatchSelector(string text)
+        {
+            this.text = text;
+        }
     }
 
-    public class CssIncludesSelector : CssSelectorFilter
+    public class CssIncludesSelector : CssBinaryMatchSelector
     {
+        string includes;
 
+        public CssIncludesSelector(string includes)
+        {
+            this.includes = includes;
+        }
     }
 
-    public class CssDashMatchSelector : CssSelectorFilter
+    public class CssDashMatchSelector : CssBinaryMatchSelector
     {
+        string dash;
 
+        public CssDashMatchSelector(string dash)
+        {
+            this.dash = dash;
+        }
     }
 
     public class CssTypeSelector
@@ -468,6 +521,10 @@ namespace HtmlSharp
                 {
                     combinators.Add(combinator);
                 }
+                else
+                {
+                    break;
+                }
             }
 
             return new CssSelector(simpleSelectorSequences, combinators);
@@ -513,33 +570,93 @@ namespace HtmlSharp
             CssTypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
 
             List<CssSelectorFilter> filters = new List<CssSelectorFilter>();
-
-            while (true)
+            if (CurrentToken != null)
             {
-                CssSelectorFilter filterSelector;
-                filterSelector = ParseHashSelector();
-                if (filterSelector != null)
+                while (true)
                 {
-                    filters.Add(filterSelector);
-                }
-                filterSelector = ParseClassSelector();
-                if (filterSelector != null)
-                {
-                    filters.Add(filterSelector);
-                }
-                filterSelector = ParseAttributeSelector();
-                if (filterSelector != null)
-                {
-                    filters.Add(filterSelector);
+                    CssSelectorFilter filterSelector;
+                    filterSelector = ParseHashSelector();
+                    if (filterSelector != null)
+                    {
+                        filters.Add(filterSelector);
+                    }
+                    filterSelector = ParseClassSelector();
+                    if (filterSelector != null)
+                    {
+                        filters.Add(filterSelector);
+                    }
+                    filterSelector = ParseAttributeSelector();
+                    if (filterSelector != null)
+                    {
+                        filters.Add(filterSelector);
+                    }
+                    filterSelector = ParsePseudoSelector();
+                    if (filterSelector != null)
+                    {
+                        filters.Add(filterSelector);
+                    }
+                    filterSelector = ParseNegation();
+                    if (filterSelector != null)
+                    {
+                        filters.Add(filterSelector);
+                    }
+                    if (filterSelector == null)
+                    {
+                        break;
+                    }
                 }
             }
             if (typeSelector == null)
             {
                 //there better be a hash, class, attrib, pseudo, or negation!
-
+                if (filters.Count == 0)
+                {
+                    //parse error
+                }
+                typeSelector = new CssUniversalSelector();
             }
-            
+            return new CssSimpleSelectorSequence(typeSelector, filters);
+        }
 
+        private CssSelectorFilter ParseNegation()
+        {
+            return null;
+            throw new NotImplementedException();
+        }
+
+        private CssSelectorFilter ParsePseudoSelector()
+        {
+            return null;
+            CssSelectorFilter selector = null;
+            if (CurrentToken.Text == ":")
+            {
+                currentPosition++;
+                if (CurrentToken == null)
+                {
+                    //parse error
+                }
+                if (CurrentToken.Text == ":")
+                {
+                    //element
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                {
+                    //class
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.Function)
+                {
+                    currentPosition++;
+                    if (CurrentToken == null)
+                    {
+                        //parse error
+                    }
+                    SkipWhiteSpace();
+                    if (CurrentToken == null)
+                    {
+                        //parse error
+                    }
+                }
+            }
             throw new NotImplementedException();
         }
 
@@ -551,7 +668,7 @@ namespace HtmlSharp
             {
                 currentPosition++;
                 SkipWhiteSpace();
-                CssSelectorNamespacePrefix ns  = ParseCssNamespacePrefix();
+                CssSelectorNamespacePrefix ns = ParseCssNamespacePrefix();
                 string attributeType = null;
                 if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                 {
@@ -562,7 +679,6 @@ namespace HtmlSharp
                     // parse error
                 }
                 SkipWhiteSpace();
-                string attributeValue = null;
                 CssBinaryMatchSelector matchSelector = null;
                 if (CurrentToken.TokenType == CssSelectorTokenType.PrefixMatch)
                 {
@@ -570,16 +686,17 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssPrefixMatchSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssPrefixMatchSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.SuffixMatch)
@@ -588,16 +705,17 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssSuffixMatchSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssSuffixMatchSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.SubstringMatch)
@@ -606,16 +724,17 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssSubstringMatchSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssSubstringMatchSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
                 else if (CurrentToken.Text == "=")
@@ -624,16 +743,17 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssExactMatchSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssExactMatchSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.Includes)
@@ -642,16 +762,17 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssIncludesSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssIncludesSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.DashMatch)
@@ -660,29 +781,27 @@ namespace HtmlSharp
                     SkipWhiteSpace();
                     if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssDashMatchSelector(CurrentToken.Text);
                     }
                     else if (CurrentToken.TokenType == CssSelectorTokenType.String)
                     {
-                        string value = CurrentToken.Text;
+                        matchSelector = new CssDashMatchSelector(CurrentToken.Text);
                     }
                     else
                     {
                         //parse error lol
                     }
+                    currentPosition++;
                     SkipWhiteSpace();
                 }
-                else if (CurrentToken.Text == "]")
-                {
-
-                }
-                else
+                else if (CurrentToken.Text != "]")
                 {
                     //parse error lolz
                 }
+
                 if (CurrentToken.Text == "]")
                 {
-
+                    selector = new CssAttributeSelector(attributeType, matchSelector);
                 }
             }
 
@@ -711,7 +830,7 @@ namespace HtmlSharp
                 {
                     selector = new CssClassSelector("." + CurrentToken.Text);
                 }
-                
+
                 currentPosition++;
             }
             return selector;
@@ -740,6 +859,7 @@ namespace HtmlSharp
                 if (CurrentToken.Text == "*")
                 {
                     selector = new CssUniversalSelector(prefix);
+                    currentPosition++;
                 }
             }
 
@@ -758,6 +878,7 @@ namespace HtmlSharp
                 if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                 {
                     selector = new CssTypeSelector(CurrentToken.Text, prefix);
+                    currentPosition++;
                 }
             }
 
