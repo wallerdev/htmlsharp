@@ -60,7 +60,15 @@ namespace HtmlSharp
 
     public class CssCombinator
     {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
 
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
     }
 
     public class CssChildCombinator : CssCombinator
@@ -105,20 +113,32 @@ namespace HtmlSharp
             this.selector = selector;
             this.filters = filters;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssSimpleSelectorSequence t = (CssSimpleSelectorSequence)obj;
+                return selector.Equals(t.selector) && filters.SequenceEqual(t.filters);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return selector.GetHashCode() ^ filters.Aggregate(0, (a, b) => a ^= b.GetHashCode());
+        }
     }
 
     public class CssSimpleSelector
     {
-        string text;
-        public CssSimpleSelector(string text)
-        {
-            this.text = text;
-        }
     }
 
     public class CssSelectorFilter
     {
-
     }
 
     public class CssHashSelector : CssSelectorFilter
@@ -129,6 +149,24 @@ namespace HtmlSharp
         {
             this.hash = hash;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssHashSelector t = (CssHashSelector)obj;
+                return hash.Equals(t.hash);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return hash.GetHashCode();
+        }
     }
 
     public class CssClassSelector : CssSelectorFilter
@@ -138,6 +176,24 @@ namespace HtmlSharp
         public CssClassSelector(string klass)
         {
             this.klass = klass;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssClassSelector t = (CssClassSelector)obj;
+                return klass.Equals(t.klass);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return klass.GetHashCode();
         }
     }
 
@@ -265,7 +321,7 @@ namespace HtmlSharp
             else
             {
                 CssTypeSelector t = (CssTypeSelector)obj;
-                return Name == t.Name;
+                return Name == t.Name && Namespace == t.Namespace;
             }
         }
 
@@ -474,6 +530,24 @@ namespace HtmlSharp
         public CssSelectorsGroup(IEnumerable<CssSelector> selectors)
         {
             this.selectors = selectors;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssSelectorsGroup t = (CssSelectorsGroup)obj;
+                return selectors.SequenceEqual(t.selectors);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return selectors.Aggregate(0, (a, b) => a ^= b.GetHashCode());
         }
     }
 
