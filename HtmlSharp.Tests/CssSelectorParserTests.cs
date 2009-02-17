@@ -18,8 +18,83 @@ namespace HtmlSharp.Tests
         {
             CssSelectorParser parser = new CssSelectorParser();
             var selector = parser.Parse("a");
-            Assert.AreEqual(new CssSelectorsGroup(new[] { new CssSelector(new CssSimpleSelectorSequence(new CssTypeSelector("a"), new CssSelectorFilter[0]) )}), selector);
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("a"), 
+                                new CssSelectorFilter[0]) )}), 
+                selector);
         }
+
+        [TestMethod]
+        public void TestMultipleSelectors()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("a,div");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("a"), new CssSelectorFilter[0])),
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("div"), new CssSelectorFilter[0]))}), 
+                selector);
+        }
+
+        [TestMethod]
+        public void TestClassFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("a.class");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("a"),
+                                new CssSelectorFilter[] {
+                                    new CssClassSelector(".class")}))}), 
+                selector);
+        }
+
+        [TestMethod]
+        public void TestIdFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("a#id");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("a"),
+                                new CssSelectorFilter[] {
+                                    new CssHashSelector("#id")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestMultipleFilters()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("a.class.selected");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("a"),
+                                new CssSelectorFilter[] {
+                                    new CssClassSelector(".class"),
+                                    new CssClassSelector(".selected")}))}),
+                selector);
+        }
+
+
 
         //[TestMethod]
         //public void TestWhiteSpace()

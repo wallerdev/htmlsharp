@@ -567,7 +567,7 @@ namespace HtmlSharp
             while (currentPosition < tokens.Count)
             {
                 selectors.Add(ParseSelector());
-                if (new CssSelectorToken(CssSelectorTokenType.Text, ",").Equals(CurrentToken))
+                if (new CssSelectorToken(CssSelectorTokenType.Comma, ",").Equals(CurrentToken))
                 {
                     currentPosition++;
                 }
@@ -648,31 +648,40 @@ namespace HtmlSharp
             {
                 while (true)
                 {
+                    if (CurrentToken == null)
+                    {
+                        break;
+                    }
                     CssSelectorFilter filterSelector;
                     filterSelector = ParseHashSelector();
                     if (filterSelector != null)
                     {
                         filters.Add(filterSelector);
+                        continue;
                     }
                     filterSelector = ParseClassSelector();
                     if (filterSelector != null)
                     {
                         filters.Add(filterSelector);
+                        continue;
                     }
                     filterSelector = ParseAttributeSelector();
                     if (filterSelector != null)
                     {
                         filters.Add(filterSelector);
+                        continue;
                     }
                     filterSelector = ParsePseudoSelector();
                     if (filterSelector != null)
                     {
                         filters.Add(filterSelector);
+                        continue;
                     }
                     filterSelector = ParseNegation();
                     if (filterSelector != null)
                     {
                         filters.Add(filterSelector);
+                        continue;
                     }
                     if (filterSelector == null)
                     {
