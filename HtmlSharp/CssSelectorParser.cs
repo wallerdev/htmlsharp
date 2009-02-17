@@ -150,6 +150,41 @@ namespace HtmlSharp
 
     }
 
+    public class CssBinaryMatchSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssPrefixMatchSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssSuffixMatchSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssSubstringMatchSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssExactMatchSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssIncludesSelector : CssSelectorFilter
+    {
+
+    }
+
+    public class CssDashMatchSelector : CssSelectorFilter
+    {
+
+    }
+
     public class CssTypeSelector
     {
         public string Name { get; private set; }
@@ -445,28 +480,19 @@ namespace HtmlSharp
             {
                 combinator = new CssAdjacentSiblingCombinator();
                 currentPosition++;
-                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
-                {
-                    currentPosition++;
-                }
+                SkipWhiteSpace();
             }
             else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.Greater)
             {
                 combinator = new CssChildCombinator();
                 currentPosition++;
-                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
-                {
-                    currentPosition++;
-                }
+                SkipWhiteSpace();
             }
             else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.Tilde)
             {
                 combinator = new CssGeneralSiblingCombinator();
                 currentPosition++;
-                if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
-                {
-                    currentPosition++;
-                }
+                SkipWhiteSpace();
             }
             else if (CurrentToken != null && CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
             {
@@ -519,7 +545,156 @@ namespace HtmlSharp
 
         private CssSelectorFilter ParseAttributeSelector()
         {
-            throw new NotImplementedException();
+            CssSelectorFilter selector = null;
+
+            if (CurrentToken.Text == "[")
+            {
+                currentPosition++;
+                SkipWhiteSpace();
+                CssSelectorNamespacePrefix ns  = ParseCssNamespacePrefix();
+                string attributeType = null;
+                if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                {
+                    attributeType = CurrentToken.Text;
+                }
+                else
+                {
+                    // parse error
+                }
+                SkipWhiteSpace();
+                string attributeValue = null;
+                CssBinaryMatchSelector matchSelector = null;
+                if (CurrentToken.TokenType == CssSelectorTokenType.PrefixMatch)
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.SuffixMatch)
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.SubstringMatch)
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.Text == "=")
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.Includes)
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.TokenType == CssSelectorTokenType.DashMatch)
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+                    {
+                        string value = CurrentToken.Text;
+                    }
+                    else
+                    {
+                        //parse error lol
+                    }
+                    SkipWhiteSpace();
+                }
+                else if (CurrentToken.Text == "]")
+                {
+
+                }
+                else
+                {
+                    //parse error lolz
+                }
+                if (CurrentToken.Text == "]")
+                {
+
+                }
+            }
+
+            return selector;
+        }
+
+        private void SkipWhiteSpace()
+        {
+            if (CurrentToken.TokenType == CssSelectorTokenType.WhiteSpace)
+            {
+                currentPosition++;
+            }
         }
 
         private CssSelectorFilter ParseClassSelector()
