@@ -43,8 +43,6 @@ namespace HtmlSharp.Tests
                 selector);
         }
 
-
-
         [TestMethod]
         public void TestMultipleSelectors()
         {
@@ -59,6 +57,112 @@ namespace HtmlSharp.Tests
                         new CssSelector(
                             new CssSimpleSelectorSequence(
                                 new CssTypeSelector("div"), new CssSelectorFilter[0]))}), 
+                selector);
+        }
+
+        [TestMethod]
+        public void TestDescendentCombinator()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("div a");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new[] {
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("div"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("a"), new CssSelectorFilter[0])},
+                            new[] {
+                                new CssDescendantCombinator()
+                            })}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestChildCombinator()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("div > a");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new[] {
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("div"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("a"), new CssSelectorFilter[0])},
+                            new[] {
+                                new CssChildCombinator()
+                            })}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAdjacentSiblingCombinator()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("div + a");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new[] {
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("div"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("a"), new CssSelectorFilter[0])},
+                            new[] {
+                                new CssAdjacentSiblingCombinator()
+                            })}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestMultipleCombinators()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("div > table tr > td");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new[] {
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("div"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("table"), new CssSelectorFilter[0]),
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("tr"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("td"), new CssSelectorFilter[0])},
+                            new CssCombinator[] {
+                                new CssChildCombinator(),
+                                new CssDescendantCombinator(),
+                                new CssChildCombinator()
+                            })}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestGeneralSiblingCombinator()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("div ~ a");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new[] {
+                                new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("div"), new CssSelectorFilter[0]),
+                               new CssSimpleSelectorSequence(
+                                   new CssTypeSelector("a"), new CssSelectorFilter[0])},
+                            new[] {
+                                new CssGeneralSiblingCombinator()
+                            })}),
                 selector);
         }
 

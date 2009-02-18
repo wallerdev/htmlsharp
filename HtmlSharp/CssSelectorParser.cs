@@ -576,7 +576,7 @@ namespace HtmlSharp
             List<CssCombinator> combinators = new List<CssCombinator>();
 
             CssCombinator combinator = null;
-            while (combinator == null)
+            do
             {
                 simpleSelectorSequences.Add(ParseSimpleSelectorSequence());
 
@@ -585,11 +585,8 @@ namespace HtmlSharp
                 {
                     combinators.Add(combinator);
                 }
-                else
-                {
-                    break;
-                }
             }
+            while (combinator != null);
 
             return new CssSelector(simpleSelectorSequences, combinators);
         }
