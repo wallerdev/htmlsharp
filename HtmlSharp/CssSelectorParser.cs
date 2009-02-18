@@ -349,16 +349,6 @@ namespace HtmlSharp
         {
             return "*";
         }
-
-        public override bool Equals(object obj)
-        {
-            return obj.GetType() == GetType();
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
     }
 
     public enum CssSelectorTokenType

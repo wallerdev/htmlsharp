@@ -125,9 +125,16 @@ namespace HtmlSharp.Tests
         }
 
         [TestMethod]
-        public void TestQuotedAttributes()
+        public void TestDoubleQuotedAttributes()
         {
             var page = parser.Parse("<div id=\"value\">");
+            Assert.AreEqual(new Root(new Div(new TagAttribute("id", "value"))), page.Root);
+        }
+
+        [TestMethod]
+        public void TestSingleQuotedAttributes()
+        {
+            var page = parser.Parse("<div id='value'>");
             Assert.AreEqual(new Root(new Div(new TagAttribute("id", "value"))), page.Root);
         }
 

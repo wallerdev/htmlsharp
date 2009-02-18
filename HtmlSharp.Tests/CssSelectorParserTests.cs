@@ -38,7 +38,7 @@ namespace HtmlSharp.Tests
                     new[] {
                         new CssSelector(
                             new CssSimpleSelectorSequence(
-                                new CssTypeSelector("*"), 
+                                new CssUniversalSelector(), 
                                 new CssSelectorFilter[0]) )}),
                 selector);
         }
