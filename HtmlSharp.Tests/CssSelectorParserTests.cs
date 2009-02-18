@@ -29,6 +29,23 @@ namespace HtmlSharp.Tests
         }
 
         [TestMethod]
+        public void TestUniversalSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("*");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssTypeSelector("*"), 
+                                new CssSelectorFilter[0]) )}),
+                selector);
+        }
+
+
+
+        [TestMethod]
         public void TestMultipleSelectors()
         {
             CssSelectorParser parser = new CssSelectorParser();
@@ -56,7 +73,7 @@ namespace HtmlSharp.Tests
                         new CssSelector(
                             new CssSimpleSelectorSequence(
                                 new CssTypeSelector("a"),
-                                new CssSelectorFilter[] {
+                                new[] {
                                     new CssClassSelector(".class")}))}), 
                 selector);
         }
@@ -72,7 +89,7 @@ namespace HtmlSharp.Tests
                         new CssSelector(
                             new CssSimpleSelectorSequence(
                                 new CssTypeSelector("a"),
-                                new CssSelectorFilter[] {
+                                new[] {
                                     new CssHashSelector("#id")}))}),
                 selector);
         }
@@ -88,7 +105,7 @@ namespace HtmlSharp.Tests
                         new CssSelector(
                             new CssSimpleSelectorSequence(
                                 new CssTypeSelector("a"),
-                                new CssSelectorFilter[] {
+                                new[] {
                                     new CssClassSelector(".class"),
                                     new CssClassSelector(".selected")}))}),
                 selector);

@@ -13,7 +13,7 @@ namespace HtmlSharp.Extensions
 
         public static Match MatchAtIndex(this Regex r, string input, int index)
         {
-            Regex newRegex = new Regex(string.Format("^({0})", r));
+            Regex newRegex = new Regex(string.Format("^(?:{0})", r));
             return newRegex.Match(input.Substring(index));
         }
         

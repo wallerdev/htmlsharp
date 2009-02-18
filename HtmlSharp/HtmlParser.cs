@@ -26,7 +26,7 @@ namespace HtmlSharp
         Regex processingInstructionClose = new Regex(">");
         Regex commentClose = new Regex(@"--\s*>");
         Regex tagFind = new Regex("[a-zA-Z][-.a-zA-Z0-9:_]*");
-        Regex attributeFind = new Regex(@"\s*([a-zA-Z_][-.:a-zA-Z_0-9]*)(\s*=\s*(\'[^\']*\'|""[^""]*""|" +
+        Regex attributeFind = new Regex(@"\s*([a-zA-Z_][-.:a-zA-Z_0-9]*)(\s*=\s*('[^']*'|""[^""]*""|" +
             @"[-a-zA-Z0-9./,:;+*%?!&$\(\)_#=~@]*))?");
 
         Regex locateStartTagEnd = new Regex(@"<[a-zA-Z][-.a-zA-Z0-9:_]*(?:\s+(?:[a-zA-Z_][-.:a-zA-Z0-9_]*(?:\s*=\s*(?:'[^']*'|\""[^\""]*\""|[^'\"">\s]+))?))*\s*");
