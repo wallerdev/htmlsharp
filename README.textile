@@ -43,7 +43,7 @@ Finding multiple tags:
 
 h2. Supported selectors
 
-| _. Pattern             | _. Meaning                                                                                                           |
+|_. Pattern              |_. Meaning                                                                                                            |
 | *                      | any element                                                                                                          |
 | E                      | an element of type E                                                                                                 |
 | E[foo]                 | an E element with a "foo" attribute                                                                                  |
