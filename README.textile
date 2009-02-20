@@ -22,14 +22,18 @@ Let's say you have the following html stored in a string named html.
 
 To be able to query this document, we'll need to parse it:
 
-  HtmlParser parser = new HtmlParser();
-  HtmlDocument doc = parser.Parse(html);
+<pre>
+HtmlParser parser = new HtmlParser();
+HtmlDocument doc = parser.Parse(html);
+</pre>
 
 From there, we can use "css selectors":http://www.w3.org/TR/css3-selectors/#selectors to find the information we want from the document.
 
 Finding the tag with the id of copyright:
 
-  Tag t = doc.Find("#copyright");
+<pre>
+Tag t = doc.Find("#copyright");
+</pre>
 
 Automatic casting to access attributes statically:
 
@@ -41,7 +45,9 @@ string class = paragraph.Class; // null
 
 Finding multiple tags:
 
-  IEnumerable<Tag> paragraphs = doc.FindAll("p"); // Returns the 3 paragraph objects it finds
+<pre>
+IEnumerable<Tag> paragraphs = doc.FindAll("p"); // Returns the 3 paragraph objects it finds
+</pre>
 
 h2. Supported selectors
 
