@@ -33,9 +33,11 @@ Finding the tag with the id of copyright:
 
 Automatic casting to access attributes statically:
 
-  P paragraph = doc.Find&lt;P&gt;("#copyright");
-  string align = paragraph.Align; // "left"
-  string class = paragraph.Class; // null
+<pre>
+P paragraph = doc.Find<P>("#copyright");
+string align = paragraph.Align; // "left"
+string class = paragraph.Class; // null
+</pre>
 
 Finding multiple tags:
 
