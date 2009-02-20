@@ -170,13 +170,13 @@ namespace HtmlSharp.Tests
         public void TestClassFilter()
         {
             CssSelectorParser parser = new CssSelectorParser();
-            var selector = parser.Parse("a.class");
+            var selector = parser.Parse(".class");
             Assert.AreEqual(
                 new CssSelectorsGroup(
                     new[] {
                         new CssSelector(
                             new CssSimpleSelectorSequence(
-                                new CssTypeSelector("a"),
+                                new CssUniversalSelector(),
                                 new[] {
                                     new CssClassSelector(".class")}))}), 
                 selector);
@@ -186,15 +186,127 @@ namespace HtmlSharp.Tests
         public void TestIdFilter()
         {
             CssSelectorParser parser = new CssSelectorParser();
-            var selector = parser.Parse("a#id");
+            var selector = parser.Parse("#id");
             Assert.AreEqual(
                 new CssSelectorsGroup(
                     new[] {
                         new CssSelector(
                             new CssSimpleSelectorSequence(
-                                new CssTypeSelector("a"),
+                                new CssUniversalSelector(),
                                 new[] {
                                     new CssHashSelector("#id")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributePresentFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[href]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeSelector("href")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributePrefixFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[href^=http]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributePrefixMatchSelector("href", "http")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributeSuffixFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[href$=html]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeSuffixMatchSelector("href", "html")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributeSubstringMatcFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[href*=www]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeSubstringMatchSelector("href", "www")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributeExactMatcFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[name=username]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeExactMatchSelector("name", "username")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributeIncludesSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[rel~=copyright]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeIncludesSelector("rel", "copyright")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestAttributeDashSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse("[hreflang|=en]");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssAttributeDashMatchSelector("hreflang", "en")}))}),
                 selector);
         }
 
