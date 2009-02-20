@@ -225,13 +225,151 @@ namespace HtmlSharp
         }
     }
 
-    public class CssPseudoSelector : CssSelectorFilter
+    public class CssPseudoRootSelector : CssSelectorFilter
     {
-        string pseudo;
-
-        public CssPseudoSelector(string pseudo)
+        public CssPseudoRootSelector()
         {
-            this.pseudo = pseudo;
+
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoFirstChildSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoLastChildSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoFirstOfTypeSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoLastOfTypeSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoOnlyChildSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoOnlyOfTypeSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoEmptySelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoEnabledSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoDisabledSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+    }
+
+    public class CssPseudoCheckedSelector : CssSelectorFilter
+    {
+        public override bool Equals(object obj)
+        {
+            return obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
         }
     }
 
@@ -819,9 +957,20 @@ namespace HtmlSharp
             throw new NotImplementedException();
         }
 
+
+        /* '::' starts a pseudo-element, ':' a pseudo-class */
+        /* Exceptions: :first-line, :first-letter, :before and :after. */
+        /* Note that pseudo-elements are restricted to one per selector and */
+        /* occur only in the last simple_selector_sequence. */
+        /*This :: notation is introduced by the current document in order to establish a 
+         * discrimination between pseudo-classes and pseudo-elements. For compatibility with 
+         * existing style sheets, user agents must also accept the previous one-colon notation 
+         * for pseudo-elements introduced in CSS levels 1 and 2 (namely, :first-line, 
+         * :first-letter, :before and :after). This compatibility is not allowed for the new 
+         * pseudo-elements introduced in CSS level 3.
+         */
         private CssSelectorFilter ParsePseudoSelector()
         {
-            return null;
             CssSelectorFilter selector = null;
             if (CurrentToken.Text == ":")
             {
@@ -833,10 +982,63 @@ namespace HtmlSharp
                 if (CurrentToken.Text == ":")
                 {
                     //element
+                    throw new NotImplementedException(":: things arent implemented");
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
                 {
                     //class
+
+                    if (CurrentToken.Text == "root")
+                    {
+                        selector = new CssPseudoRootSelector();
+                    }
+                    else if (CurrentToken.Text == "first-child")
+                    {
+                        selector = new CssPseudoFirstChildSelector();
+                    }
+                    else if (CurrentToken.Text == "last-child")
+                    {
+                        selector = new CssPseudoLastChildSelector();
+                    }
+                    else if (CurrentToken.Text == "first-of-type")
+                    {
+                        selector = new CssPseudoFirstOfTypeSelector();
+                    }
+                    else if (CurrentToken.Text == "last-of-type")
+                    {
+                        selector = new CssPseudoLastOfTypeSelector();
+                    }
+                    else if (CurrentToken.Text == "only-child")
+                    {
+                        selector = new CssPseudoOnlyChildSelector();
+                    }
+                    else if (CurrentToken.Text == "only-of-type")
+                    {
+                        selector = new CssPseudoOnlyOfTypeSelector();
+                    }
+                    else if (CurrentToken.Text == "empty")
+                    {
+                        selector = new CssPseudoEmptySelector();
+                    }
+                    else if (CurrentToken.Text == "enabled")
+                    {
+                        selector = new CssPseudoEnabledSelector();
+                    }
+                    else if (CurrentToken.Text == "disabled")
+                    {
+                        selector = new CssPseudoDisabledSelector();
+                    }
+                    else if (CurrentToken.Text == "checked")
+                    {
+                        selector = new CssPseudoCheckedSelector();
+                    }
+                    else
+                    {
+                        //parse error
+                        throw new Exception("Unsupported pseudo selector");
+                    }
+
+                    currentPosition++;
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.Function)
                 {
@@ -852,7 +1054,7 @@ namespace HtmlSharp
                     }
                 }
             }
-            throw new NotImplementedException();
+            return selector;
         }
 
         private CssSelectorFilter ParseAttributeSelector()

@@ -314,17 +314,193 @@ namespace HtmlSharp.Tests
         public void TestMultipleFilters()
         {
             CssSelectorParser parser = new CssSelectorParser();
-            var selector = parser.Parse("a.class.selected");
+            var selector = parser.Parse(".class.selected");
             Assert.AreEqual(
                 new CssSelectorsGroup(
                     new[] {
                         new CssSelector(
                             new CssSimpleSelectorSequence(
-                                new CssTypeSelector("a"),
+                                new CssUniversalSelector(),
                                 new[] {
                                     new CssClassSelector(".class"),
                                     new CssClassSelector(".selected")}))}),
                 selector);
         }
+
+        [TestMethod]
+        public void TestPseudoRootSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":root");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoRootSelector()}))}),
+                selector);
+        }
+        [TestMethod]
+        public void TestCssPseudoFirstChildSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":first-child");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoFirstChildSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoLastChildSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":last-child");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoLastChildSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoFirstOfTypeSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":first-of-type");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoFirstOfTypeSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoLastOfTypeSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":last-of-type");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoLastOfTypeSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoOnlyChildSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":only-child");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoOnlyChildSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoOnlyOfTypeSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":only-of-type");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoOnlyOfTypeSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoEmptySelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":empty");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoEmptySelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoEnabledSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":enabled");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoEnabledSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoDisabledSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":disabled");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoDisabledSelector()}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssPseudoCheckedSelector()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":checked");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssPseudoCheckedSelector()}))}),
+                selector);
+        }
+
     }
 }
