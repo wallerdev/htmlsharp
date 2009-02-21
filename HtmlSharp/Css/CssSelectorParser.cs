@@ -144,8 +144,8 @@ namespace HtmlSharp.Css
                 {
                     break;
                 }
-                SelectorFilter filterSelector = ParseIDSelector() ?? ParseClassSelector() ??
-                    ParseAttributeSelector() ?? ParsePseudoSelector() ?? ParseNegation();
+                SelectorFilter filterSelector = ParseIDFilter() ?? ParseClassFilter() ??
+                    ParseAttributeFilter() ?? ParsePseudoFilter() ?? ParseNegationFilter();
                 if (filterSelector != null)
                 {
                     filters.Add(filterSelector);
@@ -166,13 +166,13 @@ namespace HtmlSharp.Css
             return new SimpleSelectorSequence(typeSelector, filters);
         }
 
-        private SelectorFilter ParseNegation()
+        private SelectorFilter ParseNegationFilter()
         {
             return null;
             throw new NotImplementedException();
         }
 
-        private SelectorFilter ParsePseudoSelector()
+        private SelectorFilter ParsePseudoFilter()
         {
             SelectorFilter selector = null;
             if (CurrentToken.Text == ":")
@@ -207,7 +207,7 @@ namespace HtmlSharp.Css
                     }
                     else
                     {
-                       ParseError("Unsupported or invalid pseudo selector :" + filterLookup);
+                        ParseError("Unsupported or invalid pseudo selector :" + filterLookup);
                     }
                 }
                 else if (CurrentToken.TokenType == SelectorTokenType.Function)
@@ -261,8 +261,6 @@ namespace HtmlSharp.Css
             return selector;
         }
 
-        /* In CSS3, the expressions are identifiers, strings, */
-        /* or of the form "an+b" */
         private Expression ParseExpression()
         {
             bool negative = false;
@@ -388,7 +386,7 @@ namespace HtmlSharp.Css
             return expression;
         }
 
-        private SelectorFilter ParseAttributeSelector()
+        private SelectorFilter ParseAttributeFilter()
         {
             SelectorFilter selector = null;
 
@@ -396,7 +394,7 @@ namespace HtmlSharp.Css
             {
                 currentPosition++;
                 SkipWhiteSpace();
-                SelectorNamespacePrefix ns = ParseCssNamespacePrefix();
+                SelectorNamespacePrefix ns = ParseNamespacePrefix();
                 string attributeType = Consume(SelectorTokenType.Ident);
                 SkipWhiteSpace();
                 var filterLookup = new Dictionary<SelectorToken, Func<string, SelectorFilter>>()
@@ -465,7 +463,7 @@ namespace HtmlSharp.Css
             }
         }
 
-        private SelectorFilter ParseClassSelector()
+        private SelectorFilter ParseClassFilter()
         {
             SelectorFilter selector = null;
             if (CurrentToken.Text == ".")
@@ -485,7 +483,7 @@ namespace HtmlSharp.Css
             return selector;
         }
 
-        private SelectorFilter ParseIDSelector()
+        private SelectorFilter ParseIDFilter()
         {
             SelectorFilter selector = null;
             if (CurrentToken.TokenType == SelectorTokenType.Hash)
@@ -499,17 +497,12 @@ namespace HtmlSharp.Css
         private TypeSelector ParseUniversalSelector()
         {
             TypeSelector selector = null;
+            SelectorNamespacePrefix prefix = ParseNamespacePrefix();
 
-            int tempPos = currentPosition;
-            SelectorNamespacePrefix prefix = ParseCssNamespacePrefix();
-
-            if (CurrentToken != null)
+            if (CurrentToken != null && CurrentToken.Text == "*")
             {
-                if (CurrentToken.Text == "*")
-                {
-                    selector = new UniversalSelector(prefix);
-                    currentPosition++;
-                }
+                selector = new UniversalSelector(prefix);
+                currentPosition++;
             }
 
             return selector;
@@ -518,23 +511,18 @@ namespace HtmlSharp.Css
         private TypeSelector ParseTypeSelector()
         {
             TypeSelector selector = null;
+            SelectorNamespacePrefix prefix = ParseNamespacePrefix();
 
-            int tempPos = currentPosition;
-            SelectorNamespacePrefix prefix = ParseCssNamespacePrefix();
-
-            if (CurrentToken != null)
+            if (CurrentToken != null && CurrentToken.TokenType == SelectorTokenType.Ident)
             {
-                if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                {
-                    selector = new TypeSelector(CurrentToken.Text, prefix);
-                    currentPosition++;
-                }
+                selector = new TypeSelector(CurrentToken.Text, prefix);
+                currentPosition++;
             }
 
             return selector;
         }
 
-        private SelectorNamespacePrefix ParseCssNamespacePrefix()
+        private SelectorNamespacePrefix ParseNamespacePrefix()
         {
             SelectorNamespacePrefix prefix = null;
 
