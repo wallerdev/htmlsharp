@@ -16,26 +16,55 @@ namespace HtmlSharp.Css
         int currentPosition = 0;
 
         SelectorToken CurrentToken { get { return tokens.ElementAtOrDefault(currentPosition); } }
+        bool End { get { return currentPosition >= tokens.Count; } }
 
         public SelectorsGroup Parse(string selector)
         {
             tokens = tokenizer.Tokenize(selector).ToList();
 
             List<Selector> selectors = new List<Selector>();
-            while (currentPosition < tokens.Count)
+            while (!End)
             {
                 selectors.Add(ParseSelector());
-                if (new SelectorToken(SelectorTokenType.Comma, ",").Equals(CurrentToken))
+                if (!End)
                 {
-                    currentPosition++;
-                }
-                else if (CurrentToken != null)
-                {
-                    //parse error
+                    Consume(SelectorTokenType.Comma);
                 }
             }
 
             return new SelectorsGroup(selectors);
+        }
+
+        void Consume(SelectorTokenType tokenType)
+        {
+            Expect(tokenType);
+            currentPosition++;
+        }
+
+        void Expect(SelectorTokenType tokenType)
+        {
+            if (CurrentToken == null)
+            {
+                ParseErrorOnMissingToken();
+            }
+            else if (CurrentToken.TokenType != tokenType)
+            {
+                ParseError(string.Format(
+                    "Expected token {0} but found {1}", tokenType, CurrentToken.TokenType));
+            }
+        }
+
+        void ParseError(string message)
+        {
+            throw new FormatException(message);
+        }
+
+        void ParseErrorOnMissingToken()
+        {
+            if (CurrentToken == null)
+            {
+                ParseError("Unexpected end of css selector");
+            }
         }
 
         private Selector ParseSelector()
@@ -62,94 +91,54 @@ namespace HtmlSharp.Css
         private Combinator ParseCombinator()
         {
             Combinator combinator = null;
-            if (CurrentToken != null && CurrentToken.TokenType == SelectorTokenType.Plus)
+            if (CurrentToken != null)
             {
-                combinator = new AdjacentSiblingCombinator();
-                currentPosition++;
-                SkipWhiteSpace();
-            }
-            else if (CurrentToken != null && CurrentToken.TokenType == SelectorTokenType.Greater)
-            {
-                combinator = new ChildCombinator();
-                currentPosition++;
-                SkipWhiteSpace();
-            }
-            else if (CurrentToken != null && CurrentToken.TokenType == SelectorTokenType.Tilde)
-            {
-                combinator = new GeneralSiblingCombinator();
-                currentPosition++;
-                SkipWhiteSpace();
-            }
-            else if (CurrentToken != null && CurrentToken.TokenType == SelectorTokenType.WhiteSpace)
-            {
-                combinator = new DescendantCombinator();
-                currentPosition++;
-            }
+                Dictionary<SelectorTokenType, Combinator> lookup = new Dictionary<SelectorTokenType, Combinator>()
+                {
+                    { SelectorTokenType.Plus, new AdjacentSiblingCombinator() },
+                    { SelectorTokenType.Greater, new ChildCombinator() },
+                    { SelectorTokenType.Tilde, new GeneralSiblingCombinator() },
+                    { SelectorTokenType.WhiteSpace, new DescendantCombinator() }
+                };
 
+                if (lookup.TryGetValue(CurrentToken.TokenType, out combinator))
+                {
+                    currentPosition++;
+                    SkipWhiteSpace();
+                }
+            }
             return combinator;
         }
 
         private SimpleSelectorSequence ParseSimpleSelectorSequence()
         {
-            if (CurrentToken == null)
-            {
-                //parse error
-            }
+            ParseErrorOnMissingToken();
 
             TypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
 
             List<SelectorFilter> filters = new List<SelectorFilter>();
-            if (CurrentToken != null)
+            while (true)
             {
-                while (true)
+                if (CurrentToken == null)
                 {
-                    if (CurrentToken == null)
-                    {
-                        break;
-                    }
-                    SelectorFilter filterSelector;
-                    filterSelector = ParseHashSelector();
-                    if (filterSelector != null)
-                    {
-                        filters.Add(filterSelector);
-                        continue;
-                    }
-                    filterSelector = ParseClassSelector();
-                    if (filterSelector != null)
-                    {
-                        filters.Add(filterSelector);
-                        continue;
-                    }
-                    filterSelector = ParseAttributeSelector();
-                    if (filterSelector != null)
-                    {
-                        filters.Add(filterSelector);
-                        continue;
-                    }
-                    filterSelector = ParsePseudoSelector();
-                    if (filterSelector != null)
-                    {
-                        filters.Add(filterSelector);
-                        continue;
-                    }
-                    filterSelector = ParseNegation();
-                    if (filterSelector != null)
-                    {
-                        filters.Add(filterSelector);
-                        continue;
-                    }
-                    if (filterSelector == null)
-                    {
-                        break;
-                    }
+                    break;
+                }
+                SelectorFilter filterSelector = ParseIDSelector() ?? ParseClassSelector() ??
+                    ParseAttributeSelector() ?? ParsePseudoSelector() ?? ParseNegation();
+                if (filterSelector != null)
+                {
+                    filters.Add(filterSelector);
+                }
+                else
+                {
+                    break;
                 }
             }
             if (typeSelector == null)
             {
-                //there better be a hash, class, attrib, pseudo, or negation!
                 if (filters.Count == 0)
                 {
-                    //parse error
+                    ParseError("Expected hash, class, attrib, pseudo, or negation");
                 }
                 typeSelector = new UniversalSelector();
             }
@@ -679,7 +668,7 @@ namespace HtmlSharp.Css
             return selector;
         }
 
-        private SelectorFilter ParseHashSelector()
+        private SelectorFilter ParseIDSelector()
         {
             SelectorFilter selector = null;
             if (CurrentToken.TokenType == SelectorTokenType.Hash)
