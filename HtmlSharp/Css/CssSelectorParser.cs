@@ -41,6 +41,25 @@ namespace HtmlSharp.Css
             currentPosition++;
         }
 
+        void Consume(string tokenText)
+        {
+            Expect(tokenText);
+            currentPosition++;
+        }
+
+        private void Expect(string tokenText)
+        {
+            if (CurrentToken == null)
+            {
+                ParseErrorOnMissingToken();
+            }
+            else if (CurrentToken.Text != tokenText)
+            {
+                ParseError(string.Format(
+                    "Expected token {0} but found {1}", tokenText, CurrentToken.TokenType));
+            }
+        }
+
         void Expect(SelectorTokenType tokenType)
         {
             if (CurrentToken == null)
@@ -151,187 +170,79 @@ namespace HtmlSharp.Css
             throw new NotImplementedException();
         }
 
-
-        /* '::' starts a pseudo-element, ':' a pseudo-class */
-        /* Exceptions: :first-line, :first-letter, :before and :after. */
-        /* Note that pseudo-elements are restricted to one per selector and */
-        /* occur only in the last simple_selector_sequence. */
-        /*This :: notation is introduced by the current document in order to establish a 
-         * discrimination between pseudo-classes and pseudo-elements. For compatibility with 
-         * existing style sheets, user agents must also accept the previous one-colon notation 
-         * for pseudo-elements introduced in CSS levels 1 and 2 (namely, :first-line, 
-         * :first-letter, :before and :after). This compatibility is not allowed for the new 
-         * pseudo-elements introduced in CSS level 3.
-         */
         private SelectorFilter ParsePseudoSelector()
         {
             SelectorFilter selector = null;
             if (CurrentToken.Text == ":")
             {
                 currentPosition++;
-                if (CurrentToken == null)
-                {
-                    //parse error
-                }
+                ParseErrorOnMissingToken();
                 if (CurrentToken.Text == ":")
                 {
-                    //element
-                    throw new NotImplementedException(":: things arent implemented");
+                    ParseError(":: selectors do not apply to static html, so were not implemented.");
                 }
                 else if (CurrentToken.TokenType == SelectorTokenType.Ident)
                 {
-                    //class
+                    var filterLookup = new Dictionary<string, SelectorFilter>()
+                    {
+                        { "root", new RootFilter() },
+                        { "first-child", new FirstChildFilter() },
+                        { "last-child", new LastChildFilter() },
+                        { "first-of-type", new FirstOfTypeFilter() },
+                        { "last-of-type", new LastOfTypeFilter() },
+                        { "only-child", new OnlyChildFilter() },
+                        { "only-of-type", new OnlyOfTypeFilter() },
+                        { "empty", new EmptyFilter() },
+                        { "enabled", new EnabledFilter() },
+                        { "disabled", new DisabledFilter() },
+                        { "checked", new CheckedFilter() }
+                    };
 
-                    if (CurrentToken.Text == "root")
+                    if (filterLookup.ContainsKey(CurrentToken.Text))
                     {
-                        selector = new RootFilter();
-                    }
-                    else if (CurrentToken.Text == "first-child")
-                    {
-                        selector = new FirstChildFilter();
-                    }
-                    else if (CurrentToken.Text == "last-child")
-                    {
-                        selector = new LastChildFilter();
-                    }
-                    else if (CurrentToken.Text == "first-of-type")
-                    {
-                        selector = new FirstOfTypeFilter();
-                    }
-                    else if (CurrentToken.Text == "last-of-type")
-                    {
-                        selector = new LastOfTypeFilter();
-                    }
-                    else if (CurrentToken.Text == "only-child")
-                    {
-                        selector = new OnlyChildFilter();
-                    }
-                    else if (CurrentToken.Text == "only-of-type")
-                    {
-                        selector = new OnlyOfTypeFilter();
-                    }
-                    else if (CurrentToken.Text == "empty")
-                    {
-                        selector = new EmptyFilter();
-                    }
-                    else if (CurrentToken.Text == "enabled")
-                    {
-                        selector = new EnabledFilter();
-                    }
-                    else if (CurrentToken.Text == "disabled")
-                    {
-                        selector = new DisabledFilter();
-                    }
-                    else if (CurrentToken.Text == "checked")
-                    {
-                        selector = new CheckedFilter();
+                        selector = filterLookup[CurrentToken.Text];
+                        currentPosition++;
                     }
                     else
                     {
-                        //parse error
-                        throw new Exception("Unsupported pseudo selector");
+                       ParseError("Unsupported or invalid pseudo selector :" + filterLookup);
                     }
-
-                    currentPosition++;
                 }
                 else if (CurrentToken.TokenType == SelectorTokenType.Function)
                 {
-                    if (CurrentToken.Text == "nth-child(")
+                    var filterLookup = new Dictionary<string, Func<Expression, SelectorFilter>>()
                     {
-                        currentPosition++;
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        SkipWhiteSpace();
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        Expression expression = ParseExpression();
-                        if (expression == null)
-                        {
-                            //parse error
-                        }
-                        selector = new NthChildFilter(expression);
-                    }
-                    else if (CurrentToken.Text == "nth-last-child(")
-                    {
+                        { "nth-child(", e => new NthChildFilter(e) },
+                        { "nth-last-child(", e => new NthLastChildFilter(e) },
+                        { "nth-of-type(", e => new NthOfTypeFilter(e) },
+                        { "nth-last-of-type(", e => new NthLastOfTypeFilter(e) }
+                    };
 
-                        currentPosition++;
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        SkipWhiteSpace();
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        Expression expression = ParseExpression();
-                        if (expression == null)
-                        {
-                            //parse error
-                        }
-                        selector = new NthLastChildFilter(expression);
-                    }
-                    else if (CurrentToken.Text == "nth-of-type(")
+                    if (filterLookup.ContainsKey(CurrentToken.Text))
                     {
-
+                        string text = CurrentToken.Text;
                         currentPosition++;
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
+                        ParseErrorOnMissingToken();
                         SkipWhiteSpace();
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
+                        ParseErrorOnMissingToken();
                         Expression expression = ParseExpression();
                         if (expression == null)
                         {
-                            //parse error
+                            ParseError("Unable to parse expression");
                         }
-                        selector = new NthOfTypeFilter(expression);
-                    }
-                    else if (CurrentToken.Text == "nth-last-of-type(")
-                    {
-
-                        currentPosition++;
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        SkipWhiteSpace();
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
-                        Expression expression = ParseExpression();
-                        if (expression == null)
-                        {
-                            //parse error
-                        }
-                        selector = new NthLastOfTypeFilter(expression);
+                        selector = filterLookup[text](expression);
                     }
                     else if (CurrentToken.Text == "lang(")
                     {
                         currentPosition++;
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
+                        ParseErrorOnMissingToken();
                         SkipWhiteSpace();
-                        if (CurrentToken == null)
-                        {
-                            //parse error
-                        }
+                        ParseErrorOnMissingToken();
                         if (CurrentToken.TokenType == SelectorTokenType.Ident)
                         {
                             selector = new LangFilter(CurrentToken.Text);
                         }
-                        else if (CurrentToken.TokenType == SelectorTokenType.Text)
+                        else if (CurrentToken.TokenType == SelectorTokenType.String)
                         {
                             selector = new LangFilter(CurrentToken.Text.Substring(1, CurrentToken.Text.Length - 2));
                         }
@@ -339,19 +250,11 @@ namespace HtmlSharp.Css
                     }
                     else
                     {
-                        //invalid function name
+                        ParseError("Unrecognized pseudo function");
                     }
                     currentPosition++;
-                    if (CurrentToken.Text != ")")
-                    {
-                        //parse error
-                    }
-                    else
-                    {
-                        currentPosition++;
-                    }
+                    Consume(")");
                 }
-
             }
             return selector;
         }
