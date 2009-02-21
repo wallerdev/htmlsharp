@@ -590,7 +590,7 @@ namespace HtmlSharp
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return Namespace == null ? Name.GetHashCode() : Namespace.GetHashCode() ^ Name.GetHashCode();
         }
     }
 
@@ -611,6 +611,197 @@ namespace HtmlSharp
         public override string ToString()
         {
             return "*";
+        }
+    }
+
+    public class CssExpression
+    {
+
+    }
+
+    public class CssOddExpression : CssNumericExpression
+    {
+        public CssOddExpression()
+            : base(2, 1)
+        {
+        }
+    }
+
+    public class CssEvenExpression : CssNumericExpression
+    {
+        public CssEvenExpression()
+            : base(2, 0)
+        {
+        }
+    }
+
+    public class CssNumericExpression : CssExpression
+    {
+        int n;
+        int b;
+
+        public CssNumericExpression(int n, int b)
+        {
+            this.n = n;
+            this.b = b;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssNumericExpression t = (CssNumericExpression)obj;
+                return n == t.n && b == t.b;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return n.GetHashCode() ^ b.GetHashCode();
+        }
+    }
+
+    public class CssNthChildSelector : CssSelectorFilter
+    {
+        CssExpression expression;
+
+        public CssNthChildSelector(CssExpression expression)
+        {
+            this.expression = expression;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssNthChildSelector t = (CssNthChildSelector)obj;
+                return expression.Equals(t.expression);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return expression.GetHashCode();
+        }
+    }
+
+    public class CssNthLastChildSelector : CssSelectorFilter
+    {
+        CssExpression expression;
+
+        public CssNthLastChildSelector(CssExpression expression)
+        {
+            this.expression = expression;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssNthLastChildSelector t = (CssNthLastChildSelector)obj;
+                return expression.Equals(t.expression);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return expression.GetHashCode();
+        }
+    }
+
+    public class CssNthOfTypeSelector : CssSelectorFilter
+    {
+        CssExpression expression;
+
+        public CssNthOfTypeSelector(CssExpression expression)
+        {
+            this.expression = expression;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssNthOfTypeSelector t = (CssNthOfTypeSelector)obj;
+                return expression.Equals(t.expression);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return expression.GetHashCode();
+        }
+    }
+
+    public class CssNthLastOfTypeSelector : CssSelectorFilter
+    {
+        CssExpression expression;
+
+        public CssNthLastOfTypeSelector(CssExpression expression)
+        {
+            this.expression = expression;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssNthLastOfTypeSelector t = (CssNthLastOfTypeSelector)obj;
+                return expression.Equals(t.expression);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return expression.GetHashCode();
+        }
+    }
+
+    public class CssLangSelector : CssSelectorFilter
+    {
+        string lang;
+
+        public CssLangSelector(string lang)
+        {
+            this.lang = lang;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            else
+            {
+                CssLangSelector t = (CssLangSelector)obj;
+                return lang.Equals(t.lang);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return lang.GetHashCode();
         }
     }
 
@@ -1042,19 +1233,251 @@ namespace HtmlSharp
                 }
                 else if (CurrentToken.TokenType == CssSelectorTokenType.Function)
                 {
+                    if (CurrentToken.Text == "nth-child(")
+                    {
+                        currentPosition++;
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        SkipWhiteSpace();
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        CssExpression expression = ParseExpression();
+                        if (expression == null)
+                        {
+                            //parse error
+                        }
+                        selector = new CssNthChildSelector(expression);
+                    }
+                    else if (CurrentToken.Text == "nth-last-child(")
+                    {
+
+                        currentPosition++;
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        SkipWhiteSpace();
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        CssExpression expression = ParseExpression();
+                        if (expression == null)
+                        {
+                            //parse error
+                        }
+                        selector = new CssNthLastChildSelector(expression);
+                    }
+                    else if (CurrentToken.Text == "nth-of-type(")
+                    {
+
+                        currentPosition++;
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        SkipWhiteSpace();
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        CssExpression expression = ParseExpression();
+                        if (expression == null)
+                        {
+                            //parse error
+                        }
+                        selector = new CssNthOfTypeSelector(expression);
+                    }
+                    else if (CurrentToken.Text == "nth-last-of-type(")
+                    {
+
+                        currentPosition++;
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        SkipWhiteSpace();
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        CssExpression expression = ParseExpression();
+                        if (expression == null)
+                        {
+                            //parse error
+                        }
+                        selector = new CssNthLastOfTypeSelector(expression);
+                    }
+                    else if (CurrentToken.Text == "lang(")
+                    {
+                        currentPosition++;
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        SkipWhiteSpace();
+                        if (CurrentToken == null)
+                        {
+                            //parse error
+                        }
+                        if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+                        {
+                            selector = new CssLangSelector(CurrentToken.Text);
+                        }
+                        else if (CurrentToken.TokenType == CssSelectorTokenType.Text)
+                        {
+                            selector = new CssLangSelector(CurrentToken.Text.Substring(1, CurrentToken.Text.Length - 2));
+                        }
+
+                    }
+                    else
+                    {
+                        //invalid function name
+                    }
                     currentPosition++;
-                    if (CurrentToken == null)
+                    if (CurrentToken.Text != ")")
                     {
                         //parse error
                     }
-                    SkipWhiteSpace();
-                    if (CurrentToken == null)
+                    else
                     {
-                        //parse error
+                        currentPosition++;
                     }
                 }
+
             }
             return selector;
+        }
+
+        /* In CSS3, the expressions are identifiers, strings, */
+        /* or of the form "an+b" */
+        private CssExpression ParseExpression()
+        {
+            bool negative = false;
+            CssExpression expression = null;
+            if (CurrentToken.Text == "-")
+            {
+                negative = true;
+                currentPosition++;
+            }
+            if (CurrentToken.TokenType == CssSelectorTokenType.Dimension || CurrentToken.Text == "n" || CurrentToken.Text == "-n")
+            {
+                string dimension = CurrentToken.Text;
+                int dim;
+                string negativeSecond = null;
+
+                Match m = Regex.Match(CurrentToken.Text, @"(\d+n)-(\d+)");
+                if (m.Success)
+                {
+                    dimension = m.Groups[1].Value;
+                    negativeSecond = m.Groups[2].Value;
+                }
+
+                if (int.TryParse(dimension.Substring(0, dimension.Length - 1), out dim) || CurrentToken.Text == "n" || CurrentToken.Text == "-n")
+                {
+                    if (CurrentToken.Text == "n")
+                    {
+                        dim = 1;
+                    }
+                    else if (CurrentToken.Text == "-n")
+                    {
+                        dim = -1;
+                    }
+                    dim = negative ? dim * -1 : dim;
+                    currentPosition++;
+                    if (CurrentToken.TokenType == CssSelectorTokenType.Plus)
+                    {
+                        currentPosition++;
+                        if (CurrentToken.TokenType == CssSelectorTokenType.Number)
+                        {
+                            //xn+b
+                            int num;
+                            if (int.TryParse(CurrentToken.Text, out num))
+                            {
+                                expression = new CssNumericExpression(dim, num);
+                            }
+                            else
+                            {
+                                //parse error
+                            }
+                        }
+                    }
+                    else if (negativeSecond != null)
+                    {
+                        //xn-b
+                        int num;
+                        if (int.TryParse(negativeSecond, out num))
+                        {
+                            expression = new CssNumericExpression(dim, -num);
+                            currentPosition--;
+                        }
+                        else
+                        {
+                            //parse error
+                        }
+                    }
+                    else if (CurrentToken.Text == ")")
+                    {
+                        expression = new CssNumericExpression(dim, 0);
+                        currentPosition--;
+                    }
+                }
+                else
+                {
+                    //parse error
+                }
+            }
+            else if (CurrentToken.TokenType == CssSelectorTokenType.Number)
+            {
+                //b
+                int num;
+                if (int.TryParse(CurrentToken.Text, out num))
+                {
+                    expression = new CssNumericExpression(0, num * (negative ? -1 : 1));
+                }
+                else
+                {
+                    //parse error
+                }
+            }
+            else if (CurrentToken.TokenType == CssSelectorTokenType.Ident)
+            {
+                //odd or even
+                if (CurrentToken.Text == "odd")
+                {
+                    expression = new CssOddExpression();
+                }
+                else if (CurrentToken.Text == "even")
+                {
+                    expression = new CssOddExpression();
+                }
+                else
+                {
+                    //parse error
+                }
+            }
+            else if (CurrentToken.TokenType == CssSelectorTokenType.String)
+            {
+                string withoutQuotes = CurrentToken.Text.Substring(1, CurrentToken.Text.Length - 2);
+                if (CurrentToken.Text == "odd")
+                {
+                    expression = new CssOddExpression();
+                }
+                else if (CurrentToken.Text == "even")
+                {
+                    expression = new CssOddExpression();
+                }
+                else
+                {
+                    //parse error
+                }
+            }
+
+            return expression;
         }
 
         private CssSelectorFilter ParseAttributeSelector()

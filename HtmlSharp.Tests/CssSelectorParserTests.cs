@@ -502,5 +502,224 @@ namespace HtmlSharp.Tests
                 selector);
         }
 
+        [TestMethod]
+        public void TestCssNthChildFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(1, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssNthLastChildFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-last-child(n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthLastChildSelector(
+                                        new CssNumericExpression(1, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssNthOfTypeFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-of-type(n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthOfTypeSelector(
+                                        new CssNumericExpression(1, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssNthLastOfTypeFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-last-of-type(n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthLastOfTypeSelector(
+                                        new CssNumericExpression(1, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssLangFilter()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":lang(en)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssLangSelector("en")}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionN()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(1, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNumber()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(2)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(0, 2))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNumericN()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(2n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(2, 0))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNumericNPlusNumeric()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(2n+1)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(2, 1))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNumericNMinusNumeric()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(2n-1)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(2, -1))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNegativeNumericNMinusNumeric()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(-2n-1)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(-2, -1))}))}),
+                selector);
+        }
+
+        [TestMethod]
+        public void TestCssExpressionNegativeNumericN()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(-2n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(-2, 0))}))}),
+                selector);
+        }
+
+       [TestMethod]
+        public void TestCssExpressionNegativeN()
+        {
+            CssSelectorParser parser = new CssSelectorParser();
+            var selector = parser.Parse(":nth-child(-n)");
+            Assert.AreEqual(
+                new CssSelectorsGroup(
+                    new[] {
+                        new CssSelector(
+                            new CssSimpleSelectorSequence(
+                                new CssUniversalSelector(),
+                                new[] {
+                                    new CssNthChildSelector(
+                                        new CssNumericExpression(-1, 0))}))}),
+                selector);
+        }
     }
 }
