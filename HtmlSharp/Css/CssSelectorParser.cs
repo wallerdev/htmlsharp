@@ -35,10 +35,12 @@ namespace HtmlSharp.Css
             return new SelectorsGroup(selectors);
         }
 
-        void Consume(SelectorTokenType tokenType)
+        string Consume(SelectorTokenType tokenType)
         {
             Expect(tokenType);
+            string token = CurrentToken.Text;
             currentPosition++;
+            return token;
         }
 
         void Consume(string tokenText)
@@ -395,134 +397,46 @@ namespace HtmlSharp.Css
                 currentPosition++;
                 SkipWhiteSpace();
                 SelectorNamespacePrefix ns = ParseCssNamespacePrefix();
-                string attributeType = null;
-                if (CurrentToken.TokenType == SelectorTokenType.Ident)
+                string attributeType = Consume(SelectorTokenType.Ident);
+                SkipWhiteSpace();
+                var filterLookup = new Dictionary<SelectorToken, Func<string, SelectorFilter>>()
                 {
-                    attributeType = CurrentToken.Text;
+                    { new  SelectorToken(SelectorTokenType.PrefixMatch, "^="), 
+                        text => new AttributePrefixFilter(attributeType, text) },
+                    { new SelectorToken(SelectorTokenType.SuffixMatch, "$="),
+                        text => new AttributeSuffixFilter(attributeType, text) },
+                    { new SelectorToken(SelectorTokenType.SubstringMatch, "*="),
+                        text => new AttributeSubstringFilter(attributeType, text) },
+                    { new SelectorToken(SelectorTokenType.Text, "="),
+                        text => new AttributeExactFilter(attributeType, text) },
+                    { new SelectorToken(SelectorTokenType.Includes, "~="),
+                        text => new AttributeIncludesFilter(attributeType, text) },
+                    { new SelectorToken(SelectorTokenType.DashMatch, "|="),
+                        text => new AttributeDashFilter(attributeType, text) }
+                };
+                if (filterLookup.ContainsKey(CurrentToken))
+                {
+                    SelectorToken token = CurrentToken;
                     currentPosition++;
+                    SkipWhiteSpace();
+                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
+                    {
+                        selector = filterLookup[token](CurrentToken.Text);
+                    }
+                    else if (CurrentToken.TokenType == SelectorTokenType.String)
+                    {
+                        selector = filterLookup[CurrentToken](CurrentToken.Text);
+                    }
+                    else
+                    {
+                        ParseError("Unexpected token type for attribute matcher");
+                    }
+                    currentPosition++;
+                    SkipWhiteSpace();
                 }
                 else
                 {
-                    // parse error
-                }
-                SkipWhiteSpace();
-                if (CurrentToken.TokenType == SelectorTokenType.PrefixMatch)
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributePrefixFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributePrefixFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.TokenType == SelectorTokenType.SuffixMatch)
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributeSuffixFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributeSuffixFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.TokenType == SelectorTokenType.SubstringMatch)
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributeSubstringFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributeSubstringFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.Text == "=")
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributeExactFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributeExactFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.TokenType == SelectorTokenType.Includes)
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributeIncludesFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributeIncludesFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.TokenType == SelectorTokenType.DashMatch)
-                {
-                    currentPosition++;
-                    SkipWhiteSpace();
-                    if (CurrentToken.TokenType == SelectorTokenType.Ident)
-                    {
-                        selector = new AttributeDashFilter(attributeType, CurrentToken.Text);
-                    }
-                    else if (CurrentToken.TokenType == SelectorTokenType.String)
-                    {
-                        selector = new AttributeDashFilter(attributeType, CurrentToken.Text);
-                    }
-                    else
-                    {
-                        //parse error lol
-                    }
-                    currentPosition++;
-                    SkipWhiteSpace();
-                }
-                else if (CurrentToken.Text != "]")
-                {
-                    //parse error lolz
+                    Expect("]");
                 }
 
                 if (CurrentToken.Text == "]" && selector == null)
