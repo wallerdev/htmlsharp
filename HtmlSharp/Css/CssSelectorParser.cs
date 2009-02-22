@@ -53,7 +53,7 @@ namespace HtmlSharp.Css
         {
             if (CurrentToken == null)
             {
-                ParseErrorOnMissingToken();
+                ParseErrorIfEnd();
             }
             else if (CurrentToken.Text != tokenText)
             {
@@ -64,11 +64,8 @@ namespace HtmlSharp.Css
 
         void Expect(SelectorTokenType tokenType)
         {
-            if (CurrentToken == null)
-            {
-                ParseErrorOnMissingToken();
-            }
-            else if (CurrentToken.TokenType != tokenType)
+            ParseErrorIfEnd();
+            if (CurrentToken.TokenType != tokenType)
             {
                 ParseError(string.Format(
                     "Expected token {0} but found {1}", tokenType, CurrentToken.TokenType));
@@ -80,9 +77,9 @@ namespace HtmlSharp.Css
             throw new FormatException(message);
         }
 
-        void ParseErrorOnMissingToken()
+        void ParseErrorIfEnd()
         {
-            if (CurrentToken == null)
+            if (End)
             {
                 ParseError("Unexpected end of css selector");
             }
@@ -112,7 +109,7 @@ namespace HtmlSharp.Css
         private Combinator ParseCombinator()
         {
             Combinator combinator = null;
-            if (CurrentToken != null)
+            if (!End)
             {
                 Dictionary<SelectorTokenType, Combinator> lookup = new Dictionary<SelectorTokenType, Combinator>()
                 {
@@ -133,14 +130,14 @@ namespace HtmlSharp.Css
 
         private SimpleSelectorSequence ParseSimpleSelectorSequence()
         {
-            ParseErrorOnMissingToken();
+            ParseErrorIfEnd();
 
             TypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
 
             List<SelectorFilter> filters = new List<SelectorFilter>();
             while (true)
             {
-                if (CurrentToken == null)
+                if (End)
                 {
                     break;
                 }
@@ -168,8 +165,38 @@ namespace HtmlSharp.Css
 
         private SelectorFilter ParseNegationFilter()
         {
-            return null;
-            throw new NotImplementedException();
+            SelectorFilter filter = null;
+            if(CurrentToken.TokenType == SelectorTokenType.Not)
+            {
+                Consume(SelectorTokenType.Not);
+                SkipWhiteSpace();
+                ParseErrorIfEnd();
+                filter = ParseNegationArgument();
+                if (filter == null)
+                {
+                    ParseError("Expected negation filter");
+                }
+                SkipWhiteSpace();
+                Consume(")");
+            }
+            return filter;
+        }
+
+        private SelectorFilter ParseNegationArgument()
+        {
+            SelectorFilter filter = null;
+            TypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
+            if (typeSelector != null)
+            {
+                filter = new NegationTypeFilter(typeSelector);
+            }
+            SelectorFilter negationFilter = ParseIDFilter() ?? ParseClassFilter() ??
+                ParseAttributeFilter() ?? ParsePseudoFilter();
+            if (negationFilter != null)
+            {
+                filter = new NegationFilter(negationFilter);
+            }
+            return filter;
         }
 
         private SelectorFilter ParsePseudoFilter()
@@ -178,7 +205,7 @@ namespace HtmlSharp.Css
             if (CurrentToken.Text == ":")
             {
                 currentPosition++;
-                ParseErrorOnMissingToken();
+                ParseErrorIfEnd();
                 if (CurrentToken.Text == ":")
                 {
                     ParseError(":: selectors do not apply to static html, so were not implemented.");
@@ -224,9 +251,9 @@ namespace HtmlSharp.Css
                     {
                         string text = CurrentToken.Text;
                         currentPosition++;
-                        ParseErrorOnMissingToken();
+                        ParseErrorIfEnd();
                         SkipWhiteSpace();
-                        ParseErrorOnMissingToken();
+                        ParseErrorIfEnd();
                         Expression expression = ParseExpression();
                         if (expression == null)
                         {
@@ -237,9 +264,9 @@ namespace HtmlSharp.Css
                     else if (CurrentToken.Text == "lang(")
                     {
                         currentPosition++;
-                        ParseErrorOnMissingToken();
+                        ParseErrorIfEnd();
                         SkipWhiteSpace();
-                        ParseErrorOnMissingToken();
+                        ParseErrorIfEnd();
                         if (CurrentToken.TokenType == SelectorTokenType.Ident)
                         {
                             selector = new LangFilter(CurrentToken.Text);
@@ -469,13 +496,10 @@ namespace HtmlSharp.Css
             if (CurrentToken.Text == ".")
             {
                 currentPosition++;
-                if (CurrentToken == null)
-                {
-                    //parse error
-                }
+                ParseErrorIfEnd();
                 if (CurrentToken.TokenType == SelectorTokenType.Ident)
                 {
-                    selector = new ClassFilter("." + CurrentToken.Text);
+                    selector = new ClassFilter(CurrentToken.Text);
                 }
 
                 currentPosition++;
@@ -488,7 +512,7 @@ namespace HtmlSharp.Css
             SelectorFilter selector = null;
             if (CurrentToken.TokenType == SelectorTokenType.Hash)
             {
-                selector = new IDFilter(CurrentToken.Text);
+                selector = new IDFilter(CurrentToken.Text.Substring(1));
                 currentPosition++;
             }
             return selector;

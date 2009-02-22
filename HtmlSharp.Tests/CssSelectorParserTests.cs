@@ -179,7 +179,7 @@ namespace HtmlSharp.Tests
                             new SimpleSelectorSequence(
                                 new UniversalSelector(),
                                 new[] {
-                                    new ClassFilter(".class")}))}), 
+                                    new ClassFilter("class")}))}), 
                 selector);
         }
 
@@ -195,7 +195,7 @@ namespace HtmlSharp.Tests
                             new SimpleSelectorSequence(
                                 new UniversalSelector(),
                                 new[] {
-                                    new IDFilter("#id")}))}),
+                                    new IDFilter("id")}))}),
                 selector);
         }
 
@@ -323,8 +323,8 @@ namespace HtmlSharp.Tests
                             new SimpleSelectorSequence(
                                 new UniversalSelector(),
                                 new[] {
-                                    new ClassFilter(".class"),
-                                    new ClassFilter(".selected")}))}),
+                                    new ClassFilter("class"),
+                                    new ClassFilter("selected")}))}),
                 selector);
         }
 
@@ -722,5 +722,108 @@ namespace HtmlSharp.Tests
                                         new NumericExpression(-1, 0))}))}),
                 selector);
         }
+
+       [TestMethod]
+       public void TestCssNegationUniversalFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not(*)");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationTypeFilter(
+                                        new UniversalSelector())}))}),
+               selector);
+       }
+
+       [TestMethod]
+       public void TestCssNegationTypeFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not(p)");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationTypeFilter(
+                                        new TypeSelector("p"))}))}),
+               selector);
+       }
+
+       [TestMethod]
+       public void TestCssNegationAttributeFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not([align=right])");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationFilter(
+                                        new AttributeExactFilter("align", "right"))}))}),
+               selector);
+       }
+
+       [TestMethod]
+       public void TestCssNegationIDFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not(#id)");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationFilter(
+                                        new IDFilter("id"))}))}),
+               selector);
+       }
+
+       [TestMethod]
+       public void TestCssNegationClassFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not(.class)");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationFilter(
+                                        new ClassFilter("class"))}))}),
+               selector);
+       }
+
+       [TestMethod]
+       public void TestCssNegationPseudoFilter()
+       {
+           SelectorParser parser = new SelectorParser();
+           var selector = parser.Parse(":not(:nth-child(2))");
+           Assert.AreEqual(
+               new SelectorsGroup(
+                   new[] {
+                        new Selector(
+                            new SimpleSelectorSequence(
+                                new UniversalSelector(),
+                                new[] {
+                                    new NegationFilter(
+                                        new NthChildFilter(
+                                            new NumericExpression(0, 2)))}))}),
+               selector);
+       }
     }
 }

@@ -73,6 +73,7 @@
     <Compile Include="Css\LastChildFilter.cs" />
     <Compile Include="Css\LastOfTypeFilter.cs" />
     <Compile Include="Css\NegationFilter.cs" />
+    <Compile Include="Css\NegationTypeFilter.cs" />
     <Compile Include="Css\NthChildFilter.cs" />
     <Compile Include="Css\NthLastChildFilter.cs" />
     <Compile Include="Css\NthLastOfTypeFilter.cs" />

@@ -5,13 +5,13 @@ using System.Text;
 
 namespace HtmlSharp.Css
 {
-    public class NegationFilter : SelectorFilter
+    public class NegationTypeFilter : SelectorFilter
     {
-        SelectorFilter filter;
+        TypeSelector selector;
 
-        public NegationFilter(SelectorFilter filter)
+        public NegationTypeFilter(TypeSelector selector)
         {
-            this.filter = filter;
+            this.selector = selector;
         }
 
         public override bool Equals(object obj)
@@ -22,14 +22,14 @@ namespace HtmlSharp.Css
             }
             else
             {
-                NegationFilter t = (NegationFilter)obj;
-                return filter.Equals(t.filter);
+                NegationTypeFilter t = (NegationTypeFilter)obj;
+                return selector.Equals(t.selector);
             }
         }
 
         public override int GetHashCode()
         {
-            return filter.GetHashCode();
+            return selector.GetHashCode();
         }
     }
 }
