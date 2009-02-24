@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
@@ -51,6 +52,22 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return combinators.Aggregate(0, (a, b) => a ^= b.GetHashCode()) & selectors.Aggregate(0, (a, b) => a ^= b.GetHashCode());
+        }
+
+        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            for (int i = 0; i < selectors.Count; i++)
+            {
+                if (selectors.Count < i)
+                {
+                    //tags = selectors[i].Apply(tags);
+                }
+                if (combinators.Capacity < i)
+                {
+                    //tags = combinators[i].Apply(tags);
+                }
+            }
+            return null;
         }
     }
 }

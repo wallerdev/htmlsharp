@@ -140,7 +140,6 @@ namespace HtmlSharp.Elements
         protected Tag(params TagAttribute[] attributes)
             : this(attributes, new Element[0])
         {
-
         }
 
         protected Tag(IEnumerable<TagAttribute> attributes, params Element[] children)

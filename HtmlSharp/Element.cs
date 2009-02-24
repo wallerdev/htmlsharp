@@ -34,6 +34,13 @@ namespace HtmlSharp
 
         internal void AddChild(Element element)
         {
+            element.Parent = this;
+            Element previous = children.ElementAtOrDefault(children.Count - 1);
+            if (previous != null)
+            {
+                element.PreviousSibling = previous;
+                previous.NextSibling = element;
+            }
             children.Add(element);
         }
     }

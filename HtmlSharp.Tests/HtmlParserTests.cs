@@ -145,14 +145,36 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new Root(new Div(new TagAttribute("id", "value"))), page.Root);
         }
 
-        //Nestable Tags
-
         [TestMethod]
         public void TestDuplicateNestedNestableTags()
         {
-            parser = new HtmlParser();
             var page = parser.Parse("<div><div></div>");
             Assert.AreEqual(new Root(new Div(new Div())), page.Root);
+        }
+
+        [TestMethod]
+        public void TestParentIsSet()
+        {
+            var page = parser.Parse("<div><p></div>");
+            Assert.AreEqual(page.Root, page.Root.Children.ElementAt(0).Parent);
+            Assert.AreEqual(page.Root.Children.ElementAt(0), 
+                page.Root.Children.ElementAt(0).Children.ElementAt(0).Parent);
+        }
+
+        [TestMethod]
+        public void TestNextSiblingIsSet()
+        {
+            var page = parser.Parse("<p>text</p></p><p>text</p>");
+            Assert.AreEqual(page.Root.Children.ElementAt(1), 
+                page.Root.Children.ElementAt(0).NextSibling);
+        }
+
+        [TestMethod]
+        public void TestPreviousSiblingIsSet()
+        {
+            var page = parser.Parse("<p>text</p></p><p>text</p>");
+            Assert.AreEqual(page.Root.Children.ElementAt(0),
+                page.Root.Children.ElementAt(1).PreviousSibling);
         }
     }
 }
