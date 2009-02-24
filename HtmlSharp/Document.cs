@@ -16,8 +16,8 @@ namespace HtmlSharp
 
         public IEnumerable<Tag> GetTags()
         {
-            Element currentTag = Root.Children.ElementAt(0);
-            while (currentTag.Next != null)
+            Element currentTag = Root.Children.ElementAtOrDefault(0);
+            while (currentTag != null)
             {
                 Tag current = currentTag as Tag;
                 if (current != null)
