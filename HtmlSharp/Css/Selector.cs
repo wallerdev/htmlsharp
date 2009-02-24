@@ -58,16 +58,16 @@ namespace HtmlSharp.Css
         {
             for (int i = 0; i < selectors.Count; i++)
             {
-                if (selectors.Count < i)
+                if (i < selectors.Count)
                 {
-                    //tags = selectors[i].Apply(tags);
+                    tags = selectors[i].Apply(tags);
                 }
-                if (combinators.Capacity < i)
+                if (i < combinators.Capacity)
                 {
                     //tags = combinators[i].Apply(tags);
                 }
             }
-            return null;
+            return tags;
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using HtmlSharp.Elements.Tags;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Tests
 {
@@ -23,7 +25,8 @@ namespace HtmlSharp.Tests
         [TestMethod]
         public void TestTypeSelector()
         {
-            doc.Find("p");
+            var tag = doc.Find("p");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
         }
     }
 }

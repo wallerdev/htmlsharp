@@ -16,21 +16,15 @@ namespace HtmlSharp
 
         public IEnumerable<Tag> GetTags()
         {
-            foreach (var tag in GetAllChildTags(Root))
+            Element currentTag = Root.Children.ElementAt(0);
+            while (currentTag.Next != null)
             {
-                yield return tag;
-            }
-        }
-
-        IEnumerable<Tag> GetAllChildTags(Element tag)
-        {
-            foreach (var child in tag.Children)
-            {
-                if (child is Tag)
+                Tag current = currentTag as Tag;
+                if (current != null)
                 {
-                    yield return child as Tag;
+                    yield return current;
                 }
-                GetAllChildTags(child);
+                currentTag = currentTag.Next;
             }
         }
 
@@ -62,9 +56,7 @@ namespace HtmlSharp
         {
             SelectorParser parser = new SelectorParser();
             var selectorGroup = parser.Parse(selector);
-            selectorGroup.Apply(GetTags());
-
-            return null;
+            return selectorGroup.Apply(GetTags()).FirstOrDefault();
         }
     }
 }

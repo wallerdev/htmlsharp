@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
@@ -37,6 +38,14 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return Namespace == null ? Name.GetHashCode() : Namespace.GetHashCode() ^ Name.GetHashCode();
+        }
+
+        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            foreach (var tag in tags.Where(tag => tag.TagName == Name))
+            {
+                yield return tag;
+            }
         }
     }
 }
