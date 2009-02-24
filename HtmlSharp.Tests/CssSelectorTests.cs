@@ -19,7 +19,7 @@ namespace HtmlSharp.Tests
         public CssSelectorTests()
         {
             HtmlParser parser = new HtmlParser();
-            doc = parser.Parse(File.ReadAllText("../../../HtmlSharp.Tests/Simple.html"));
+            doc = parser.Parse(File.ReadAllText("Simple.html"));
         }
 
         [TestMethod]
