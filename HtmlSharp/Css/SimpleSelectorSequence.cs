@@ -38,7 +38,7 @@ namespace HtmlSharp.Css
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
             tags = selector.Apply(tags);
-            return tags;
+            return filters.Aggregate(tags, (t, filter) =>  filter.Apply(t));
         }
     }
 }

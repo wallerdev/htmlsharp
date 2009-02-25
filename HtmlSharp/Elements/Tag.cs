@@ -160,7 +160,14 @@ namespace HtmlSharp.Elements
         {
             get
             {
-                return attributes[attribute].Value;
+                if (attributes.ContainsKey(attribute))
+                {
+                    return attributes[attribute].Value;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

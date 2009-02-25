@@ -40,7 +40,7 @@ namespace HtmlSharp.Css
             return Namespace == null ? Name.GetHashCode() : Namespace.GetHashCode() ^ Name.GetHashCode();
         }
 
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        public virtual IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
             foreach (var tag in tags.Where(tag => tag.TagName == Name))
             {

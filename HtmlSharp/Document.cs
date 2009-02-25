@@ -37,9 +37,9 @@ namespace HtmlSharp
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            foreach (Element ele in Root.Children)
+            foreach (Element element in Root.Children)
             {
-                builder.Append(ele.ToString());
+                builder.Append(element.ToString());
             }
             return builder.ToString();
         }

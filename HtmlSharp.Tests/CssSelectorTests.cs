@@ -51,5 +51,39 @@ namespace HtmlSharp.Tests
             tag = doc.Find("body > p");
             Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
         }
+
+        [TestMethod]
+        public void TestSiblingCombinator()
+        {
+            var tag = doc.Find("body + h1");
+            Assert.IsNull(tag);
+            tag = doc.Find("h1 + p");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
+        }
+
+        [TestMethod]
+        public void TestGeneralSiblingCombinator()
+        {
+            var tag = doc.Find("body ~ h2");
+            Assert.IsNull(tag);
+            tag = doc.Find("h1 ~ h2");
+            Assert.AreEqual(new H2(new HtmlText() { Value = "Really, it's unfortunate." }), tag);
+        }
+
+        [TestMethod]
+        public void TestIDFilter()
+        {
+            var tag = doc.Find("#info");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
+
+        [TestMethod]
+        public void TestClassFilter()
+        {
+            var tag = doc.Find(".more");
+            Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
+                new HtmlText() { Value = "Nothing to really talk about." }), tag);
+        }
     }
 }

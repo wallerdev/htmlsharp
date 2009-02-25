@@ -35,7 +35,7 @@ namespace HtmlSharp.Css
 
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            return tags.Where(tag => tag["class"] == klass);
         }
     }
 }
