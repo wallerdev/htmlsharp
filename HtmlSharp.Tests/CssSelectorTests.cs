@@ -85,5 +85,13 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
                 new HtmlText() { Value = "Nothing to really talk about." }), tag);
         }
+
+        [TestMethod]
+        public void TestUniversalSelector()
+        {
+            HtmlParser parser = new HtmlParser();
+            var html = parser.Parse("<p></p>");
+            Assert.AreEqual(new P(), html.Find("*"));
+        }
     }
 }
