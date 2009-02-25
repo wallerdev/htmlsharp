@@ -15,7 +15,17 @@ namespace HtmlSharp.Css
 
         public override IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            foreach (var tag in tags)
+            {
+                foreach (var child in tag.Children)
+                {
+                    Tag childTag = child as Tag;
+                    if (childTag != null)
+                    {
+                        yield return childTag;
+                    }
+                }
+            }
         }
     }
 }

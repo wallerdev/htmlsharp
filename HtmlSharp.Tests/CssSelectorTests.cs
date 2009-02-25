@@ -42,5 +42,14 @@ namespace HtmlSharp.Tests
             var tag = doc.Find("html p");
             Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
         }
+
+        [TestMethod]
+        public void TestChildCombinator()
+        {
+            var tag = doc.Find("html > p");
+            Assert.IsNull(tag);
+            tag = doc.Find("body > p");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
+        }
     }
 }
