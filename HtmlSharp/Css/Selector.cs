@@ -62,9 +62,9 @@ namespace HtmlSharp.Css
                 {
                     tags = selectors[i].Apply(tags);
                 }
-                if (i < combinators.Capacity)
+                if (i < combinators.Count)
                 {
-                    //tags = combinators[i].Apply(tags);
+                    tags = combinators[i].Apply(tags);
                 }
             }
             return tags;

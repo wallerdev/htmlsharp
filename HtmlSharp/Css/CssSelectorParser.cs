@@ -134,14 +134,14 @@ namespace HtmlSharp.Css
 
             TypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
 
-            List<SelectorFilter> filters = new List<SelectorFilter>();
+            List<IFilter> filters = new List<IFilter>();
             while (true)
             {
                 if (End)
                 {
                     break;
                 }
-                SelectorFilter filterSelector = ParseIDFilter() ?? ParseClassFilter() ??
+                IFilter filterSelector = ParseIDFilter() ?? ParseClassFilter() ??
                     ParseAttributeFilter() ?? ParsePseudoFilter() ?? ParseNegationFilter();
                 if (filterSelector != null)
                 {
@@ -163,9 +163,9 @@ namespace HtmlSharp.Css
             return new SimpleSelectorSequence(typeSelector, filters);
         }
 
-        private SelectorFilter ParseNegationFilter()
+        private IFilter ParseNegationFilter()
         {
-            SelectorFilter filter = null;
+            IFilter filter = null;
             if(CurrentToken.TokenType == SelectorTokenType.Not)
             {
                 Consume(SelectorTokenType.Not);
@@ -182,15 +182,15 @@ namespace HtmlSharp.Css
             return filter;
         }
 
-        private SelectorFilter ParseNegationArgument()
+        private IFilter ParseNegationArgument()
         {
-            SelectorFilter filter = null;
+            IFilter filter = null;
             TypeSelector typeSelector = ParseTypeSelector() ?? ParseUniversalSelector();
             if (typeSelector != null)
             {
                 filter = new NegationTypeFilter(typeSelector);
             }
-            SelectorFilter negationFilter = ParseIDFilter() ?? ParseClassFilter() ??
+            IFilter negationFilter = ParseIDFilter() ?? ParseClassFilter() ??
                 ParseAttributeFilter() ?? ParsePseudoFilter();
             if (negationFilter != null)
             {
@@ -199,9 +199,9 @@ namespace HtmlSharp.Css
             return filter;
         }
 
-        private SelectorFilter ParsePseudoFilter()
+        private IFilter ParsePseudoFilter()
         {
-            SelectorFilter selector = null;
+            IFilter selector = null;
             if (CurrentToken.Text == ":")
             {
                 currentPosition++;
@@ -212,7 +212,7 @@ namespace HtmlSharp.Css
                 }
                 else if (CurrentToken.TokenType == SelectorTokenType.Ident)
                 {
-                    var filterLookup = new Dictionary<string, SelectorFilter>()
+                    var filterLookup = new Dictionary<string, IFilter>()
                     {
                         { "root", new RootFilter() },
                         { "first-child", new FirstChildFilter() },
@@ -239,7 +239,7 @@ namespace HtmlSharp.Css
                 }
                 else if (CurrentToken.TokenType == SelectorTokenType.Function)
                 {
-                    var filterLookup = new Dictionary<string, Func<Expression, SelectorFilter>>()
+                    var filterLookup = new Dictionary<string, Func<Expression, IFilter>>()
                     {
                         { "nth-child(", e => new NthChildFilter(e) },
                         { "nth-last-child(", e => new NthLastChildFilter(e) },
@@ -413,9 +413,9 @@ namespace HtmlSharp.Css
             return expression;
         }
 
-        private SelectorFilter ParseAttributeFilter()
+        private IFilter ParseAttributeFilter()
         {
-            SelectorFilter selector = null;
+            IFilter selector = null;
 
             if (CurrentToken.Text == "[")
             {
@@ -424,7 +424,7 @@ namespace HtmlSharp.Css
                 SelectorNamespacePrefix ns = ParseNamespacePrefix();
                 string attributeType = Consume(SelectorTokenType.Ident);
                 SkipWhiteSpace();
-                var filterLookup = new Dictionary<SelectorToken, Func<string, SelectorFilter>>()
+                var filterLookup = new Dictionary<SelectorToken, Func<string, IFilter>>()
                 {
                     { new  SelectorToken(SelectorTokenType.PrefixMatch, "^="), 
                         text => new AttributePrefixFilter(attributeType, text) },
@@ -490,9 +490,9 @@ namespace HtmlSharp.Css
             }
         }
 
-        private SelectorFilter ParseClassFilter()
+        private IFilter ParseClassFilter()
         {
-            SelectorFilter selector = null;
+            IFilter selector = null;
             if (CurrentToken.Text == ".")
             {
                 currentPosition++;
@@ -507,9 +507,9 @@ namespace HtmlSharp.Css
             return selector;
         }
 
-        private SelectorFilter ParseIDFilter()
+        private IFilter ParseIDFilter()
         {
-            SelectorFilter selector = null;
+            IFilter selector = null;
             if (CurrentToken.TokenType == SelectorTokenType.Hash)
             {
                 selector = new IDFilter(CurrentToken.Text.Substring(1));

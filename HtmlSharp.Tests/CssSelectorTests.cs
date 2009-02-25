@@ -28,5 +28,19 @@ namespace HtmlSharp.Tests
             var tag = doc.Find("p");
             Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
         }
+
+        [TestMethod]
+        public void TestFindFail()
+        {
+            var tag = doc.Find("form");
+            Assert.IsNull(tag);
+        }
+
+        [TestMethod]
+        public void TestDescendantCombinator()
+        {
+            var tag = doc.Find("html p");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
+        }
     }
 }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class LangFilter : SelectorFilter
+    public class LangFilter : IFilter
     {
         string lang;
 
@@ -30,6 +31,11 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return lang.GetHashCode();
+        }
+
+        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            throw new NotImplementedException();
         }
     }
 }

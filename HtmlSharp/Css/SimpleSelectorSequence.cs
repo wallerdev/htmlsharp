@@ -8,10 +8,10 @@ namespace HtmlSharp.Css
 {
     public class SimpleSelectorSequence
     {
-        IEnumerable<SelectorFilter> filters;
+        IEnumerable<IFilter> filters;
         TypeSelector selector;
 
-        public SimpleSelectorSequence(TypeSelector selector, IEnumerable<SelectorFilter> filters)
+        public SimpleSelectorSequence(TypeSelector selector, IEnumerable<IFilter> filters)
         {
             this.selector = selector;
             this.filters = filters;

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class Combinator
+    public abstract class Combinator : IFilter
     {
         public override bool Equals(object obj)
         {
@@ -16,5 +17,7 @@ namespace HtmlSharp.Css
         {
             return GetType().GetHashCode();
         }
+
+        public abstract IEnumerable<Tag> Apply(IEnumerable<Tag> tags);
     }
 }

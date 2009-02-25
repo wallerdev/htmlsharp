@@ -25,7 +25,7 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new SimpleSelectorSequence(
                                 new TypeSelector("a"), 
-                                new SelectorFilter[0]) )}), 
+                                new IFilter[0]) )}), 
                 selector);
         }
 
@@ -40,7 +40,7 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new SimpleSelectorSequence(
                                 new UniversalSelector(), 
-                                new SelectorFilter[0]) )}),
+                                new IFilter[0]) )}),
                 selector);
         }
 
@@ -54,10 +54,10 @@ namespace HtmlSharp.Tests
                     new[] {
                         new Selector(
                             new SimpleSelectorSequence(
-                                new TypeSelector("a"), new SelectorFilter[0])),
+                                new TypeSelector("a"), new IFilter[0])),
                         new Selector(
                             new SimpleSelectorSequence(
-                                new TypeSelector("div"), new SelectorFilter[0]))}), 
+                                new TypeSelector("div"), new IFilter[0]))}), 
                 selector);
         }
 
@@ -72,9 +72,9 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new[] {
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("div"), new SelectorFilter[0]),
+                                   new TypeSelector("div"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("a"), new SelectorFilter[0])},
+                                   new TypeSelector("a"), new IFilter[0])},
                             new[] {
                                 new DescendantCombinator()
                             })}),
@@ -92,9 +92,9 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new[] {
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("div"), new SelectorFilter[0]),
+                                   new TypeSelector("div"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("a"), new SelectorFilter[0])},
+                                   new TypeSelector("a"), new IFilter[0])},
                             new[] {
                                 new ChildCombinator()
                             })}),
@@ -112,9 +112,9 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new[] {
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("div"), new SelectorFilter[0]),
+                                   new TypeSelector("div"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("a"), new SelectorFilter[0])},
+                                   new TypeSelector("a"), new IFilter[0])},
                             new[] {
                                 new AdjacentSiblingCombinator()
                             })}),
@@ -132,13 +132,13 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new[] {
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("div"), new SelectorFilter[0]),
+                                   new TypeSelector("div"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("table"), new SelectorFilter[0]),
+                                   new TypeSelector("table"), new IFilter[0]),
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("tr"), new SelectorFilter[0]),
+                                   new TypeSelector("tr"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("td"), new SelectorFilter[0])},
+                                   new TypeSelector("td"), new IFilter[0])},
                             new Combinator[] {
                                 new ChildCombinator(),
                                 new DescendantCombinator(),
@@ -158,9 +158,9 @@ namespace HtmlSharp.Tests
                         new Selector(
                             new[] {
                                 new SimpleSelectorSequence(
-                                   new TypeSelector("div"), new SelectorFilter[0]),
+                                   new TypeSelector("div"), new IFilter[0]),
                                new SimpleSelectorSequence(
-                                   new TypeSelector("a"), new SelectorFilter[0])},
+                                   new TypeSelector("a"), new IFilter[0])},
                             new[] {
                                 new GeneralSiblingCombinator()
                             })}),

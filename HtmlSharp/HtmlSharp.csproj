@@ -84,7 +84,7 @@
     <Compile Include="Css\OnlyOfType.cs" />
     <Compile Include="Css\RootFilter.cs" />
     <Compile Include="Css\Selector.cs" />
-    <Compile Include="Css\SelectorFilter.cs" />
+    <Compile Include="Css\IFilter.cs" />
     <Compile Include="Css\SelectorNamespacePrefix.cs" />
     <Compile Include="Css\SelectorsGroup.cs" />
     <Compile Include="Css\SelectorToken.cs" />

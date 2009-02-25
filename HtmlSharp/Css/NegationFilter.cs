@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class NegationFilter : SelectorFilter
+    public class NegationFilter : IFilter
     {
-        SelectorFilter filter;
+        IFilter filter;
 
-        public NegationFilter(SelectorFilter filter)
+        public NegationFilter(IFilter filter)
         {
             this.filter = filter;
         }
@@ -30,6 +31,11 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return filter.GetHashCode();
+        }
+
+        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            throw new NotImplementedException();
         }
     }
 }

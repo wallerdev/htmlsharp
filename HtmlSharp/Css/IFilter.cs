@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class SelectorFilter
+    public interface IFilter
     {
+        IEnumerable<Tag> Apply(IEnumerable<Tag> tags);
     }
 }

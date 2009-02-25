@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class RootFilter : SelectorFilter
+    public class RootFilter : IFilter
     {
         public RootFilter()
         {
@@ -20,6 +21,11 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return GetType().GetHashCode();
+        }
+
+        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            throw new NotImplementedException();
         }
     }
 }
