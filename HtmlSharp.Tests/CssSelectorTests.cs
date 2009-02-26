@@ -93,5 +93,13 @@ namespace HtmlSharp.Tests
             var html = parser.Parse("<p></p>");
             Assert.AreEqual(new P(), html.Find("*"));
         }
+
+        [TestMethod]
+        public void TestAttributeExistsSelector()
+        {
+            var tag = doc.Find("[id]");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
     }
 }
