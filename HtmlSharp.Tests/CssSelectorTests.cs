@@ -101,5 +101,15 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
                 new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
         }
+
+        [TestMethod]
+        public void TestAttributeEqualsSelector()
+        {
+            var tag = doc.Find("[id=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[id=info]");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
     }
 }

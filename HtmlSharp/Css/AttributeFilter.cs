@@ -8,7 +8,7 @@ namespace HtmlSharp.Css
 {
     public class AttributeFilter : IFilter
     {
-        string type;
+        protected string type;
 
         public AttributeFilter(string type)
         {
@@ -33,7 +33,7 @@ namespace HtmlSharp.Css
             return type.GetHashCode();
         }
 
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        public virtual IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
             return tags.Where(tag => tag[type] != null);
         }
