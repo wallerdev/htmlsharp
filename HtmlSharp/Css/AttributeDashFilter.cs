@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
@@ -31,6 +32,12 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return base.GetHashCode() ^ dash.GetHashCode();
+        }
+
+        public override IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        {
+            return tags.Where(tag => tag[type] != null && 
+                (tag[type] == dash || tag[type].StartsWith(dash + "-")));
         }
     }
 }

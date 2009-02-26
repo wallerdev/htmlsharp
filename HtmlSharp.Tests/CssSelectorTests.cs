@@ -111,5 +111,55 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
                 new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
         }
+
+        [TestMethod]
+        public void TestAttributeDashFilter()
+        {
+            var tag = doc.Find("[hreflang|=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[hreflang|=en]");
+            Assert.AreEqual(new Link(new[] { new TagAttribute("rel", "copyright copyleft"),
+                new TagAttribute("hreflang", "en-us")}), tag);
+        }
+
+        [TestMethod]
+        public void TestAttributeIncludesFilter()
+        {
+            var tag = doc.Find("[rel~=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[rel~=copyleft]");
+            Assert.AreEqual(new Link(new[] { new TagAttribute("rel", "copyright copyleft"),
+                new TagAttribute("hreflang", "en-us")}), tag);
+        }
+
+        [TestMethod]
+        public void TestAttributePrefixFilter()
+        {
+            var tag = doc.Find("[id^=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[id^=in]");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
+
+        [TestMethod]
+        public void TestAttributeSuffixSelector()
+        {
+            var tag = doc.Find("[id$=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[id$=fo]");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
+
+        [TestMethod]
+        public void TestAttributeSubstringSelector()
+        {
+            var tag = doc.Find("[id*=fake]");
+            Assert.IsNull(tag);
+            tag = doc.Find("[id*=nf]");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
     }
 }
