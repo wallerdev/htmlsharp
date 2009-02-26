@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HtmlSharp.Elements;
+using HtmlSharp.Elements.Tags;
 
 namespace HtmlSharp.Css
 {
@@ -25,7 +26,7 @@ namespace HtmlSharp.Css
 
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            return tags.Where(tag => tag.Parent is Root);
         }
     }
 }

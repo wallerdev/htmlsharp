@@ -161,5 +161,13 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
                 new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
         }
+
+        [TestMethod]
+        public void TestRootFilter()
+        {
+            HtmlParser parser = new HtmlParser();
+            var html = parser.Parse("<p></p>");
+            Assert.AreEqual(new P(), html.Find(":root"));
+        }
     }
 }
