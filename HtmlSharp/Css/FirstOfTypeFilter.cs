@@ -6,8 +6,13 @@ using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class FirstOfTypeFilter : IFilter
+    public class FirstOfTypeFilter : NthOfTypeFilter
     {
+        public FirstOfTypeFilter()
+            : base(new NumericExpression(0, 1))
+        {
+        }
+
         public override bool Equals(object obj)
         {
             return obj != null && GetType() == obj.GetType();
@@ -16,11 +21,6 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return GetType().GetHashCode();
-        }
-
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -20,7 +20,14 @@ namespace HtmlSharp.Css
 
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            foreach (var tag in tags)
+            {
+                var childrenTags = tag.Children.OfType<Tag>().ToList();
+                if (childrenTags.Count > 0)
+                {
+                    yield return childrenTags.Last();
+                }
+            }
         }
     }
 }

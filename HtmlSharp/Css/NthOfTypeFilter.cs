@@ -37,8 +37,11 @@ namespace HtmlSharp.Css
         {
             foreach (var tag in tags)
             {
-                List<Tag> siblingTags = new List<Tag>() { tag };
-                var sibling = tag.NextSibling;
+                var start = tag.Parent.Children.OfType<Tag>().First(t => t.TagName == tag.TagName);
+
+                List<Tag> siblingTags = new List<Tag>() { start };
+
+                var sibling = start.NextSibling;
                 while (sibling != null)
                 {
                     Tag siblingTag = sibling as Tag;

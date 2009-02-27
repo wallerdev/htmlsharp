@@ -201,5 +201,41 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
                 new HtmlText() { Value = "Nothing to really talk about." }), tag);
         }
+
+        [TestMethod]
+        public void TestFirstChildFilter()
+        {
+            var tag = doc.Find("head:first-child");
+            Assert.AreEqual(new Title(new HtmlText() { Value = "Test Document" }), tag);
+        }
+
+        [TestMethod]
+        public void TestLastChildFilter()
+        {
+            var tag = doc.Find("body:last-child");
+            Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
+                new HtmlText() { Value = "Nothing to really talk about." }), tag);
+        }
+
+        [TestMethod]
+        public void TestFirstOfTypeFilter()
+        {
+            var tag = doc.Find("p:first-of-type");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
+
+            //make sure it finds the first sibling of type, not next sibling of type
+            tag = doc.Find("#info:first-of-type");
+            Assert.AreEqual(new P(new HtmlText() { Value = "It will be used in tests." }), tag);
+        }
+
+        [TestMethod]
+        public void TestLastOfTypeFilter()
+        {
+            var tag = doc.Find("p:last-of-type");
+            Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
+                new HtmlText() { Value = "Nothing to really talk about." }), tag);
+        }
+
+
     }
 }
