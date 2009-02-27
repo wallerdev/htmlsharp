@@ -35,7 +35,13 @@ namespace HtmlSharp.Css
 
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            foreach (var tag in tags)
+            {
+                if (selector.Apply(new[] { tag }).Count() == 0)
+                {
+                    yield return tag;
+                }
+            }
         }
     }
 }

@@ -318,5 +318,12 @@ namespace HtmlSharp.Tests
             tag = doc.Find("p:lang(en)");
             Assert.IsNull(tag);
         }
+
+        [TestMethod]
+        public void TestNotFilter()
+        {
+            var tag = doc.Find("head > :not(link)");
+            Assert.AreEqual(new Title(new HtmlText() { Value = "Test Document" }), tag);
+        }
     }
 }
