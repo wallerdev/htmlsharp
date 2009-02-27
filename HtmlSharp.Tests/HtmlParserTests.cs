@@ -75,11 +75,11 @@ namespace HtmlSharp.Tests
         [TestMethod]
         public void TestRepeatedTagsWithContent()
         {
-            var page = parser.Parse("<tag>content<tag>content");
+            var page = parser.Parse("<p>content<p>content");
             Assert.AreEqual(
                 new Root(
-                    new UnknownTag("tag", new HtmlText() { Value = "content" }),
-                    new UnknownTag("tag", new HtmlText() { Value = "content" })), page.Root);
+                    new P(new HtmlText() { Value = "content" }),
+                    new P(new HtmlText() { Value = "content" })), page.Root);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace HtmlSharp.Tests
         {
             var page = parser.Parse("<div><p></div>");
             Assert.AreEqual(page.Root, page.Root.Children.ElementAt(0).Parent);
-            Assert.AreEqual(page.Root.Children.ElementAt(0), 
+            Assert.AreEqual(page.Root.Children.ElementAt(0),
                 page.Root.Children.ElementAt(0).Children.ElementAt(0).Parent);
         }
 
@@ -165,7 +165,7 @@ namespace HtmlSharp.Tests
         public void TestNextSiblingIsSet()
         {
             var page = parser.Parse("<p>text</p></p><p>text</p>");
-            Assert.AreEqual(page.Root.Children.ElementAt(1), 
+            Assert.AreEqual(page.Root.Children.ElementAt(1),
                 page.Root.Children.ElementAt(0).NextSibling);
         }
 
@@ -175,6 +175,13 @@ namespace HtmlSharp.Tests
             var page = parser.Parse("<p>text</p></p><p>text</p>");
             Assert.AreEqual(page.Root.Children.ElementAt(0),
                 page.Root.Children.ElementAt(1).PreviousSibling);
+        }
+
+        [TestMethod]
+        public void TestSelfClosingTags()
+        {
+            var page = parser.Parse("<img><p>");
+            Assert.AreEqual(new Root(new Img(), new P()), page.Root);
         }
     }
 }

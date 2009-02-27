@@ -22,6 +22,7 @@ namespace TagGenerator
         public bool EndTagOptional { get; set; }
         public bool AllowsNesting { get; set; }
         public bool ResetsNesting { get; set; }
+        public bool SelfClosing { get; set; }
         public List<string> NestingBreakers = new List<string>();
 
         public TagClass(string name)
@@ -131,15 +132,16 @@ namespace HtmlSharp.Elements.Tags
         public {0}(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {{
-            {3}TagName = ""{5}"";
+            {3}{6}TagName = ""{5}"";
         }}
     }}
 }}", GetClassName(Name)
-  , AllowsNesting ? ", IAllowsNesting" : ""
+  , AllowsNesting ? ", IAllowsNestingSelf" : ""
   , AllowsNesting ? GetNestingBreakersString() : ""
   , ResetsNesting ? "ResetsNesting = true;\r\n            " : ""
   , GetAttributesString()
-  , Name);
+  , Name
+  , SelfClosing ? "IsSelfClosing = true;\r\n            " : "");
         }
 
         public static string GetClassName(string Name)
@@ -248,7 +250,6 @@ namespace HtmlSharp.Elements.Tags
                     TagClass t = new TagClass(infos[0]);
                     t.StartTagOptional = infos[1] == "O";
                     t.EndTagOptional = infos[2] == "O";
-                    t.AllowsNesting = infos[3] != "E";
 
                     if (t.Name == "li")
                     {
@@ -277,6 +278,22 @@ namespace HtmlSharp.Elements.Tags
                     {
                         t.ResetsNesting = true;
                     }
+
+                    if (new[] { "table", "tr", "td", "th", "thead", "tbody",
+                        "tfoot", "ol", "ul", "li", "dl", "dd", "dt", "blockquote", "div", "fieldset", "ins",
+                        "del", "span", "font", "q", "object", "bdo", "sub", "sup", "center" }.Contains(t.Name))
+                    {
+                        t.AllowsNesting = true;
+                    }
+
+                    //self closing tags
+
+                    if (new[] { "br", "hr", "input", "img", "meta", "spacer", "link", "frame", "base" }
+                        .Contains(t.Name))
+                    {
+                        t.SelfClosing = true;
+                    }
+
                     tags.Add(t);
                 }
             }

@@ -95,6 +95,7 @@ namespace HtmlSharp.Elements.Tags
         public Input(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "input";
         }
     }

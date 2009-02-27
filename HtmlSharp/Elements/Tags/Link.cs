@@ -71,6 +71,7 @@ namespace HtmlSharp.Elements.Tags
         public Link(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "link";
         }
     }

@@ -63,6 +63,7 @@ namespace HtmlSharp.Elements.Tags
         public HR(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "hr";
         }
     }

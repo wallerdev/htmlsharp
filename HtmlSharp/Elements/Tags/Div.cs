@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Div : Tag, IAllowsNesting
+    public class Div : Tag, IAllowsNestingSelf
     {
         public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
 

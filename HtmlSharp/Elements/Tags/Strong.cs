@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Strong : Tag, IAllowsNesting
+    public class Strong : Tag
     {
-        public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
-
         public string Class { get { return this["class"]; } }
 
         public string Dir { get { return this["dir"]; } }

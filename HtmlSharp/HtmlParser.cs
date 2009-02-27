@@ -1015,7 +1015,7 @@ namespace HtmlSharp
             // <td><tr><td> *<td>* should pop to 'tr', not the first 'td'
             //"""
 
-            IAllowsNesting nestableTag = tag as IAllowsNesting;
+            IAllowsNestingSelf nestableTag = tag as IAllowsNestingSelf;
             Tag popTo = null;
             bool inclusive = true;
             foreach (Tag t in tagStack)

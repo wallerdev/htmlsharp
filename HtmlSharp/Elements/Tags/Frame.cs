@@ -47,6 +47,7 @@ namespace HtmlSharp.Elements.Tags
         public Frame(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "frame";
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Root : Tag, IAllowsNesting
+    public class Root : Tag, IAllowsNestingSelf
     {
         public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
 

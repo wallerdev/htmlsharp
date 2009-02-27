@@ -79,6 +79,7 @@ namespace HtmlSharp.Elements.Tags
         public Img(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "img";
         }
     }

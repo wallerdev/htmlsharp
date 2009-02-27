@@ -35,6 +35,7 @@ namespace HtmlSharp.Elements.Tags
         public Meta(IEnumerable<TagAttribute> attributes, params Element[] children)
             : base(attributes, children)
         {
+            IsSelfClosing = true;
             TagName = "meta";
         }
     }

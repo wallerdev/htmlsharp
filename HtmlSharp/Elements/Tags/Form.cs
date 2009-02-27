@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace HtmlSharp.Elements.Tags
 {
-    public class Form : Tag, IAllowsNesting
+    public class Form : Tag
     {
-        public IEnumerable<Type> NestingBreakers { get { return new Type[0]; } }
-
         public string Acceptcharset { get { return this["accept-charset"]; } }
 
         public string Accept { get { return this["accept"]; } }

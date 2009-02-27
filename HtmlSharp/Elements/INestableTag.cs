@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HtmlSharp.Elements
 {
-    public interface IAllowsNesting
+    public interface IAllowsNestingSelf
     {
         IEnumerable<Type> NestingBreakers { get; }
     }
