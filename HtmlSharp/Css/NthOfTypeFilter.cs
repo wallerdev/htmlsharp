@@ -33,7 +33,7 @@ namespace HtmlSharp.Css
             return expression.GetHashCode();
         }
 
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        public virtual IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
             foreach (var tag in tags)
             {

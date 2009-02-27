@@ -6,7 +6,7 @@ using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class OnlyChildFilter : IFilter
+    public class OnlyChildFilter : FirstChildFilter
     {
         public override bool Equals(object obj)
         {
@@ -18,9 +18,17 @@ namespace HtmlSharp.Css
             return GetType().GetHashCode();
         }
 
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
+        public override IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            List<Tag> validTags = new List<Tag>();
+            foreach (var tag in tags)
+            {
+                if (tag.Children.OfType<Tag>().Count() == 1)
+                {
+                    validTags.Add(tag);
+                }
+            }
+            return base.Apply(validTags);
         }
     }
 }
