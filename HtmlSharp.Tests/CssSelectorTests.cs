@@ -32,7 +32,7 @@ namespace HtmlSharp.Tests
         [TestMethod]
         public void TestFindFail()
         {
-            var tag = doc.Find("q");
+            var tag = doc.Find("fake");
             Assert.IsNull(tag);
         }
 
@@ -305,6 +305,17 @@ namespace HtmlSharp.Tests
                ), tag);
 
             tag = doc.Find("p:checked");
+            Assert.IsNull(tag);
+        }
+
+        [TestMethod]
+        public void TestAttributeLangFilter()
+        {
+            var tag = doc.Find("q:lang(en)");
+            Assert.AreEqual(new Q(new[] { new TagAttribute("lang", "en-us") },
+                new HtmlText() { Value = "Here's a quotation." }), tag);
+
+            tag = doc.Find("p:lang(en)");
             Assert.IsNull(tag);
         }
     }

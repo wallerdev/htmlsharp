@@ -6,11 +6,12 @@ using HtmlSharp.Elements;
 
 namespace HtmlSharp.Css
 {
-    public class LangFilter : IFilter
+    public class LangFilter : AttributeDashFilter
     {
         string lang;
 
         public LangFilter(string lang)
+            : base("lang", lang)
         {
             this.lang = lang;
         }
@@ -31,11 +32,6 @@ namespace HtmlSharp.Css
         public override int GetHashCode()
         {
             return lang.GetHashCode();
-        }
-
-        public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
-        {
-            throw new NotImplementedException();
         }
     }
 }
