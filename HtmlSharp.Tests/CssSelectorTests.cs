@@ -177,5 +177,29 @@ namespace HtmlSharp.Tests
             Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
                 new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
         }
+
+        [TestMethod]
+        public void TestNthLastChildFilter()
+        {
+            var tag = doc.Find("head:nth-last-child(1)");
+            Assert.AreEqual(new Link(new[] { new TagAttribute("rel", "copyright copyleft"),
+                new TagAttribute("hreflang", "en-us")}), tag);
+        }
+
+        [TestMethod]
+        public void TestNthOfTypeFilter()
+        {
+            var tag = doc.Find("p:nth-of-type(2)");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
+
+        [TestMethod]
+        public void TestNthLastOfTypeFilter()
+        {
+            var tag = doc.Find("p:nth-last-of-type(1)");
+            Assert.AreEqual(new P(new[] { new TagAttribute("class", "more") },
+                new HtmlText() { Value = "Nothing to really talk about." }), tag);
+        }
     }
 }

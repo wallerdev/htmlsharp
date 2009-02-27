@@ -35,7 +35,28 @@ namespace HtmlSharp.Css
 
         public IEnumerable<Tag> Apply(IEnumerable<Tag> tags)
         {
-            throw new NotImplementedException();
+            foreach (var tag in tags)
+            {
+                List<Tag> siblingTags = new List<Tag>() { tag };
+                var sibling = tag.NextSibling;
+                while (sibling != null)
+                {
+                    Tag siblingTag = sibling as Tag;
+                    if (siblingTag != null && siblingTag.TagName == tag.TagName)
+                    {
+                        siblingTags.Add(siblingTag);
+                    }
+                    sibling = sibling.NextSibling;
+                }
+
+                foreach (var index in expression.GetValues().TakeWhile(n => n <= siblingTags.Count))
+                {
+                    if (index > 0)
+                    {
+                        yield return siblingTags[index - 1];
+                    }
+                }
+            }
         }
     }
 }
