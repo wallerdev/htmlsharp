@@ -450,7 +450,7 @@ namespace HtmlSharp.Css
                     }
                     else if (CurrentToken.TokenType == SelectorTokenType.String)
                     {
-                        selector = filterLookup[CurrentToken](CurrentToken.Text);
+                        selector = filterLookup[token](CurrentToken.Text.Substring(1, CurrentToken.Text.Length - 2));
                     }
                     else
                     {

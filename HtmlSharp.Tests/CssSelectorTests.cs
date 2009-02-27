@@ -110,6 +110,11 @@ namespace HtmlSharp.Tests
             tag = doc.Find("[id=info]");
             Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
                 new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+            tag = doc.Find("[id='fake']");
+            Assert.IsNull(tag);
+            tag = doc.Find("[id='info']");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
         }
 
         [TestMethod]
@@ -309,7 +314,7 @@ namespace HtmlSharp.Tests
         }
 
         [TestMethod]
-        public void TestAttributeLangFilter()
+        public void TestLangFilter()
         {
             var tag = doc.Find("q:lang(en)");
             Assert.AreEqual(new Q(new[] { new TagAttribute("lang", "en-us") },
