@@ -33,5 +33,20 @@ namespace HtmlSharp.Css
         {
             return n.GetHashCode() ^ b.GetHashCode();
         }
+
+        public override IEnumerable<int> GetValues()
+        {
+            if (n == 0)
+            {
+                yield return b;
+            }
+            else
+            {
+                for (int i = 0; ; i++)
+                {
+                    yield return n * i + b;
+                }
+            }
+        }
     }
 }

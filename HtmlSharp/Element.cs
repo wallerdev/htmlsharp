@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace HtmlSharp
 {
@@ -15,7 +16,7 @@ namespace HtmlSharp
         public Element NextSibling { get; set; }
         public Element PreviousSibling { get; set; }
 
-        public IEnumerable<Element> Children { get { return children; } }
+        public ReadOnlyCollection<Element> Children { get { return children.AsReadOnly(); } }
         
         protected Element()
         {

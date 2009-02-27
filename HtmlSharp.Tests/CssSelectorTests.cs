@@ -169,5 +169,13 @@ namespace HtmlSharp.Tests
             var html = parser.Parse("<p></p>");
             Assert.AreEqual(new P(), html.Find(":root"));
         }
+
+        [TestMethod]
+        public void TestNthChildFilter()
+        {
+            var tag = doc.Find("body:nth-child(3)");
+            Assert.AreEqual(new P(new[] { new TagAttribute("id", "info") },
+                new HtmlText() { Value = "It probably will not be used anywhere else." }), tag);
+        }
     }
 }

@@ -5,7 +5,8 @@ using System.Text;
 
 namespace HtmlSharp.Css
 {
-    public class Expression
+    public abstract class Expression
     {
+        public abstract IEnumerable<int> GetValues();
     }
 }
