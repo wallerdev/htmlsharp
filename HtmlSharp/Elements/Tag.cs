@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using HtmlSharp.Elements.Tags;
 using System.Collections.ObjectModel;
+using HtmlSharp.Css;
 
 namespace HtmlSharp.Elements
 {
@@ -171,18 +172,6 @@ namespace HtmlSharp.Elements
             }
         }
 
-        public IEnumerable<Tag> FindAll()
-        {
-            foreach (Tag t in Children.Where(e => e is Tag))
-            {
-                yield return t;
-                foreach (Tag tag in t.FindAll())
-                {
-                    yield return tag;
-                }
-            }
-        }
-
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -220,6 +209,32 @@ namespace HtmlSharp.Elements
             }
             builder.AppendFormat("</{0}>", TagName);
             return builder.ToString();
+        }
+
+        public IEnumerable<Tag> FindAll(string selector)
+        {
+            SelectorParser parser = new SelectorParser();
+            var selectorGroup = parser.Parse(selector);
+            return selectorGroup.Apply(GetTags());
+        }
+
+        public Tag Find(string selector)
+        {
+            return FindAll(selector).FirstOrDefault();
+        }
+
+        IEnumerable<Tag> GetTags()
+        {
+            Element currentTag = Children.ElementAtOrDefault(0);
+            while (currentTag != null)
+            {
+                Tag current = currentTag as Tag;
+                if (current != null)
+                {
+                    yield return current;
+                }
+                currentTag = currentTag.Next;
+            }
         }
     }
 }

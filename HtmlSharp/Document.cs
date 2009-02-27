@@ -14,7 +14,7 @@ namespace HtmlSharp
         public string Html { get; private set; }
         public Tag Root { get; private set; }
 
-        public IEnumerable<Tag> GetTags()
+        IEnumerable<Tag> GetTags()
         {
             Element currentTag = Root.Children.ElementAtOrDefault(0);
             while (currentTag != null)
@@ -44,19 +44,16 @@ namespace HtmlSharp
             return builder.ToString();
         }
 
-        public IEnumerable<Tag> FindAll()
+        public IEnumerable<Tag> FindAll(string selector)
         {
-            foreach (Tag t in Root.FindAll())
-            {
-                yield return t;
-            }
+            SelectorParser parser = new SelectorParser();
+            var selectorGroup = parser.Parse(selector);
+            return selectorGroup.Apply(GetTags());
         }
 
         public Tag Find(string selector)
         {
-            SelectorParser parser = new SelectorParser();
-            var selectorGroup = parser.Parse(selector);
-            return selectorGroup.Apply(GetTags()).FirstOrDefault();
+            return FindAll(selector).FirstOrDefault();
         }
     }
 }

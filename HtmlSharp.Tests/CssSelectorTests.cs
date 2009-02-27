@@ -37,6 +37,36 @@ namespace HtmlSharp.Tests
         }
 
         [TestMethod]
+        public void TestFindAll()
+        {
+            var tags = doc.FindAll("fake");
+            Assert.AreEqual(tags.Count(), 0);
+            HtmlParser parser = new HtmlParser();
+            tags = parser.Parse("<p><b></p><p></p>").FindAll("p");
+            Assert.IsTrue(tags.SequenceEqual(new[] { new P(new B()), new P() }));
+        }
+
+        [TestMethod]
+        public void TestFindFromTag()
+        {
+            var tag = doc.Find("html");
+            Assert.IsNull(tag.Find("fake"));
+            tag = tag.Find("link");
+            Assert.AreEqual(new Link(new[] { new TagAttribute("rel", "copyright copyleft"),
+                new TagAttribute("hreflang", "en-us")}), tag);
+        }
+
+        [TestMethod]
+        public void TestFindAllFromTag()
+        {
+            var tags = doc.Find("html").FindAll("fake");
+            Assert.AreEqual(tags.Count(), 0);
+            HtmlParser parser = new HtmlParser();
+            tags = parser.Parse("<html><p><b></p><p></p></html>").Find("html").FindAll("p");
+            Assert.IsTrue(tags.SequenceEqual(new[] { new P(new B()), new P() }));
+        }
+
+        [TestMethod]
         public void TestDescendantCombinator()
         {
             var tag = doc.Find("html p");
