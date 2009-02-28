@@ -223,6 +223,16 @@ namespace HtmlSharp.Elements
             return FindAll(selector).FirstOrDefault();
         }
 
+        public T Find<T>(string selector)
+        {
+            return FindAll<T>(selector).FirstOrDefault();
+        }
+
+        public IEnumerable<T> FindAll<T>(string selector)
+        {
+            return FindAll(selector).OfType<T>();
+        }
+
         IEnumerable<Tag> GetTags()
         {
             Element currentTag = Children.ElementAtOrDefault(0);

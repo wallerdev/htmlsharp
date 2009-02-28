@@ -55,5 +55,15 @@ namespace HtmlSharp
         {
             return FindAll(selector).FirstOrDefault();
         }
+
+        public T Find<T>(string selector)
+        {
+            return FindAll<T>(selector).FirstOrDefault();
+        }
+
+        public IEnumerable<T> FindAll<T>(string selector)
+        {
+            return FindAll(selector).OfType<T>();
+        }
     }
 }
